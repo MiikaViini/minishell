@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/31 19:07:23 by mviinika          #+#    #+#             */
-/*   Updated: 2022/09/09 14:16:07 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/09/12 18:18:56 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,22 @@
 // 	// 	ft_putendl("\n$> ");
 // 	signal(SIGINT, sgn_handler);
 // }
+char **parse_input(char *input)
+{
+	int i;
+	int	s_quote;
+	int d_quote;
 
+	i = 0;
+	quote = 0;
+	while (input[i])
+	{
+		if (input[i] == '"')
+			s_quote += 1;
+		else if (input[0] == "\"")
+			d_quote += 1;
+	}
+}
 int	get_input(void)
 {
 	int		rb;
