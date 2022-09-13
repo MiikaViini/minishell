@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/31 19:07:23 by mviinika          #+#    #+#             */
-/*   Updated: 2022/09/12 18:18:56 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/09/13 12:02:42 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,22 +19,47 @@
 // 	// 	ft_putendl("\n$> ");
 // 	signal(SIGINT, sgn_handler);
 // }
+
+int	is_single_quote(char c)
+{
+	return (c == '\'');
+}
+
+int	is_double_quote(char c)
+{
+	return (c == '"');
+}
+
 char **parse_input(char *input)
 {
-	int i;
-	int	s_quote;
-	int d_quote;
+	int		i;
+	int		start_quote;
+	int		end_quote;
+	char	**parsed_input;
 
 	i = 0;
-	quote = 0;
+	start_quote = 0;
+	end_quote = 0;
+	parsed_input = (char **)malloc(sizeof(char *) * 150);
+	if (is_single_quote(input[0]) || is_double_quote(input[0]))
+		start_quote = 1;
+	if ((input[2] && is_single_quote(input[ft_strlen(input) - 2])) || (input[2] && is_double_quote(input[ft_strlen(input)- 2])))
+		end_quote = 1;
 	while (input[i])
 	{
-		if (input[i] == '"')
+		if (input[i] == '\'')
 			s_quote += 1;
-		else if (input[0] == "\"")
+		else if (input[i] == '\"')
 			d_quote += 1;
+		i++;
 	}
+	if (s_quote % 2 != 0 || d_quote % 2 != 0)
+		return (1);
+	ft_putnbr(start_quote);
+	ft_putnbr(end_quote);
+	return (0);
 }
+
 int	get_input(void)
 {
 	int		rb;
@@ -49,10 +74,10 @@ int	get_input(void)
 		rb = read(0, &buf, 4096);
 		if (rb == -1)
 			exit(1);
-		if (rb != 0 && !ft_isspace(buf[0]))
-			parsed_input = ft_strsplitws(buf);
+		parsed_input = parse_input(buf);
+		// if (rb != 0 && !ft_isspace(buf[0]))
+		// 	parsed_input = ft_strsplitws(buf);
 		rb = check_builtin(parsed_input, rb, buf);
-
 		ft_memset(buf, '\0', 4096);
 	}
 	return (rb);
