@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/31 19:07:23 by mviinika          #+#    #+#             */
-/*   Updated: 2022/09/16 14:28:31 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/09/18 22:50:05 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,11 @@ int	is_single_quote(char c)
 int	is_double_quote(char c)
 {
 	return (c == '"');
+}
+
+int is_quote(char c)
+{
+	return (c == '\'' || c == '"');
 }
 
 int	check_quotes(char *input)
@@ -58,33 +63,43 @@ char	*word(char *input, int i)
 {
 	int		k;
 	char	*word;
-	int		s_open;
-	int		d_open;
+	int		open;
+	int		quote;
+	// int 	i;
 
+	quote = 0;
 	k = 0;
-	s_open = 1;
-	d_open = 1;
-	word = ft_strnew(100);
-	// while (ft_isspace(input[i]))
-	// 	i++;
+	open = 0;
+	word = ft_strnew(200);
+
 	while (input[i])
 	{
-		while (is_single_quote(input[i]) || is_double_quote(input[i]))
+		if (is_quote(input[i]))
 		{
-			// if (is_single_quote(input[i]) && !is_double_quote(input[i]))
-			// 	s_open += 1;
-			// else if (is_double_quote(input[i]) && !is_single_quote(input[i]))
-			// 	d_open += 1;
-			// else
-			// {
-			// 	s_open = 0;
-			// 	d_open = 0;
-			// }
-			i++;
+			quote = 1;
+			if (is_single_quote(input[i]) && !open)
+			{
+				i++;
+				open = 1;
+			}
+			else if (is_single_quote(input[i]))
+				break ;
+			else if ((ft_isspace(input[i]) && open))
+				break ;
+			else if (is_double_quote(input[i]) && !open)
+			{
+				i++;
+				open = 1;
+			}
+			else if ((ft_isspace(input[i]) && open))
+				break ;
+			else if (is_double_quote(input[i]))
+				break ;
 		}
-		// else if (is_double_quote(input[i]))
-		// 	i++;
+		if (ft_isspace(input[i]) && !quote)
+			break ;
 		word[k++] = input[i++];
+		//else
 	}
 	word[k] = '\0';
 	return (word);
@@ -95,19 +110,35 @@ char	**parse_input(char *input)
 	int		i;
 	int		k;
 	char	**parsed;
+	char    *temp;
 
 	parsed = (char **)malloc(sizeof(char *) * 150);
 	i = 0;
 	k = 0;
-	while (input[i])
+	temp = ft_strndup(input, ft_strlen(input) - 1);
+	while (ft_isspace(temp[i]))
+		i++;
+	while (temp && temp[i])
 	{
-		parsed[k] = word(input, i);
-		i += ft_strlen(parsed[k++]);
-		ft_putnbr((int)ft_strlen(parsed[k]));
+
+		parsed[k] = word(temp, i);
+		i += ft_strlen(parsed[k]) + 1;
+		k++;
+		//ft_putnbr((int)ft_strlen(parsed[k]));
 	}
 	parsed[k] = NULL;
-	ft_putnbr(k);
+	//ft_putnbr(k);
 	return (parsed);
+}
+
+void free_parsed_input(char **p_input)
+{
+	int i;
+
+	i = -1;
+	while(p_input && p_input[++i])
+		ft_strdel(&p_input[i]);
+	ft_strdel(p_input);
 }
 
 int	get_input(void)
@@ -115,6 +146,8 @@ int	get_input(void)
 	int		rb;
 	char	buf[4096];
 	char	**parsed_input;
+	//char	*temp;
+	//int 	i = 0;
 
 	rb = 1;
 	ft_memset(buf, '\0', 4096);
@@ -127,19 +160,21 @@ int	get_input(void)
 		if (check_quotes(buf))
 			ft_putstr("invalid quoting, try again\n");
 		else
-			parsed_input = parse_input(buf);
-		// if (rb != 0 && !ft_isspace(buf[0]))
-		// 	parsed_input = ft_strsplitws(buf);
-		// rb = check_builtin(parsed_input, rb, buf);
-		while (parsed_input && *parsed_input)
 		{
-			write(1, "1", 1);
-			ft_putstr(*parsed_input);
-			parsed_input++;
-			write(1, "1 ", 1);
+			parsed_input = parse_input(buf);
+			rb = check_builtin(parsed_input, rb, buf);
 		}
+		// if (rb != 0 && !ft_isspace(buf[0]))
+		//parsed_input = ft_strsplitws(temp)
+
+
+		// while (parsed_input && parsed_input[i])
+		// {
+		// 	ft_putstr(parsed_input[i++]);
+		// 	write(1, "\n", 1);
+		// }
 		ft_memset(buf, '\0', 4096);
-		ft_strdel(parsed_input);
+		free_parsed_input(parsed_input);
 	}
 	return (rb);
 }
@@ -151,8 +186,11 @@ int	check_builtin(char **input, int rb, char *buf)
 
 	i = 1;
 	ret = 0;
-	if (ft_isspace(buf[0]))
+	if (ft_isspace(buf[0]) )
 		return (1);
+	//(void)buf;
+	// ft_putstr(input[0]);
+	// write(1, "0", 1);
 	if (rb == 0 || !ft_strcmp(input[0], "exit"))
 	{
 		ft_putstr("exit\n");
@@ -163,10 +201,8 @@ int	check_builtin(char **input, int rb, char *buf)
 		if (!input[i])
 			write(1, "\n", 2);
 		while (input[i])
-		{
 			ft_putstr(input[i++]);
-			write(1, "\n", 2);
-		}
+		write(1, "\n", 2);
 	}
 	else if (!ft_strcmp(input[0], "cd"))
 		ft_putstr("entering directory\n");
@@ -176,6 +212,8 @@ int	check_builtin(char **input, int rb, char *buf)
 		ft_putstr("unsetting environment\n");
 	else if (!ft_strcmp(input[0], "env"))
 		ft_putstr("printing environment\n");
+	else
+		ft_printf("mish1.0: %s: command not found\n", input[0]);
 	return (1);
 }
 
@@ -226,6 +264,7 @@ int	main(int argc, char **argv, char **environ)
 	rb = 1;
 	env = NULL;
 	env = get_env(env, environ, argc, argv);
+	system("clear");
 	while (rb != 0)
 	{
 		ft_putstr("mish-1.0$ ");
