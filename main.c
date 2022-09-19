@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/31 19:07:23 by mviinika          #+#    #+#             */
-/*   Updated: 2022/09/19 10:50:21 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/09/19 15:58:51 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,26 +65,32 @@ char	*word(char *input, int i)
 	char	*word;
 	int		d_quote;
 	int		s_quote;
+	int		closed;
 	// int 	i;
 
 	s_quote = 0;
 	k = 0;
 	d_quote = 0;
+	closed = 0;
 	word = ft_strnew(200);
 
-	while (input[i])
+	while (input[i] && !closed)
 	{
 		if (is_quote(input[i]))
 		{
-			if (is_single_quote(input[i]))
-				s_quote += 1;
-			else if (is_double_quote(input[i]))
+			if (is_double_quote(input[i]) && !s_quote)
+			{
 				d_quote += 1;
-			else if (s_quote && d_quote)
 				i++;
+			}
+			else if (is_single_quote(input[i]) && !d_quote)
+			{
+				s_quote += 1;
+				i++;
+			}
+			if (s_quote == 2 || d_quote == 2)
+				closed = 1;
 		}
-		if ((ft_isspace(input[i]) && s_quote % 2 == 0) || (ft_isspace(input[i]) && d_quote % 2 == 0))
-			break ;
 		else
 			word[k++] = input[i++];
 	}
