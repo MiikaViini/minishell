@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/31 19:07:23 by mviinika          #+#    #+#             */
-/*   Updated: 2022/09/18 22:50:05 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/09/19 10:50:21 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 // void	sgn_handler(int num)
 // {
 // 	(void)num;
-// 	// if (num == SIGINT)
-// 	// 	ft_putendl("\n$> ");
+// 	if (num == SIGINT)
+// 		ft_putendl("\n$> ");
 // 	signal(SIGINT, sgn_handler);
 // }
 
@@ -63,43 +63,30 @@ char	*word(char *input, int i)
 {
 	int		k;
 	char	*word;
-	int		open;
-	int		quote;
+	int		d_quote;
+	int		s_quote;
 	// int 	i;
 
-	quote = 0;
+	s_quote = 0;
 	k = 0;
-	open = 0;
+	d_quote = 0;
 	word = ft_strnew(200);
 
 	while (input[i])
 	{
 		if (is_quote(input[i]))
 		{
-			quote = 1;
-			if (is_single_quote(input[i]) && !open)
-			{
-				i++;
-				open = 1;
-			}
-			else if (is_single_quote(input[i]))
-				break ;
-			else if ((ft_isspace(input[i]) && open))
-				break ;
-			else if (is_double_quote(input[i]) && !open)
-			{
-				i++;
-				open = 1;
-			}
-			else if ((ft_isspace(input[i]) && open))
-				break ;
+			if (is_single_quote(input[i]))
+				s_quote += 1;
 			else if (is_double_quote(input[i]))
-				break ;
+				d_quote += 1;
+			else if (s_quote && d_quote)
+				i++;
 		}
-		if (ft_isspace(input[i]) && !quote)
+		if ((ft_isspace(input[i]) && s_quote % 2 == 0) || (ft_isspace(input[i]) && d_quote % 2 == 0))
 			break ;
-		word[k++] = input[i++];
-		//else
+		else
+			word[k++] = input[i++];
 	}
 	word[k] = '\0';
 	return (word);
@@ -213,7 +200,7 @@ int	check_builtin(char **input, int rb, char *buf)
 	else if (!ft_strcmp(input[0], "env"))
 		ft_putstr("printing environment\n");
 	else
-		ft_printf("mish1.0: %s: command not found\n", input[0]);
+		ft_printf("mish-1.0: %s: command not found\n", input[0]);
 	return (1);
 }
 
@@ -265,6 +252,7 @@ int	main(int argc, char **argv, char **environ)
 	env = NULL;
 	env = get_env(env, environ, argc, argv);
 	system("clear");
+	//signal(SIGINT, sgn_handler(1));
 	while (rb != 0)
 	{
 		ft_putstr("mish-1.0$ ");
