@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/31 19:07:23 by mviinika          #+#    #+#             */
-/*   Updated: 2022/09/19 20:07:44 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/09/20 15:02:05 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ char	*word(char *input, int i)
 	d_quote = 0;
 	closed = 0;
 	word = ft_strnew(200);
-
+	// ft_printf("incoming to word%s\n", input[i]);
 	while (input[i] && !closed)
 	{
 		if (is_quote(input[i]))
@@ -82,23 +82,26 @@ char	*word(char *input, int i)
 			{
 				d_quote += 1;
 				i += 1;
+				if (is_double_quote(input[i]))
+					break ;
 			}
 			else if (is_single_quote(input[i]) && !d_quote)
 			{
 				s_quote += 1;
 				i += 1;
+				if (is_single_quote(input[i]))
+					break ;
 			}
-			if (s_quote == 2 || d_quote == 2)
-				closed = 1;
-			else
+			else if (input[i])
 				word[k++] = input[i++];
 		}
+		if (s_quote == 2 || d_quote == 2)
+			break ;
 		else if (ft_isspace(input[i]) && !s_quote && !d_quote)
 			break ;
-		else
+		else if (input[i])
 			word[k++] = input[i++];
 	}
-	word[k] = '\0';
 	return (word);
 }
 
@@ -106,24 +109,24 @@ char	**parse_input(char *input)
 {
 	int		i;
 	int		k;
-	char	**parsed;
 	char	*temp;
+	char	*temp2;
+	char	**parsed;
 
-	parsed = (char **)malloc(sizeof(char *) * 150);
 	i = 0;
 	k = 0;
-	temp = ft_strndup(input, ft_strlen(input) - 1);
-	while (ft_isspace(temp[i]))
-		i++;
-	while (temp && temp[i])
+	parsed = (char **)malloc(sizeof(char *) * 100);
+	temp = ft_strndup(input, ft_strlen(input)); //malloc
+	temp2 = ft_strtrim(temp);					//malloc
+	free(temp);
+	k = 0;
+	while (temp2[i])
 	{
-		parsed[k] = word(temp, i);
-		i += ft_strlen(parsed[k]);
-		k++;
-		//ft_putnbr((int)ft_strlen(parsed[k]));
+		parsed[k] = word(temp2, i);
+		i += ft_strlen(parsed[k++]) + 1;
 	}
 	parsed[k] = NULL;
-	//ft_putnbr(k);
+	free(temp2);
 	return (parsed);
 }
 
@@ -132,9 +135,11 @@ void free_parsed_input(char **p_input)
 	int i;
 
 	i = -1;
-	while(p_input && p_input[++i])
+	if (!p_input || !p_input[0])
+		return ;
+	while(p_input[++i])
 		ft_strdel(&p_input[i]);
-	ft_strdel(p_input);
+	// free(p_input);
 }
 
 int	get_input(void)
@@ -144,10 +149,10 @@ int	get_input(void)
 	char	**parsed_input;
 	//char	*temp;
 	//int 	i = 0;
-
+	
 	rb = 1;
 	ft_memset(buf, '\0', 4096);
-	parsed_input = 0;
+	parsed_input = NULL;
 	if (rb != 0)
 	{
 		rb = read(0, &buf, 4096);
@@ -171,6 +176,8 @@ int	get_input(void)
 		// }
 		ft_memset(buf, '\0', 4096);
 		free_parsed_input(parsed_input);
+		if (parsed_input)
+			free(parsed_input);
 	}
 	return (rb);
 }
@@ -182,8 +189,9 @@ int	check_builtin(char **input, int rb, char *buf)
 
 	i = 1;
 	ret = 0;
-	if (ft_isspace(buf[0]) )
+	if (ft_isspace(buf[0]))
 		return (1);
+	
 	//(void)buf;
 	// ft_putstr(input[0]);
 	// write(1, "0", 1);
@@ -196,9 +204,12 @@ int	check_builtin(char **input, int rb, char *buf)
 	{
 		if (!input[i])
 			write(1, "\n", 2);
-		while (input[i])
-			ft_putstr(input[i++]);
-		write(1, "\n", 2);
+		else
+		{
+			while (input[i])
+				ft_putstr(input[i++]);
+			write(1, "\n", 2);
+		}
 	}
 	else if (!ft_strcmp(input[0], "cd"))
 		ft_putstr("entering directory\n");
@@ -229,7 +240,9 @@ void	free_env(char **env)
 
 	i = 0;
 	while (env && env[i])
-		ft_strdel(&env[i++]);
+	{
+		free(env[i++]);
+	}
 	free(env);
 }
 
