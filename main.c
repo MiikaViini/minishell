@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/31 19:07:23 by mviinika          #+#    #+#             */
-/*   Updated: 2022/09/19 15:58:51 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/09/19 20:07:44 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,16 +81,20 @@ char	*word(char *input, int i)
 			if (is_double_quote(input[i]) && !s_quote)
 			{
 				d_quote += 1;
-				i++;
+				i += 1;
 			}
 			else if (is_single_quote(input[i]) && !d_quote)
 			{
 				s_quote += 1;
-				i++;
+				i += 1;
 			}
 			if (s_quote == 2 || d_quote == 2)
 				closed = 1;
+			else
+				word[k++] = input[i++];
 		}
+		else if (ft_isspace(input[i]) && !s_quote && !d_quote)
+			break ;
 		else
 			word[k++] = input[i++];
 	}
@@ -103,7 +107,7 @@ char	**parse_input(char *input)
 	int		i;
 	int		k;
 	char	**parsed;
-	char    *temp;
+	char	*temp;
 
 	parsed = (char **)malloc(sizeof(char *) * 150);
 	i = 0;
@@ -113,9 +117,8 @@ char	**parse_input(char *input)
 		i++;
 	while (temp && temp[i])
 	{
-
 		parsed[k] = word(temp, i);
-		i += ft_strlen(parsed[k]) + 1;
+		i += ft_strlen(parsed[k]);
 		k++;
 		//ft_putnbr((int)ft_strlen(parsed[k]));
 	}
