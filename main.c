@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/31 19:07:23 by mviinika          #+#    #+#             */
-/*   Updated: 2022/09/20 15:02:05 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/09/21 15:20:27 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,50 +58,79 @@ int	check_quotes(char *input)
 	}
 	return (s_quote + d_quote);
 }
+char *ft_sep(char *str, const char delim)
+{
+	int		i;
+	int		k;
+	int		delim_c;
+	char	*separated;
 
-char	*word(char *input, int i)
+	separated = ft_strnew(ft_strlen(str));
+	i = 0;
+	k = 0;
+	delim_c = 0;
+	while (str && str[i] && delim_c < 2)
+	{
+		if (str[i] == delim)
+		{
+			delim_c++;
+			i++;
+		}
+		separated[k++] = str[i++];
+	}
+	return (separated);
+}
+/* Split string to words, whitespace, singlequote and doublequote
+** works as separator
+*/
+char	*word(char *input, int i, int *total)
 {
 	int		k;
 	char	*word;
 	int		d_quote;
 	int		s_quote;
 	int		closed;
-	// int 	i;
 
 	s_quote = 0;
 	k = 0;
 	d_quote = 0;
 	closed = 0;
 	word = ft_strnew(200);
-	// ft_printf("incoming to word%s\n", input[i]);
+	while (ft_isspace(input[i]))
+		i++;
+//	ft_printf("word [%s]\n", &input[i]);
 	while (input[i] && !closed)
 	{
 		if (is_quote(input[i]))
 		{
-			if (is_double_quote(input[i]) && !s_quote)
+		//	ft_printf("%c\n", input[i]);
+		//	ft_printf("d %d\n", d_quote);
+			//ft_printf("s %d\n", s_quote);
+			while (is_double_quote(input[i]) && s_quote == 0)
 			{
 				d_quote += 1;
-				i += 1;
-				if (is_double_quote(input[i]))
-					break ;
+				i++;
 			}
-			else if (is_single_quote(input[i]) && !d_quote)
+		//ft_printf("%d\n", d_quote);
+			//ft_printf("%d\n", s_quote);
+			while (is_single_quote(input[i]) && !d_quote)
 			{
 				s_quote += 1;
-				i += 1;
-				if (is_single_quote(input[i]))
-					break ;
+				i++;
 			}
-			else if (input[i])
-				word[k++] = input[i++];
+			if (s_quote == 2 || d_quote == 2)
+				closed = 1;
 		}
-		if (s_quote == 2 || d_quote == 2)
+		if (ft_isspace(input[i]) && s_quote + d_quote == 0)
+		{
+			//(*total)--;
+			//ft_printf("%d\n", s_quote + d_quote);
 			break ;
-		else if (ft_isspace(input[i]) && !s_quote && !d_quote)
-			break ;
-		else if (input[i])
+		}
+		if (input[i] && !closed && (*total)++)
 			word[k++] = input[i++];
 	}
+	//ft_printf("word [%s]\n", word);
 	return (word);
 }
 
@@ -109,24 +138,25 @@ char	**parse_input(char *input)
 {
 	int		i;
 	int		k;
-	char	*temp;
-	char	*temp2;
+	static int  total;
+	char	*trimmed_inp;
 	char	**parsed;
 
 	i = 0;
 	k = 0;
+	total = 0;
 	parsed = (char **)malloc(sizeof(char *) * 100);
-	temp = ft_strndup(input, ft_strlen(input)); //malloc
-	temp2 = ft_strtrim(temp);					//malloc
-	free(temp);
+	trimmed_inp = ft_strtrim(input);
 	k = 0;
-	while (temp2[i])
+	while (trimmed_inp[i])
 	{
-		parsed[k] = word(temp2, i);
-		i += ft_strlen(parsed[k++]) + 1;
+		parsed[k++] = word(trimmed_inp, i, &total);
+		i += total; //ft_strlen(parsed[k++]) + 1;
+		if(k)
+			total -= 1;
 	}
 	parsed[k] = NULL;
-	free(temp2);
+	ft_strdel(&trimmed_inp);
 	return (parsed);
 }
 
@@ -139,7 +169,6 @@ void free_parsed_input(char **p_input)
 		return ;
 	while(p_input[++i])
 		ft_strdel(&p_input[i]);
-	// free(p_input);
 }
 
 int	get_input(void)
@@ -149,7 +178,7 @@ int	get_input(void)
 	char	**parsed_input;
 	//char	*temp;
 	//int 	i = 0;
-	
+
 	rb = 1;
 	ft_memset(buf, '\0', 4096);
 	parsed_input = NULL;
@@ -191,7 +220,7 @@ int	check_builtin(char **input, int rb, char *buf)
 	ret = 0;
 	if (ft_isspace(buf[0]))
 		return (1);
-	
+
 	//(void)buf;
 	// ft_putstr(input[0]);
 	// write(1, "0", 1);
