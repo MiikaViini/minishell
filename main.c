@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/31 19:07:23 by mviinika          #+#    #+#             */
-/*   Updated: 2022/09/21 15:20:27 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/09/21 20:27:44 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,51 +96,49 @@ char	*word(char *input, int i, int *total)
 	d_quote = 0;
 	closed = 0;
 	word = ft_strnew(200);
-	while (ft_isspace(input[i]))
+	while (ft_isspace(input[i]) && (*total)++)
 		i++;
-//	ft_printf("word [%s]\n", &input[i]);
-	while (input[i] && !closed)
+	while (input[i])
 	{
 		if (is_quote(input[i]))
 		{
-		//	ft_printf("%c\n", input[i]);
-		//	ft_printf("d %d\n", d_quote);
-			//ft_printf("s %d\n", s_quote);
 			while (is_double_quote(input[i]) && s_quote == 0)
 			{
 				d_quote += 1;
 				i++;
+				*total += 1;
 			}
-		//ft_printf("%d\n", d_quote);
-			//ft_printf("%d\n", s_quote);
 			while (is_single_quote(input[i]) && !d_quote)
 			{
 				s_quote += 1;
 				i++;
+				*total += 1;
 			}
-			if (s_quote == 2 || d_quote == 2)
+			if (s_quote >= 2 || d_quote >= 2)
 				closed = 1;
 		}
-		if (ft_isspace(input[i]) && s_quote + d_quote == 0)
+		if ((ft_isspace(input[i]) && s_quote + d_quote == 0)
+			|| (ft_isspace(input[i]) && closed))
 		{
-			//(*total)--;
-			//ft_printf("%d\n", s_quote + d_quote);
+			*total += 1;
 			break ;
 		}
-		if (input[i] && !closed && (*total)++)
+		if ((input[i] && closed == 0) || (!ft_isspace(input[i + 1]) && closed))
+		{
 			word[k++] = input[i++];
+			*total += 1;
+		}
 	}
-	//ft_printf("word [%s]\n", word);
 	return (word);
 }
 
 char	**parse_input(char *input)
 {
-	int		i;
-	int		k;
-	static int  total;
-	char	*trimmed_inp;
-	char	**parsed;
+	int			i;
+	int			k;
+	static int	total;
+	char		*trimmed_inp;
+	char		**parsed;
 
 	i = 0;
 	k = 0;
@@ -151,9 +149,7 @@ char	**parse_input(char *input)
 	while (trimmed_inp[i])
 	{
 		parsed[k++] = word(trimmed_inp, i, &total);
-		i += total; //ft_strlen(parsed[k++]) + 1;
-		if(k)
-			total -= 1;
+		i = total;
 	}
 	parsed[k] = NULL;
 	ft_strdel(&trimmed_inp);
@@ -167,7 +163,7 @@ void free_parsed_input(char **p_input)
 	i = -1;
 	if (!p_input || !p_input[0])
 		return ;
-	while(p_input[++i])
+	while (p_input[++i])
 		ft_strdel(&p_input[i]);
 }
 
@@ -176,8 +172,6 @@ int	get_input(void)
 	int		rb;
 	char	buf[4096];
 	char	**parsed_input;
-	//char	*temp;
-	//int 	i = 0;
 
 	rb = 1;
 	ft_memset(buf, '\0', 4096);
@@ -194,15 +188,6 @@ int	get_input(void)
 			parsed_input = parse_input(buf);
 			rb = check_builtin(parsed_input, rb, buf);
 		}
-		// if (rb != 0 && !ft_isspace(buf[0]))
-		//parsed_input = ft_strsplitws(temp)
-
-
-		// while (parsed_input && parsed_input[i])
-		// {
-		// 	ft_putstr(parsed_input[i++]);
-		// 	write(1, "\n", 1);
-		// }
 		ft_memset(buf, '\0', 4096);
 		free_parsed_input(parsed_input);
 		if (parsed_input)
@@ -220,10 +205,6 @@ int	check_builtin(char **input, int rb, char *buf)
 	ret = 0;
 	if (ft_isspace(buf[0]))
 		return (1);
-
-	//(void)buf;
-	// ft_putstr(input[0]);
-	// write(1, "0", 1);
 	if (rb == 0 || !ft_strcmp(input[0], "exit"))
 	{
 		ft_putstr("exit\n");
@@ -236,7 +217,7 @@ int	check_builtin(char **input, int rb, char *buf)
 		else
 		{
 			while (input[i])
-				ft_putstr(input[i++]);
+				ft_printf("%s ", input[i++]);
 			write(1, "\n", 2);
 		}
 	}
@@ -302,7 +283,7 @@ int	main(int argc, char **argv, char **environ)
 	rb = 1;
 	env = NULL;
 	env = get_env(env, environ, argc, argv);
-	system("clear");
+	//ft_putstr("\033[2J");
 	//signal(SIGINT, sgn_handler(1));
 	while (rb != 0)
 	{
