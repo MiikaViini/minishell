@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/31 19:07:23 by mviinika          #+#    #+#             */
-/*   Updated: 2022/09/21 20:27:44 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/09/22 11:22:26 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,7 +167,7 @@ void free_parsed_input(char **p_input)
 		ft_strdel(&p_input[i]);
 }
 
-int	get_input(void)
+int	get_input(char **env)
 {
 	int		rb;
 	char	buf[4096];
@@ -186,7 +186,7 @@ int	get_input(void)
 		else
 		{
 			parsed_input = parse_input(buf);
-			rb = check_builtin(parsed_input, rb, buf);
+			rb = check_builtin(parsed_input, rb, buf, env);
 		}
 		ft_memset(buf, '\0', 4096);
 		free_parsed_input(parsed_input);
@@ -196,15 +196,17 @@ int	get_input(void)
 	return (rb);
 }
 
-int	check_builtin(char **input, int rb, char *buf)
+int	check_builtin(char **input, int rb, char *buf, char **env)
 {
 	int	i;
+	int k;
 	int	ret;
 
 	i = 1;
 	ret = 0;
+	k = 0;
 	if (ft_isspace(buf[0]))
-		return (1);
+		return (-1);
 	if (rb == 0 || !ft_strcmp(input[0], "exit"))
 	{
 		ft_putstr("exit\n");
@@ -214,6 +216,20 @@ int	check_builtin(char **input, int rb, char *buf)
 	{
 		if (!input[i])
 			write(1, "\n", 2);
+		else if(input[i][0] == '$' && input[i][1])
+		{
+			while(env[k])
+			{
+				if (ft_strncmp(env[k], &input[i][1], (int)ft_strlen(&input[i][1])) == 0)
+					ft_printf("%s \n", env[k] + (ft_strlen(&input[i][1])+ 1));
+				if (input[i] && !env[k])
+				{
+					k = 0;
+					i++;
+				}
+				k++;
+			}
+		}
 		else
 		{
 			while (input[i])
@@ -228,7 +244,10 @@ int	check_builtin(char **input, int rb, char *buf)
 	else if (!ft_strcmp(input[0], "unsetenv"))
 		ft_putstr("unsetting environment\n");
 	else if (!ft_strcmp(input[0], "env"))
-		ft_putstr("printing environment\n");
+	{
+		while(env[k])
+			ft_putendl(env[k++]);
+	}
 	else
 		ft_printf("mish-1.0: %s: command not found\n", input[0]);
 	return (1);
@@ -249,10 +268,10 @@ void	free_env(char **env)
 	int	i;
 
 	i = 0;
+	if(!env || !env[0])
+		return ;
 	while (env && env[i])
-	{
 		free(env[i++]);
-	}
 	free(env);
 }
 
@@ -262,13 +281,10 @@ char	**get_env(char **dest, char **environ, int argc, char **argv)
 
 	(void)argc;
 	(void)argv;
-	i = 0;
+	i = -1;
 	dest = (char **)malloc(sizeof(char *) * ft_linecount(environ) + 1);
-	while (environ[i])
-	{
+	while (environ[++i])
 		dest[i] = ft_strdup(environ[i]);
-		i++;
-	}
 	dest[i] = NULL;
 	return (dest);
 }
@@ -288,7 +304,7 @@ int	main(int argc, char **argv, char **environ)
 	while (rb != 0)
 	{
 		ft_putstr("mish-1.0$ ");
-		rb = get_input();
+		rb = get_input(env);
 	}
 	free_env(env);
 	return (0);
