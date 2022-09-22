@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/31 19:07:23 by mviinika          #+#    #+#             */
-/*   Updated: 2022/09/22 11:22:26 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/09/22 14:46:43 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -201,7 +201,9 @@ int	check_builtin(char **input, int rb, char *buf, char **env)
 	int	i;
 	int k;
 	int	ret;
+	int len;
 
+	len = 0;
 	i = 1;
 	ret = 0;
 	k = 0;
@@ -215,25 +217,26 @@ int	check_builtin(char **input, int rb, char *buf, char **env)
 	else if (!ft_strcmp(input[0], "echo"))
 	{
 		if (!input[i])
-			write(1, "\n", 2);
-		else if(input[i][0] == '$' && input[i][1])
-		{
-			while(env[k])
-			{
-				if (ft_strncmp(env[k], &input[i][1], (int)ft_strlen(&input[i][1])) == 0)
-					ft_printf("%s \n", env[k] + (ft_strlen(&input[i][1])+ 1));
-				if (input[i] && !env[k])
-				{
-					k = 0;
-					i++;
-				}
-				k++;
-			}
-		}
+			write(1, "\n", 2);	
 		else
 		{
 			while (input[i])
-				ft_printf("%s ", input[i++]);
+			{
+				if (input[i][0] == '$' && input[i][1])
+				{
+					while(env[k])
+					{
+						len = (int)ft_strlen(&input[i][1]);
+						if (ft_strncmp(env[k], &input[i][1], len) == 0 && env[k][len] == '=')
+							ft_printf("%s ", env[k] + (len + 1));
+						k++;
+					}
+					k = 0;
+				}
+				else
+					ft_printf("%s ", input[i]);
+				i++;
+			}
 			write(1, "\n", 2);
 		}
 	}
