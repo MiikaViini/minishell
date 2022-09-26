@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/31 19:07:23 by mviinika          #+#    #+#             */
-/*   Updated: 2022/09/26 12:01:40 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/09/26 16:04:22 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,21 +118,16 @@ char	*replace_expansion(char *word, char **env, char *input)
 	int		i;
 	int		k;
 	char 	*expanded;
+	int		len;
 
 	expanded = NULL;
 	i = 0;
 	k = -1;
 	(void)input;
-	if (word[0] == '~')
+	len = 0;
+	// TILDE HANDLING //////////////***************************************************************
+	if (word[0] == '~' && word[1] != '$')
 	{
-		// if (ft_isprint(word[1]))
-		// {
-		// 	if (check_user(&word[1]))
-		// 		return (word);
-		// }
-		// else
-		// {
-			
 		if (word[1] == '/' || word[1] == '\0')
 		{
 			while (env[++k])
@@ -146,29 +141,28 @@ char	*replace_expansion(char *word, char **env, char *input)
 				k++;
 			}
 		}
-		else if (word[1] == '+')
+		else if (word[1] == '-')
 		{
-			// ft_printf("%s\n", &word[1]);
-			// exit(1);
 			while (env[++k])
 			{
 				if (ft_strncmp(env[k], "OLDPWD=", 7) == 0)
 				{
 					expanded = ft_strdup(env[k] + 7);
-					//expanded = ft_strjoin(expanded, &word[1]);
+					expanded = ft_strjoin(expanded, &word[2]);
 					break ;
 				}
 				k++;
 			}
+			return (word);
 		}
-		else if (word[1] == '-')
+		else if (word[1] == '+')
 		{
 			while (env[++k])
 			{
 				if (ft_strncmp(env[k], "PWD=", 4) == 0)
 				{
 					expanded = ft_strdup(env[k] + 4);
-					//expanded = ft_strjoin(expanded, &word[1]);
+					expanded = ft_strjoin(expanded, &word[2]);
 					break ;
 				}
 				k++;
@@ -176,9 +170,33 @@ char	*replace_expansion(char *word, char **env, char *input)
 		}
 		else
 			return (word);
-		//}
 	}
-	free(word);
+	// TILDE HANDLING ENDS//////////////***************************************************************
+	else
+	{
+		i = 2;
+		ft_printf("%s\n",&word[i]);
+		while(word[i] && !ft_isspace(word[i]))
+		{
+			len++;
+			i++;
+		}
+		while (env[++k])
+		{
+			if (ft_strncmp(env[k], &word[i], len) == 0)
+			{
+				expanded = ft_strdup(env[k] + len + 1);
+				ft_printf("%s\n",expanded);
+				// exit(1);
+			//	expanded = ft_strjoin(expanded, &word[2]);
+				break ;
+			}
+			// else
+			// 	return (word);
+		}
+		expanded = ft_strnew(1);
+	}
+	//free(word);
 	return (expanded);
 }
 char	*word(char *input, int i, int *total, char **env)
@@ -226,9 +244,17 @@ char	*word(char *input, int i, int *total, char **env)
 			word[k++] = input[i++];
 			*total += 1;
 		}
+		if ((input[i] == '~' && input[i + 1] == '$') || input[i] == '$')
+		{
+			i--;
+			ft_strcat(word, replace_expansion(&input[i], env, &input[i]));
+			total += ft_strlen(word);
+			//ft_printf("word %s\n", word);
+			return (word);
+		}
 	}
-	if ((word[0] == '$' && !closed) || (word[0] == '~' && !closed))	
-		word = replace_expansion(word, env, &input[i]);
+	// if (word[0] == '~' && !closed)
+	// 	word = replace_expansion(word, env, &input[i]);
 	return (word);
 }
 
@@ -353,14 +379,24 @@ void	free_env(char **env)
 char	**get_env(char **dest, char **environ, int argc, char **argv)
 {
 	int		i;
+	int		k;
 
 	(void)argc;
 	(void)argv;
-	i = -1;
+	i = 0;
+	k = -1;
 	dest = (char **)malloc(sizeof(char *) * ft_linecount(environ) + 1);
-	while (environ[++i])
-		dest[i] = ft_strdup(environ[i]);
+	while (environ[++k])
+	{
+		if (ft_strncmp(environ[k], "OLDPWD=", 7) == 0)
+			k++;
+		dest[i++] = ft_strdup(environ[k]);
+	}
 	dest[i] = NULL;
+	i = -1;
+	while (dest[++i])
+		if (ft_strncmp(dest[i], "SHLVL=", 6) == 0)
+			dest[i][6] += 1;
 	return (dest);
 }
 
