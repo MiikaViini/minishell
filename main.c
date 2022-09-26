@@ -6,19 +6,21 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/31 19:07:23 by mviinika          #+#    #+#             */
-/*   Updated: 2022/09/26 16:04:22 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/09/26 22:38:31 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "include/minishell.h"
 
-// void	sgn_handler(int num)
-// {
-// 	(void)num;
-// 	if (num == SIGINT)
-// 		ft_putendl("\n$> ");
-// 	signal(SIGINT, sgn_handler);
-// }
+void	sgn_handler(int num)
+{
+	//(void)num;
+	if (num == SIGINT)
+	{
+		ft_putstr("\nmish-1.0$ ");
+		signal(SIGINT, sgn_handler);
+	}
+}
 
 int	is_single_quote(char c)
 {
@@ -138,7 +140,6 @@ char	*replace_expansion(char *word, char **env, char *input)
 					expanded = ft_strjoin(expanded, &word[1]);
 					break ;
 				}
-				k++;
 			}
 		}
 		else if (word[1] == '-')
@@ -174,22 +175,22 @@ char	*replace_expansion(char *word, char **env, char *input)
 	// TILDE HANDLING ENDS//////////////***************************************************************
 	else
 	{
-		i = 2;
-		ft_printf("%s\n",&word[i]);
+		i = 1;
+		ft_printf("[%s]\n",&word[i]);
 		while(word[i] && !ft_isspace(word[i]))
 		{
 			len++;
 			i++;
 		}
+		i = 1;
 		while (env[++k])
 		{
 			if (ft_strncmp(env[k], &word[i], len) == 0)
 			{
 				expanded = ft_strdup(env[k] + len + 1);
-				ft_printf("%s\n",expanded);
-				// exit(1);
+				//ft_printf("%s\n",expanded);
 			//	expanded = ft_strjoin(expanded, &word[2]);
-				break ;
+				return (expanded);
 			}
 			// else
 			// 	return (word);
@@ -239,22 +240,25 @@ char	*word(char *input, int i, int *total, char **env)
 			*total += 1;
 			break ;
 		}
+		//ft_printf("word [%c]\n", input[i]);
+		if ((input[i] == '~' && input[i + 1] == '$') || input[i] == '$')
+		{
+			//i--;
+			//ft_printf("input [%s]\n", &input[i]);
+			ft_strcat(word, replace_expansion(&input[i], env, &input[i]));
+			*total += ft_strlen(word);
+			//ft_printf("word [%s]\n", word);
+			//exit(1);
+			return (word);
+		}
 		if ((input[i] && closed == 0) || (!ft_isspace(input[i + 1]) && closed))
 		{
 			word[k++] = input[i++];
 			*total += 1;
 		}
-		if ((input[i] == '~' && input[i + 1] == '$') || input[i] == '$')
-		{
-			i--;
-			ft_strcat(word, replace_expansion(&input[i], env, &input[i]));
-			total += ft_strlen(word);
-			//ft_printf("word %s\n", word);
-			return (word);
-		}
 	}
-	// if (word[0] == '~' && !closed)
-	// 	word = replace_expansion(word, env, &input[i]);
+	if (word[0] == '~' && !closed && word[1] != '$')
+		word = replace_expansion(word, env, &input[i]);
 	return (word);
 }
 
@@ -304,6 +308,7 @@ int	get_input(char **env)
 	parsed_input = NULL;
 	if (rb != 0)
 	{
+		signal(SIGINT, sgn_handler);
 		rb = read(0, &buf, 4096);
 		if (rb == -1)
 			exit(1);
@@ -410,8 +415,7 @@ int	main(int argc, char **argv, char **environ)
 	rb = 1;
 	env = NULL;
 	env = get_env(env, environ, argc, argv);
-	//ft_putstr("\033[2J");
-	//signal(SIGINT, sgn_handler(1));
+	ft_putstr("\033[2J");
 	while (rb != 0)
 	{
 		ft_putstr("mish-1.0$ ");
