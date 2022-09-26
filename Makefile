@@ -6,13 +6,13 @@
 #    By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/07/09 19:07:08 by mviinika          #+#    #+#              #
-#    Updated: 2022/09/09 10:26:22 by mviinika         ###   ########.fr        #
+#    Updated: 2022/09/23 10:54:20 by mviinika         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 
-SRC_FILES = main.c
+SRC_FILES = main.c echo.c
 
 OBJS = $(SRC_FILES:.c=.o)
 

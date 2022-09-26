@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/31 19:07:23 by mviinika          #+#    #+#             */
-/*   Updated: 2022/09/22 14:46:43 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/09/26 12:01:40 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,105 @@ char *ft_sep(char *str, const char delim)
 /* Split string to words, whitespace, singlequote and doublequote
 ** works as separator
 */
-char	*word(char *input, int i, int *total)
+// char *check_user(char *word)
+// {
+// 	DIR				*dir_s;
+// 	struct dirent	*entity;
+// 	struct stat		buf;
+// 	char			user_home[200];
+
+// 	ft_memset(user_home, '\0', 200);
+// 	ft_strcat(user_home, "/Users/")
+// 	dir_s = opendir(user_home);
+// 	if (!dir_s)
+// 	{
+// 		exit(1);
+// 	}
+// 	entity = readdir(dir_s);
+// 	while (entity)
+// 	{
+// 		if (ft_strncmp(entity->d_name, word, ft_strlen(word)) == 0)
+// 		{
+// 			//free(word);
+// 			ft_strcat(user_home, entity->d_name);
+// 			lstat(user_home, &buf);
+// 			ft_printf("%s\n", word);
+// 			break ;
+// 		}
+// 		entity = readdir(dir_s);
+// 	}
+// 	return (word);
+// }
+
+char	*replace_expansion(char *word, char **env, char *input)
+{
+	int		i;
+	int		k;
+	char 	*expanded;
+
+	expanded = NULL;
+	i = 0;
+	k = -1;
+	(void)input;
+	if (word[0] == '~')
+	{
+		// if (ft_isprint(word[1]))
+		// {
+		// 	if (check_user(&word[1]))
+		// 		return (word);
+		// }
+		// else
+		// {
+			
+		if (word[1] == '/' || word[1] == '\0')
+		{
+			while (env[++k])
+			{
+				if (ft_strncmp(env[k], "HOME=", 5) == 0)
+				{
+					expanded = ft_strdup(env[k] + 5);
+					expanded = ft_strjoin(expanded, &word[1]);
+					break ;
+				}
+				k++;
+			}
+		}
+		else if (word[1] == '+')
+		{
+			// ft_printf("%s\n", &word[1]);
+			// exit(1);
+			while (env[++k])
+			{
+				if (ft_strncmp(env[k], "OLDPWD=", 7) == 0)
+				{
+					expanded = ft_strdup(env[k] + 7);
+					//expanded = ft_strjoin(expanded, &word[1]);
+					break ;
+				}
+				k++;
+			}
+		}
+		else if (word[1] == '-')
+		{
+			while (env[++k])
+			{
+				if (ft_strncmp(env[k], "PWD=", 4) == 0)
+				{
+					expanded = ft_strdup(env[k] + 4);
+					//expanded = ft_strjoin(expanded, &word[1]);
+					break ;
+				}
+				k++;
+			}
+		}
+		else
+			return (word);
+		//}
+	}
+	free(word);
+	return (expanded);
+}
+char	*word(char *input, int i, int *total, char **env)
 {
 	int		k;
 	char	*word;
@@ -129,10 +227,12 @@ char	*word(char *input, int i, int *total)
 			*total += 1;
 		}
 	}
+	if ((word[0] == '$' && !closed) || (word[0] == '~' && !closed))	
+		word = replace_expansion(word, env, &input[i]);
 	return (word);
 }
 
-char	**parse_input(char *input)
+char	**parse_input(char *input, char **env)
 {
 	int			i;
 	int			k;
@@ -148,7 +248,7 @@ char	**parse_input(char *input)
 	k = 0;
 	while (trimmed_inp[i])
 	{
-		parsed[k++] = word(trimmed_inp, i, &total);
+		parsed[k++] = word(trimmed_inp, i, &total, env);
 		i = total;
 	}
 	parsed[k] = NULL;
@@ -185,7 +285,7 @@ int	get_input(char **env)
 			ft_putstr("invalid quoting, try again\n");
 		else
 		{
-			parsed_input = parse_input(buf);
+			parsed_input = parse_input(buf, env);
 			rb = check_builtin(parsed_input, rb, buf, env);
 		}
 		ft_memset(buf, '\0', 4096);
@@ -198,13 +298,9 @@ int	get_input(char **env)
 
 int	check_builtin(char **input, int rb, char *buf, char **env)
 {
-	int	i;
 	int k;
 	int	ret;
-	int len;
 
-	len = 0;
-	i = 1;
 	ret = 0;
 	k = 0;
 	if (ft_isspace(buf[0]))
@@ -215,31 +311,7 @@ int	check_builtin(char **input, int rb, char *buf, char **env)
 		return (EXIT_SUCCESS);
 	}
 	else if (!ft_strcmp(input[0], "echo"))
-	{
-		if (!input[i])
-			write(1, "\n", 2);	
-		else
-		{
-			while (input[i])
-			{
-				if (input[i][0] == '$' && input[i][1])
-				{
-					while(env[k])
-					{
-						len = (int)ft_strlen(&input[i][1]);
-						if (ft_strncmp(env[k], &input[i][1], len) == 0 && env[k][len] == '=')
-							ft_printf("%s ", env[k] + (len + 1));
-						k++;
-					}
-					k = 0;
-				}
-				else
-					ft_printf("%s ", input[i]);
-				i++;
-			}
-			write(1, "\n", 2);
-		}
-	}
+		do_echo(input, env);
 	else if (!ft_strcmp(input[0], "cd"))
 		ft_putstr("entering directory\n");
 	else if (!ft_strcmp(input[0], "setenv"))

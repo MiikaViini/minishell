@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/06 08:59:36 by mviinika          #+#    #+#             */
-/*   Updated: 2022/09/22 10:17:31 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/09/26 11:15:52 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@
 # include <signal.h>
 # include <stdlib.h>
 # include "../libft/libft.h"
+# include <dirent.h>
+# include <pwd.h>
 
 // typedef struct s_env
 // {
@@ -27,4 +29,5 @@
 // }			t_env;
 
 int	check_builtin(char **input, int rb, char *buf, char **env);
+int	do_echo(char **input, char **env);
 #endif
