@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/06 08:59:36 by mviinika          #+#    #+#             */
-/*   Updated: 2022/09/26 11:15:52 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/09/27 09:22:35 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,4 +30,21 @@
 
 int	check_builtin(char **input, int rb, char *buf, char **env);
 int	do_echo(char **input, char **env);
+/*
+**QUOTES
+*/
+int	is_single_quote(char c);
+int	is_double_quote(char c);
+int	is_quote(char c);
+int	check_quotes(char *input);
+
+/*
+**EXPANSIONS
+*/
+char	*replace_expansion(char *word, char **env, char *input);
+
+/*
+**PARSING
+*/
+char	**parse_input(char *input, char **env);
 #endif

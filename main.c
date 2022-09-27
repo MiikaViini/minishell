@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/31 19:07:23 by mviinika          #+#    #+#             */
-/*   Updated: 2022/09/26 22:38:31 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/09/27 10:37:56 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,44 +22,7 @@ void	sgn_handler(int num)
 	}
 }
 
-int	is_single_quote(char c)
-{
-	return (c == '\'');
-}
 
-int	is_double_quote(char c)
-{
-	return (c == '"');
-}
-
-int is_quote(char c)
-{
-	return (c == '\'' || c == '"');
-}
-
-int	check_quotes(char *input)
-{
-	int		i;
-	int		s_quote;
-	int		d_quote;
-
-	i = 0;
-	s_quote = 0;
-	d_quote = 0;
-	while (input[i])
-	{
-		if (input[i] == '\'' && !s_quote && !d_quote)
-			s_quote = 1;
-		else if (input[i] == '\'')
-			s_quote = 0;
-		else if (input[i] == '\"' && !d_quote && !s_quote)
-			d_quote = 1;
-		else if (input[i] == '\"')
-			d_quote = 0;
-		i++;
-	}
-	return (s_quote + d_quote);
-}
 char *ft_sep(char *str, const char delim)
 {
 	int		i;
@@ -115,178 +78,7 @@ char *ft_sep(char *str, const char delim)
 // 	return (word);
 // }
 
-char	*replace_expansion(char *word, char **env, char *input)
-{
-	int		i;
-	int		k;
-	char 	*expanded;
-	int		len;
-
-	expanded = NULL;
-	i = 0;
-	k = -1;
-	(void)input;
-	len = 0;
-	// TILDE HANDLING //////////////***************************************************************
-	if (word[0] == '~' && word[1] != '$')
-	{
-		if (word[1] == '/' || word[1] == '\0')
-		{
-			while (env[++k])
-			{
-				if (ft_strncmp(env[k], "HOME=", 5) == 0)
-				{
-					expanded = ft_strdup(env[k] + 5);
-					expanded = ft_strjoin(expanded, &word[1]);
-					break ;
-				}
-			}
-		}
-		else if (word[1] == '-')
-		{
-			while (env[++k])
-			{
-				if (ft_strncmp(env[k], "OLDPWD=", 7) == 0)
-				{
-					expanded = ft_strdup(env[k] + 7);
-					expanded = ft_strjoin(expanded, &word[2]);
-					break ;
-				}
-				k++;
-			}
-			return (word);
-		}
-		else if (word[1] == '+')
-		{
-			while (env[++k])
-			{
-				if (ft_strncmp(env[k], "PWD=", 4) == 0)
-				{
-					expanded = ft_strdup(env[k] + 4);
-					expanded = ft_strjoin(expanded, &word[2]);
-					break ;
-				}
-				k++;
-			}
-		}
-		else
-			return (word);
-	}
-	// TILDE HANDLING ENDS//////////////***************************************************************
-	else
-	{
-		i = 1;
-		ft_printf("[%s]\n",&word[i]);
-		while(word[i] && !ft_isspace(word[i]))
-		{
-			len++;
-			i++;
-		}
-		i = 1;
-		while (env[++k])
-		{
-			if (ft_strncmp(env[k], &word[i], len) == 0)
-			{
-				expanded = ft_strdup(env[k] + len + 1);
-				//ft_printf("%s\n",expanded);
-			//	expanded = ft_strjoin(expanded, &word[2]);
-				return (expanded);
-			}
-			// else
-			// 	return (word);
-		}
-		expanded = ft_strnew(1);
-	}
-	//free(word);
-	return (expanded);
-}
-char	*word(char *input, int i, int *total, char **env)
-{
-	int		k;
-	char	*word;
-	int		d_quote;
-	int		s_quote;
-	int		closed;
-
-	s_quote = 0;
-	k = 0;
-	d_quote = 0;
-	closed = 0;
-	word = ft_strnew(200);
-	while (ft_isspace(input[i]) && (*total)++)
-		i++;
-	while (input[i])
-	{
-		if (is_quote(input[i]))
-		{
-			while (is_double_quote(input[i]) && s_quote == 0)
-			{
-				d_quote += 1;
-				i++;
-				*total += 1;
-			}
-			while (is_single_quote(input[i]) && !d_quote)
-			{
-				s_quote += 1;
-				i++;
-				*total += 1;
-			}
-			if (s_quote >= 2 || d_quote >= 2)
-				closed = 1;
-		}
-		if ((ft_isspace(input[i]) && s_quote + d_quote == 0)
-			|| (ft_isspace(input[i]) && closed))
-		{
-			*total += 1;
-			break ;
-		}
-		//ft_printf("word [%c]\n", input[i]);
-		if ((input[i] == '~' && input[i + 1] == '$') || input[i] == '$')
-		{
-			//i--;
-			//ft_printf("input [%s]\n", &input[i]);
-			ft_strcat(word, replace_expansion(&input[i], env, &input[i]));
-			*total += ft_strlen(word);
-			//ft_printf("word [%s]\n", word);
-			//exit(1);
-			return (word);
-		}
-		if ((input[i] && closed == 0) || (!ft_isspace(input[i + 1]) && closed))
-		{
-			word[k++] = input[i++];
-			*total += 1;
-		}
-	}
-	if (word[0] == '~' && !closed && word[1] != '$')
-		word = replace_expansion(word, env, &input[i]);
-	return (word);
-}
-
-char	**parse_input(char *input, char **env)
-{
-	int			i;
-	int			k;
-	static int	total;
-	char		*trimmed_inp;
-	char		**parsed;
-
-	i = 0;
-	k = 0;
-	total = 0;
-	parsed = (char **)malloc(sizeof(char *) * 100);
-	trimmed_inp = ft_strtrim(input);
-	k = 0;
-	while (trimmed_inp[i])
-	{
-		parsed[k++] = word(trimmed_inp, i, &total, env);
-		i = total;
-	}
-	parsed[k] = NULL;
-	ft_strdel(&trimmed_inp);
-	return (parsed);
-}
-
-void free_parsed_input(char **p_input)
+void	free_parsed_input(char **p_input)
 {
 	int i;
 
@@ -297,7 +89,7 @@ void free_parsed_input(char **p_input)
 		ft_strdel(&p_input[i]);
 }
 
-int	get_input(char **env)
+int	minishell(char **env)
 {
 	int		rb;
 	char	buf[4096];
@@ -419,7 +211,7 @@ int	main(int argc, char **argv, char **environ)
 	while (rb != 0)
 	{
 		ft_putstr("mish-1.0$ ");
-		rb = get_input(env);
+		rb = minishell(env);
 	}
 	free_env(env);
 	return (0);

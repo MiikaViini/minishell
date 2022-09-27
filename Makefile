@@ -6,13 +6,13 @@
 #    By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/07/09 19:07:08 by mviinika          #+#    #+#              #
-#    Updated: 2022/09/23 10:54:20 by mviinika         ###   ########.fr        #
+#    Updated: 2022/09/27 10:02:30 by mviinika         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 
-SRC_FILES = main.c echo.c
+SRC_FILES = main.c echo.c check_quotes.c expansions.c parsing.c quotecheck_utils.c
 
 OBJS = $(SRC_FILES:.c=.o)
 
@@ -32,7 +32,7 @@ RESET = \x1b[32;00m
 
 all: $(NAME)
 
-$(NAME): Makefile $(OBJS) $(INC)
+$(NAME): $(OBJS)
 	@make -C $(LIBFT_DIR)
 	@gcc -c $(FLAGS) $(SRC_FILES) -I $(INC)
 	@gcc $(OBJS) -o $(NAME) $(LIBFT)

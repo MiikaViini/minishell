@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/09 15:00:43 by mviinika          #+#    #+#             */
-/*   Updated: 2022/09/26 15:49:54 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/09/27 10:53:24 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,24 +21,25 @@ int do_echo(char **input, char **env)
 	i = 1;
 	k = 0;
 	len = 0;
+	(void)env;
 	if (!input[i])
-		write(1, "\n", 2);	
+		write(1, "\n", 2);
 	else
 	{
 		while (input[i])
 		{
-			if (input[i][0] == '$' && input[i][1])
-			{
-				while (env[k])
-				{
-					len = (int)ft_strlen(&input[i][1]);
-					if (ft_strncmp(env[k], &input[i][1], len) == 0 && env[k][len] == '=')
-						ft_printf("%s ", env[k] + (len + 1));
-					k++;
-				}
-				k = 0;
-			}
-			else
+			// if (input[i][0] == '$' && input[i][1])
+			// {
+			// 	while (env[k])
+			// 	{
+			// 		len = (int)ft_strlen(&input[i][1]);
+			// 		if (ft_strncmp(env[k], &input[i][1], len) == 0 && env[k][len] == '=')
+			// 			ft_printf("%s ", env[k] + (len + 1));
+			// 		k++;
+			// 	}
+			// 	k = 0;
+			// }
+			// else
 				ft_printf("%s ", input[i]);
 			i++;
 		}
