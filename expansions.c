@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/27 09:15:09 by mviinika          #+#    #+#             */
-/*   Updated: 2022/09/27 11:26:54 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/09/27 13:16:34 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,16 @@ char	*replace_expansion(char *word, char **env, char *input)
 	int		len;
 
 	expanded = NULL;
-	i = 0;
+	i = 1;
 	k = -1;
 	(void)input;
-	len = 0;
+	len = 1;
+	if (word[0] == '~' && word[1] == '$' && len++)
+		i++;
 	// TILDE HANDLING //////////////***************************************************************
 	if (word[0] == '~' && word[1] != '$')
 	{
+		
 		if (word[1] == '/' || word[1] == '\0')
 		{
 			while (env[++k])
@@ -72,22 +75,17 @@ char	*replace_expansion(char *word, char **env, char *input)
 	// TILDE HANDLING ENDS//////////////***************************************************************
 	else
 	{
-		
-		i = 1;
-		//ft_printf("[%s]\n", &word[i]);
-		while(word[i] && !ft_isspace(word[i]) && !is_quote(word[i]))
-		{
+		ft_printf("[%s]\n", &word[len]);
+		while(word[len + i] && !ft_isspace(word[len + i]) && !is_quote(word[len + i]))
 			len++;
-			i++;
-		}
-		i = 1;
+		ft_printf("%d\n",len);
 		while (env[++k])
 		{
 			if (ft_strncmp(env[k], &word[i], len) == 0 && env[k][len] == '=')
 			{
 				expanded = ft_strdup(env[k] + len + 1);
-				//ft_printf("%s\n",expanded);
-				expanded = ft_strjoin(expanded, &word[len + 1]);
+				ft_printf("%s\n",expanded);
+				expanded = ft_strjoin(expanded, &word[len]);
 				return (expanded);
 			}
 		}

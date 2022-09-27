@@ -6,11 +6,39 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/27 09:14:23 by mviinika          #+#    #+#             */
-/*   Updated: 2022/09/27 11:21:41 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/09/27 13:46:20 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "include/minishell.h"
+
+static int	is_expansion(char *str)
+{
+	int ret;
+	int	i;
+
+	i = 0;
+	ret = 0;
+	if (str[i] == '$' && str[i + 1])
+		ret = 1;
+	else if (str[i] == '~')
+		ret = 1;
+	return (ret);
+}
+
+static char *handle_expansions(char *input, char **env, int *total, int *i)
+{
+	char	word[200];
+	char	*temp;
+
+	ft_memset(word, '\0', 200);
+	ft_printf("input [%s]\n", input);
+	ft_strcat(word, replace_expansion(input, env, input));
+	*total += ft_strlen(input);
+	*i += ft_strlen(input);
+	temp = ft_strdup(word);
+	return (temp);
+}
 
 static char	*word(char *input, int i, int *total, char **env)
 {
@@ -52,18 +80,11 @@ static char	*word(char *input, int i, int *total, char **env)
 			*total += 1;
 			break ;
 		}
-		if ((input[i] == '~' && input[i + 1] == '$') || (input[i] == '$' && input[i + 1] != '\0'))
+		if (is_expansion(&input[i])) // (input[i] == '~' && input[i + 1] == '$') || (input[i] == '$' && input[i + 1] != '\0')
 		{
 			//i--;
-			ft_printf("input [%s]\n", &input[i]);
-			ft_strcat(word, replace_expansion(&input[i], env, &input[i]));
-			*total += ft_strlen(&input[i]);
-			ft_printf("tama word [%s]\n", word);
-			if (!s_quote && !d_quote)
-				return (word);
-			ft_printf("tama word [%s]\n", word);
-			i += ft_strlen(word);
-			ft_printf("input [%s]\n", &input[i]);
+			ft_strcat(word, handle_expansions(&input[i], env, total, &i));
+			return (word);
 		}
 		if ((input[i] && closed == 0) || (!ft_isspace(input[i + 1]) && closed))
 		{
@@ -71,8 +92,8 @@ static char	*word(char *input, int i, int *total, char **env)
 			*total += 1;
 		}
 	}
-	if (word[0] == '~' && !closed && word[1] != '$')
-		word = replace_expansion(word, env, &input[i]);
+	// if (word[0] == '~' && !closed && word[1] != '$')
+	// 	word = replace_expansion(word, env, &input[i]);
 	//ft_printf("tama word [%s]\n", word);
 	return (word);
 }
