@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/27 09:14:23 by mviinika          #+#    #+#             */
-/*   Updated: 2022/09/27 13:46:20 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/09/27 15:50:20 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,10 @@ static int	is_expansion(char *str)
 	if (str[i] == '$' && str[i + 1])
 		ret = 1;
 	else if (str[i] == '~')
-		ret = 1;
+	{
+		if (str[i + 1] == '\0' || str[i + 1] == '+' || str[i + 1] == '-') //(str[i - 1] && str[i - 1] != '~')
+			ret = 1;
+	}
 	return (ret);
 }
 
@@ -32,7 +35,7 @@ static char *handle_expansions(char *input, char **env, int *total, int *i)
 	char	*temp;
 
 	ft_memset(word, '\0', 200);
-	ft_printf("input [%s]\n", input);
+	//ft_printf("input [%s]\n", input);
 	ft_strcat(word, replace_expansion(input, env, input));
 	*total += ft_strlen(input);
 	*i += ft_strlen(input);
