@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/27 09:14:23 by mviinika          #+#    #+#             */
-/*   Updated: 2022/09/28 10:05:39 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/09/28 13:28:08 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,8 @@ static char *handle_expansions(char *input, char **env, int *total, int *i)
 	char	*temp;
 
 	ft_memset(word, '\0', 200);
-	//ft_printf("input [%s]\n", input);
 	ft_strcat(word, replace_expansion(input, env, input));
-	*total += ft_strlen(input);
-	*i += ft_strlen(input);
+	*total += ft_strlen(&input[*i]);
 	temp = ft_strdup(word);
 	return (temp);
 }
@@ -102,7 +100,6 @@ static char	*word(char *input, int i, int *total, char **env)
 		word = handle_expansions(word, env, total, &i);
 	// if (word[0] == '~' && !closed && word[1] != '$')
 	// 	word = replace_expansion(word, env, &input[i]);
-	//ft_printf("tama word [%s]\n", word);
 	return (word);
 }
 

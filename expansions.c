@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/27 09:15:09 by mviinika          #+#    #+#             */
-/*   Updated: 2022/09/28 10:36:41 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/09/28 13:22:29 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,6 @@ char	*replace_expansion(char *word, char **env, char *input)
 	// TILDE HANDLING ENDS//////////////***************************************************************
 	else
 	{
-		printf("word [%s]\n", &word[i]);
 		while(word[i])
 		{
 			if (!is_expansion(&word[i]))
@@ -86,22 +85,20 @@ char	*replace_expansion(char *word, char **env, char *input)
 			else
 			{
 				i++;
-				printf("word [%s]\n", &word[i]);
 				while(ft_isalnum(word[len + i]))
 					len++;
-				printf("word [%d]\n", len);
 				while(env[++k])
 				{
 					if (ft_strncmp(env[k], &word[i], len) == 0 && env[k][len] == '=')
 						ft_strcat(expanded, env[k] + len + 1);
 				}
 				i += len;
-				j += ft_strlen(expanded);
+				j = ft_strlen(expanded);
 				len = 0;
 			}
 			k = -1;
 		}
 	}
-	//free(word);
+	//ft_printf("input [%s]\n", expanded);
 	return (expanded);
 }
