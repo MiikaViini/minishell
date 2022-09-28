@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/27 09:14:23 by mviinika          #+#    #+#             */
-/*   Updated: 2022/09/28 14:54:47 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/09/28 21:46:44 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ static char	*word(char *input, int i, int *total, char **env)
 	k = 0;
 	d_quote = 0;
 	closed = 0;
-	word = ft_strnew(200);
+	word = ft_strnew(ft_strlen(input));
 	(void)env;
 	while (ft_isspace(input[i]) && (*total)++)
 		i++;
@@ -97,7 +97,7 @@ static char	*word(char *input, int i, int *total, char **env)
 			*total += 1;
 		}
 	}
-	if (expansion == -100)
+	if (expansion)
 		word = handle_expansions(word, env, total, &i);
 	// if (word[0] == '~' && !closed && word[1] != '$')
 	// 	word = replace_expansion(word, env, &input[i]);
