@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/06 08:59:36 by mviinika          #+#    #+#             */
-/*   Updated: 2022/09/28 09:42:42 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/09/28 14:47:07 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,4 +48,7 @@ char	*replace_expansion(char *word, char **env, char *input);
 **PARSING
 */
 char	**parse_input(char *input, char **env);
+
+
+int	do_unsetenv(char **input, char **env);
 #endif

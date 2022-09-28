@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/31 19:07:23 by mviinika          #+#    #+#             */
-/*   Updated: 2022/09/28 10:06:34 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/09/28 14:47:35 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,7 +140,7 @@ int	check_builtin(char **input, int rb, char *buf, char **env)
 	else if (!ft_strcmp(input[0], "setenv"))
 		ft_putstr("setting environment\n");
 	else if (!ft_strcmp(input[0], "unsetenv"))
-		ft_putstr("unsetting environment\n");
+		do_unsetenv(input, env);
 	else if (!ft_strcmp(input[0], "env"))
 	{
 		while(env[k])
