@@ -6,21 +6,21 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/31 19:07:23 by mviinika          #+#    #+#             */
-/*   Updated: 2022/09/27 10:37:56 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/09/28 10:06:34 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "include/minishell.h"
 
-void	sgn_handler(int num)
-{
-	//(void)num;
-	if (num == SIGINT)
-	{
-		ft_putstr("\nmish-1.0$ ");
-		signal(SIGINT, sgn_handler);
-	}
-}
+// void	sgn_handler(int num)
+// {
+// 	//(void)num;
+// 	if (num == SIGINT)
+// 	{
+// 		ft_putstr("\nmish-1.0$ ");
+// 		signal(SIGINT, sgn_handler);
+// 	}
+// }
 
 
 char *ft_sep(char *str, const char delim)
@@ -100,7 +100,7 @@ int	minishell(char **env)
 	parsed_input = NULL;
 	if (rb != 0)
 	{
-		signal(SIGINT, sgn_handler);
+		//signal(SIGINT, sgn_handler);
 		rb = read(0, &buf, 4096);
 		if (rb == -1)
 			exit(1);

@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/27 09:15:09 by mviinika          #+#    #+#             */
-/*   Updated: 2022/09/27 15:16:37 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/09/28 10:36:41 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,15 @@ char	*replace_expansion(char *word, char **env, char *input)
 	char 	*expanded;
 	int		len;
 	char 	*temp;
+	int		j;
 
-	expanded = NULL;
+	expanded = ft_strnew(200);
+	j = 0;
 	temp = NULL;
-	i = 1;
+	i = 0;
 	k = -1;
 	(void)input;
-	len = 1;
+	len = 0;
 	if (word[0] == '~' && word[1] == '$' && len++)
 		i++;
 	// TILDE HANDLING //////////////***************************************************************
@@ -76,21 +78,29 @@ char	*replace_expansion(char *word, char **env, char *input)
 	// TILDE HANDLING ENDS//////////////***************************************************************
 	else
 	{
-		//ft_printf("[%s]\n", &word[len]);
-		while(word[len + i] && !ft_isspace(word[len + i]) && !is_quote(word[len + i]))
-			len++;
-		//ft_printf("%d\n",len);
-		while (env[++k])
+		printf("word [%s]\n", &word[i]);
+		while(word[i])
 		{
-			if (ft_strncmp(env[k], &word[i], len) == 0 && env[k][len] == '=')
+			if (!is_expansion(&word[i]))
+				expanded[j++] = word[i++];
+			else
 			{
-				expanded = ft_strdup(env[k] + len + 1);
-				//ft_printf("%s\n",expanded);
-				//expanded = ft_strjoin(expanded, &word[len + i]);
-				return (expanded);
+				i++;
+				printf("word [%s]\n", &word[i]);
+				while(ft_isalnum(word[len + i]))
+					len++;
+				printf("word [%d]\n", len);
+				while(env[++k])
+				{
+					if (ft_strncmp(env[k], &word[i], len) == 0 && env[k][len] == '=')
+						ft_strcat(expanded, env[k] + len + 1);
+				}
+				i += len;
+				j += ft_strlen(expanded);
+				len = 0;
 			}
+			k = -1;
 		}
-		expanded = ft_strnew(1);
 	}
 	//free(word);
 	return (expanded);

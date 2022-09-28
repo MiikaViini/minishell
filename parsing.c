@@ -6,20 +6,20 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/27 09:14:23 by mviinika          #+#    #+#             */
-/*   Updated: 2022/09/27 15:50:20 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/09/28 10:05:39 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "include/minishell.h"
 
-static int	is_expansion(char *str)
+int	is_expansion(char *str)
 {
 	int ret;
 	int	i;
 
 	i = 0;
 	ret = 0;
-	if (str[i] == '$' && str[i + 1])
+	if (str[i] == '$' && ft_isalnum(str[i + 1]))
 		ret = 1;
 	else if (str[i] == '~')
 	{
@@ -50,7 +50,9 @@ static char	*word(char *input, int i, int *total, char **env)
 	int		d_quote;
 	int		s_quote;
 	int		closed;
+	int		expansion;
 
+	expansion = 0;
 	s_quote = 0;
 	k = 0;
 	d_quote = 0;
@@ -85,9 +87,10 @@ static char	*word(char *input, int i, int *total, char **env)
 		}
 		if (is_expansion(&input[i])) // (input[i] == '~' && input[i + 1] == '$') || (input[i] == '$' && input[i + 1] != '\0')
 		{
+			expansion = 1;
 			//i--;
-			ft_strcat(word, handle_expansions(&input[i], env, total, &i));
-			return (word);
+			// ft_strcat(word, handle_expansions(&input[i], env, total, &i));
+			// return (word);
 		}
 		if ((input[i] && closed == 0) || (!ft_isspace(input[i + 1]) && closed))
 		{
@@ -95,6 +98,8 @@ static char	*word(char *input, int i, int *total, char **env)
 			*total += 1;
 		}
 	}
+	if (expansion != 0)
+		word = handle_expansions(word, env, total, &i);
 	// if (word[0] == '~' && !closed && word[1] != '$')
 	// 	word = replace_expansion(word, env, &input[i]);
 	//ft_printf("tama word [%s]\n", word);
