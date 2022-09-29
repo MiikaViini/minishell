@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/27 09:15:09 by mviinika          #+#    #+#             */
-/*   Updated: 2022/09/28 13:22:29 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/09/29 22:46:04 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,12 @@ char	*replace_expansion(char *word, char **env, char *input)
 	char 	*temp;
 	int		j;
 
-	expanded = ft_strnew(200);
+	expanded = ft_strnew(300);
+	(void)input;
 	j = 0;
 	temp = NULL;
 	i = 0;
 	k = -1;
-	(void)input;
 	len = 0;
 	if (word[0] == '~' && word[1] == '$' && len++)
 		i++;
@@ -39,8 +39,10 @@ char	*replace_expansion(char *word, char **env, char *input)
 			{
 				if (ft_strncmp(env[k], "HOME=", 5) == 0)
 				{
-					expanded = ft_strdup(env[k] + 5);
-					expanded = ft_strjoin(expanded, &word[1]);
+					temp = ft_strdup(env[k] + 5);
+					ft_strdel(&expanded);
+					expanded = ft_strjoin(temp, &word[1]);
+					ft_strdel(&temp);
 					break ;
 				}
 			}
@@ -51,13 +53,16 @@ char	*replace_expansion(char *word, char **env, char *input)
 			{
 				if (ft_strncmp(env[k], "OLDPWD=", 7) == 0)
 				{
-					expanded = ft_strdup(env[k] + 7);
-					expanded = ft_strjoin(expanded, &word[2]);
+
+					temp = ft_strdup(env[k] + 7);
+					ft_strdel(&expanded);
+					expanded = ft_strjoin(temp, &word[2]);
+					ft_strdel(&temp);
+					//exit(1);
 					break ;
 				}
 				k++;
 			}
-			return (word);
 		}
 		else if (word[1] == '+')
 		{
@@ -65,15 +70,17 @@ char	*replace_expansion(char *word, char **env, char *input)
 			{
 				if (ft_strncmp(env[k], "PWD=", 4) == 0)
 				{
-					expanded = ft_strdup(env[k] + 4);
-					expanded = ft_strjoin(expanded, &word[2]);
+					temp = ft_strdup(env[k] + 4);
+					ft_strdel(&expanded);
+					expanded = ft_strjoin(temp, &word[2]);
+					ft_strdel(&temp);
 					break ;
 				}
 				k++;
 			}
 		}
 		else
-			return (word);
+			expanded = ft_strdup(word);
 	}
 	// TILDE HANDLING ENDS//////////////***************************************************************
 	else
@@ -100,5 +107,6 @@ char	*replace_expansion(char *word, char **env, char *input)
 		}
 	}
 	//ft_printf("input [%s]\n", expanded);
+
 	return (expanded);
 }

@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/31 19:07:23 by mviinika          #+#    #+#             */
-/*   Updated: 2022/09/29 13:05:10 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/09/29 21:58:29 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,10 +143,7 @@ int	check_builtin(char **input, int rb, char *buf, char **env)
 	else if (!ft_strcmp(input[0], "unsetenv"))
 		do_unsetenv(input, env);
 	else if (!ft_strcmp(input[0], "env"))
-	{
-		while(env[k])
-			ft_putendl(env[k++]);
-	}
+		do_env(input, env);
 	else
 		ft_printf("mish-1.0: %s: command not found\n", input[0]);
 	return (1);
@@ -208,7 +205,7 @@ int	main(int argc, char **argv, char **environ)
 	rb = 1;
 	env = NULL;
 	env = get_env(env, environ, argc, argv);
-	ft_putstr("\033[2J");
+	system("clear");
 	while (rb != 0)
 	{
 		ft_putstr("mish-1.0$ ");

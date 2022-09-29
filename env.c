@@ -1,35 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   echo.c                                             :+:      :+:    :+:   */
+/*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/09/09 15:00:43 by mviinika          #+#    #+#             */
-/*   Updated: 2022/09/29 13:24:21 by mviinika         ###   ########.fr       */
+/*   Created: 2022/09/29 21:50:13 by mviinika          #+#    #+#             */
+/*   Updated: 2022/09/29 21:58:49 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "include/minishell.h"
 
-int do_echo(char **input, char **env)
+int do_env(char **input, char **env)
 {
 	int	i;
 	int	k;
 
-	i = 1;
+	i = 0;
 	k = 0;
-	(void)env;
-	if (!input[i])
-		write(1, "\n", 2);
-	else
-	{
-		while (input[i])
-		{
-			ft_putstr(input[i++]);
-			write(1, " ", 1);
-		}
-		write(1, "\n", 2);
-	}
-	return 0;
+	if (!input[1])
+		while(env[k])
+			ft_putendl(env[k++]);
+	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/27 09:14:23 by mviinika          #+#    #+#             */
-/*   Updated: 2022/09/29 13:04:41 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/09/29 22:44:59 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,14 +31,20 @@ int	is_expansion(char *str)
 
 static char *handle_expansions(char *input, char **env, int *total, int *i)
 {
-	char	word[200];
-	char	*temp;
+	char	*word;
+	char	*expanded;
+	//char	*temp;
 
-	ft_memset(word, '\0', 200);
-	ft_strcat(word, replace_expansion(input, env, input));
+	word = ft_strnew(ft_strlen(input));
+	expanded = replace_expansion(input, env, input);
+	ft_strcat(word, expanded);
+
 	*total += ft_strlen(&input[*i]);
-	temp = ft_strdup(word);
-	return (temp);
+	//temp = ft_strdup(word);
+	ft_strdel(&expanded);
+	ft_strdel(&input);
+	//ft_strdel(&word);
+	return (word);
 }
 
 static char	*word(char *input, int i, int *total, char **env)
@@ -114,6 +120,8 @@ char	**parse_input(char *input, char **env)
 	while (trimmed_inp[i])
 	{
 		parsed[k++] = word(trimmed_inp, i, &total, env);
+		if (!parsed[k - 1][0])
+			ft_strdel(&parsed[--k]);
 		i = total;
 	}
 	parsed[k] = NULL;

@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 08:48:51 by mviinika          #+#    #+#             */
-/*   Updated: 2022/09/29 11:33:14 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/09/29 17:19:52 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ static int check_validity(char **input)
 	k = -1;
 	if (!ft_isalpha(input[1][0]))
 	{
-		ft_putstr("minishell: setenv: variable name must begin with a letter.\n");
+		ft_putstr_fd("minishell: setenv: variable name must begin with a letter.\n", 2);
 		return (1);
 	}
 	while (input[++i])
@@ -51,14 +51,14 @@ static int check_validity(char **input)
 		equ_sign = check_equalsign(input[i]);
 		if (equ_sign)
 		{
-			ft_putstr("minishell: setenv: please enter arguments in format 'name=value'.\n");
+			ft_putstr_fd("minishell: setenv: please enter arguments in format 'name=value'.\n", 2);
 			return (1);
 		}
 		while(input[i][++k])
 		{
 			if(!is_valid_char(input[i][k]))
 			{
-				ft_putstr("minishell: setenv: variable name must contain alphanumeric characters.\n");
+				ft_putstr_fd("minishell: setenv: variable name must contain alphanumeric characters.\n", 2);
 				return(1);
 			}
 		}
