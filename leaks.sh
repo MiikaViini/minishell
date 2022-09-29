@@ -13,3 +13,5 @@ do
 	sleep 1;
 	echo
 done
+
+#copied from Alex Mann
