@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/06 08:59:36 by mviinika          #+#    #+#             */
-/*   Updated: 2022/09/28 14:47:07 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/09/29 09:11:37 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,4 +51,5 @@ char	**parse_input(char *input, char **env);
 
 
 int	do_unsetenv(char **input, char **env);
+int	do_setenv(char **input, char **env);
 #endif

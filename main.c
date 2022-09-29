@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/31 19:07:23 by mviinika          #+#    #+#             */
-/*   Updated: 2022/09/28 14:47:35 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/09/29 13:05:10 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,8 +126,9 @@ int	check_builtin(char **input, int rb, char *buf, char **env)
 
 	ret = 0;
 	k = 0;
-	if (ft_isspace(buf[0]))
+	if (!input[0] && rb)
 		return (-1);
+	(void)buf;
 	if (rb == 0 || !ft_strcmp(input[0], "exit"))
 	{
 		ft_putstr("exit\n");
@@ -138,7 +139,7 @@ int	check_builtin(char **input, int rb, char *buf, char **env)
 	else if (!ft_strcmp(input[0], "cd"))
 		ft_putstr("entering directory\n");
 	else if (!ft_strcmp(input[0], "setenv"))
-		ft_putstr("setting environment\n");
+		do_setenv(input, env);
 	else if (!ft_strcmp(input[0], "unsetenv"))
 		do_unsetenv(input, env);
 	else if (!ft_strcmp(input[0], "env"))
