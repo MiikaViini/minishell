@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/27 09:15:09 by mviinika          #+#    #+#             */
-/*   Updated: 2022/09/29 22:46:04 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/09/30 09:33:35 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,5 @@ char	*replace_expansion(char *word, char **env, char *input)
 			k = -1;
 		}
 	}
-	//ft_printf("input [%s]\n", expanded);
-
 	return (expanded);
 }
