@@ -6,13 +6,13 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 08:48:51 by mviinika          #+#    #+#             */
-/*   Updated: 2022/09/30 14:58:19 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/09/30 22:40:18 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "include/minishell.h"
 
-static int check_equalsign(char *input)
+int check_equalsign(char *input)
 {
 	int i;
 

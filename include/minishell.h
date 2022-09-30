@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/06 08:59:36 by mviinika          #+#    #+#             */
-/*   Updated: 2022/09/30 14:47:01 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/09/30 22:40:30 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,4 +52,5 @@ int do_env(char **input, char **env);
 
 void	free_strarr(char **strarr);
 int check_validity(char **input);
+int check_equalsign(char *input);
 #endif

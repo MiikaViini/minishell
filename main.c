@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/31 19:07:23 by mviinika          #+#    #+#             */
-/*   Updated: 2022/09/30 14:44:08 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/09/30 23:41:11 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,6 +192,7 @@ char	**get_env(char **dest, char **environ, int argc, char **argv)
 	while (dest[++i])
 		if (ft_strncmp(dest[i], "SHLVL=", 6) == 0)
 			dest[i][6] += 1;
+	ft_printf("jee\n");
 	return (dest);
 }
 
