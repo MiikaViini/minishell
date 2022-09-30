@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 08:48:51 by mviinika          #+#    #+#             */
-/*   Updated: 2022/09/29 17:19:52 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/09/30 14:58:19 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	is_valid_char(char c)
 		|| (ft_isalnum(c) && c != '='));
 }
 
-static int check_validity(char **input)
+int check_validity(char **input)
 {
 	int	i;
 	int	k;

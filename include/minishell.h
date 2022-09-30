@@ -6,22 +6,20 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/06 08:59:36 by mviinika          #+#    #+#             */
-/*   Updated: 2022/09/29 21:56:30 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/09/30 14:47:01 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# include <unistd.h>
-# include <stdio.h>
 # include <sys/wait.h>
-# include <string.h>
 # include <signal.h>
-# include <stdlib.h>
 # include "../libft/libft.h"
 # include <dirent.h>
 # include <pwd.h>
+
+# define MAX_VAR 1024
 
 // typedef struct s_env
 // {
@@ -48,9 +46,10 @@ char	*replace_expansion(char *word, char **env, char *input);
 **PARSING
 */
 char	**parse_input(char *input, char **env);
-
-
 int	do_unsetenv(char **input, char **env);
 int	do_setenv(char **input, char **env);
 int do_env(char **input, char **env);
+
+void	free_strarr(char **strarr);
+int check_validity(char **input);
 #endif

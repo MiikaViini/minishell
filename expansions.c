@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/27 09:15:09 by mviinika          #+#    #+#             */
-/*   Updated: 2022/09/30 09:33:35 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/09/30 12:44:31 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ char	*replace_expansion(char *word, char **env, char *input)
 			else
 			{
 				i++;
-				while(ft_isalnum(word[len + i]))
+				while(ft_isalnum(word[len + i]) || (!ft_isalnum(word[len + i]) && word[len + i] == '_'))
 					len++;
 				while(env[++k])
 				{

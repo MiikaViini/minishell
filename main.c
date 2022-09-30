@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/31 19:07:23 by mviinika          #+#    #+#             */
-/*   Updated: 2022/09/29 21:58:29 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/09/30 14:44:08 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,16 +159,16 @@ size_t	ft_linecount(char **arr)
 	return (count);
 }
 
-void	free_env(char **env)
+void	free_strarr(char **strarr)
 {
 	int	i;
 
 	i = 0;
-	if(!env || !env[0])
+	if(!strarr || !strarr[0])
 		return ;
-	while (env && env[i])
-		free(env[i++]);
-	free(env);
+	while (strarr && strarr[i])
+		free(strarr[i++]);
+	free(strarr);
 }
 
 char	**get_env(char **dest, char **environ, int argc, char **argv)
@@ -211,6 +211,6 @@ int	main(int argc, char **argv, char **environ)
 		ft_putstr("mish-1.0$ ");
 		rb = minishell(env);
 	}
-	free_env(env);
+	free_strarr(env);
 	return (0);
 }
