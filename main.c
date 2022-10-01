@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/31 19:07:23 by mviinika          #+#    #+#             */
-/*   Updated: 2022/09/30 23:41:11 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/01 09:41:50 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,9 +123,11 @@ int	check_builtin(char **input, int rb, char *buf, char **env)
 {
 	int k;
 	int	ret;
+	char **path;
 
 	ret = 0;
 	k = 0;
+	path = get_path(env);
 	if (!input[0] && rb)
 		return (-1);
 	(void)buf;
@@ -144,6 +146,8 @@ int	check_builtin(char **input, int rb, char *buf, char **env)
 		do_unsetenv(input, env);
 	else if (!ft_strcmp(input[0], "env"))
 		do_env(input, env);
+	else if (!check_command(input, path, env))
+		;
 	else
 		ft_printf("mish-1.0: %s: command not found\n", input[0]);
 	return (1);

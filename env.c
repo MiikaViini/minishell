@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 21:50:13 by mviinika          #+#    #+#             */
-/*   Updated: 2022/09/30 23:55:08 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/01 09:31:04 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,28 +107,75 @@ int	check_command(char **input, char **path, char **env)
 	return (1);
 }
 
+char **strarrdup(char **strarr)
+{
+	int	i;
+	int	len;
+	char **fresh;
+
+	i = -1;
+	len = 0;
+	while(strarr[++i])
+		len++;
+	fresh = (char **)malloc(sizeof(char *) * len + 1);
+	if (!fresh)
+		return (NULL);
+	i = -1;
+	while (strarr[++i])
+		fresh[i] = ft_strdup(strarr[i]);
+	fresh[i] = NULL;
+	return (fresh);
+
+}
+
 int do_env(char **input, char **env)
 {
 	int		i;
 	int		k;
 	char	**path;
+	int		arr_len;
+	int		var_len;
+	int		added;
+	char	**new_env;
 
 	i = 1;
-	k = 0;
+	k = -1;
 	path = NULL;
+	added = 0;
+	arr_len = 0;
+	var_len = 0;
+	new_env = strarrdup(env);
 	if (!input[i])
-		while(env[k])
-			ft_putendl(env[k++]);
+		while(env[++k])
+			ft_putendl(env[k]);
 	else
 	{
 		while (check_equalsign(input[i]) == 0)
+		{
+			k = -1;
+			while(new_env[++k])
+			{
+				while(ft_strchr(&input[i][var_len], '='))
+					var_len++;
+				if (ft_strncmp(new_env[k], input[i], var_len) == 0 && new_env[k][var_len - 1] == '=')
+				{
+					ft_strdel(&new_env[k]);
+					new_env[k] = ft_strdup(input[i]);
+					added = 1;
+				}
+			}
+			if (!added)
+				new_env[arr_len++] = ft_strdup(input[i]);
 			i++;
+		}
+		//new_env[arr_len] = NULL;
 		path = get_path(env);
-		if (!check_command(&input[i], path, env))
+		if (!check_command(&input[i], path, new_env))
 			return (0);
 		// while (path && path[i])
 		// 	ft_printf("[%s]\n", path[i++]);
 	}
 	free_strarr(path);
+	free_strarr(new_env);
 	return (0);
 }
