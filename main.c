@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/31 19:07:23 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/01 09:41:50 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/03 09:58:58 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,18 +119,45 @@ int	minishell(char **env)
 	return (rb);
 }
 
+void update_env(char **env, char *input, char *var)
+{
+	int		i;
+	char	*temp;
+	int		len;
+
+	i = -1;
+	len = ft_strlen(var);
+	while(env[++i])
+	{
+		if (ft_strncmp(env[i], var, len) == 0 && env[i][len] == '=')
+		{
+
+			temp = ft_strndup(env[i], len + 1);
+			env[i] = ft_strjoin(temp ,input);
+			ft_strdel(&temp);
+			return ;
+		}
+	}
+	temp = ft_strjoin(var, "=");
+	env[i++] = ft_strjoin(temp, input);
+	env[i] = NULL;
+}
+
 int	check_builtin(char **input, int rb, char *buf, char **env)
 {
 	int k;
 	int	ret;
 	char **path;
 
+
 	ret = 0;
 	k = 0;
 	path = get_path(env);
+
 	if (!input[0] && rb)
 		return (-1);
 	(void)buf;
+	update_env(env, input[0], "_");
 	if (rb == 0 || !ft_strcmp(input[0], "exit"))
 	{
 		ft_putstr("exit\n");
@@ -139,7 +166,7 @@ int	check_builtin(char **input, int rb, char *buf, char **env)
 	else if (!ft_strcmp(input[0], "echo"))
 		do_echo(input, env);
 	else if (!ft_strcmp(input[0], "cd"))
-		ft_putstr("entering directory\n");
+		do_cd(input, env);
 	else if (!ft_strcmp(input[0], "setenv"))
 		do_setenv(input, env);
 	else if (!ft_strcmp(input[0], "unsetenv"))
@@ -150,6 +177,7 @@ int	check_builtin(char **input, int rb, char *buf, char **env)
 		;
 	else
 		ft_printf("mish-1.0: %s: command not found\n", input[0]);
+	free_strarr(path);
 	return (1);
 }
 
@@ -196,7 +224,6 @@ char	**get_env(char **dest, char **environ, int argc, char **argv)
 	while (dest[++i])
 		if (ft_strncmp(dest[i], "SHLVL=", 6) == 0)
 			dest[i][6] += 1;
-	ft_printf("jee\n");
 	return (dest);
 }
 

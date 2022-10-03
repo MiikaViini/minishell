@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/06 08:59:36 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/01 09:40:46 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/03 09:39:21 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,15 @@
 # define MINISHELL_H
 
 # include <sys/wait.h>
+ #include <sys/stat.h>
 # include <signal.h>
 # include "../libft/libft.h"
 # include <dirent.h>
 # include <pwd.h>
+# include <unistd.h>
 
 # define MAX_VAR 1024
+# define MAX_PATH 1024
 
 // typedef struct s_env
 // {
@@ -49,10 +52,12 @@ char	**parse_input(char *input, char **env);
 int	do_unsetenv(char **input, char **env);
 int	do_setenv(char **input, char **env);
 int do_env(char **input, char **env);
+int do_cd(char **input, char **env);
 
 void	free_strarr(char **strarr);
 int check_validity(char **input);
 int check_equalsign(char *input);
 char **get_path(char **env);
 int	check_command(char **input, char **path, char **env);
+void update_env(char **env, char *input, char *var);
 #endif

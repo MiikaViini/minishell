@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/27 09:14:23 by mviinika          #+#    #+#             */
-/*   Updated: 2022/09/30 12:47:24 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/02 23:07:09 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	is_expansion(char *str)
 		ret = 1;
 	else if (str[i] == '~')
 	{
-		if (str[i + 1] == '\0' || str[i + 1] == '+' || str[i + 1] == '-') //(str[i - 1] && str[i - 1] != '~')
+		if (str[i + 1] == '/' || str[i + 1] == '\0' || str[i + 1] == '+' || str[i + 1] == '-') //(str[i - 1] && str[i - 1] != '~')
 			ret = 1;
 	}
 	return (ret);
@@ -35,6 +35,8 @@ static char *handle_expansions(char *input, char **env, int *total, int *i)
 	char	*expanded;
 
 	word = ft_strnew(MAX_VAR);
+	if (word == NULL)
+		return (NULL);
 	expanded = replace_expansion(input, env, input);
 	ft_strcat(word, expanded);
 	*total += ft_strlen(&input[*i]);
@@ -112,6 +114,8 @@ char	**parse_input(char *input, char **env)
 	total = 0;
 	parsed = (char **)malloc(sizeof(char *) * 100);
 	trimmed_inp = ft_strtrim(input);
+	if (!parsed || !trimmed_inp || !input)
+		return (NULL);
 	k = 0;
 	while (trimmed_inp[i])
 	{

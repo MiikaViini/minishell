@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 21:50:13 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/01 09:31:04 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/03 00:03:26 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,18 @@ char **get_path(char **env)
 int execute_command(char **input, char *exec, char **env)
 {
 	int	pid;
+	struct stat stat_;
+	int	ret;
+
+	ret = stat(exec, &stat_);
+	if (!S_ISREG(stat_.st_mode))
+	{
+		ft_printf("minishell: %s: isnt executable\n", exec);
+		return (-1);
+	}
 
 	pid = fork();
+
 	if (pid < 0)
 		return (-1);
 	else if (pid == 0)
@@ -74,7 +84,7 @@ int	check_command(char **input, char **path, char **env)
 
 	i = 0;
 	k = 0;
-	while (path[i])
+	while (path && path[i])
 	{
 		dir = opendir(path[i]);
 		if (dir == NULL)
@@ -90,6 +100,7 @@ int	check_command(char **input, char **path, char **env)
 				exec = ft_strjoin("/", input[k]);
 				path_ = ft_strjoin(path[i], exec);
 				execute_command(input, path_, env);
+
 				ft_strdel(&exec);
 				ft_strdel(&path_);
 				return (0);
@@ -103,7 +114,6 @@ int	check_command(char **input, char **path, char **env)
 		}
 		i++;
 	}
-	ft_printf("env: %s: command not found\n", input[k]);
 	return (1);
 }
 
@@ -171,7 +181,9 @@ int do_env(char **input, char **env)
 		//new_env[arr_len] = NULL;
 		path = get_path(env);
 		if (!check_command(&input[i], path, new_env))
-			return (0);
+			;
+		else
+			ft_printf("env: %s: command not found\n", input[i]);
 		// while (path && path[i])
 		// 	ft_printf("[%s]\n", path[i++]);
 	}

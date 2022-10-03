@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/28 14:30:06 by mviinika          #+#    #+#             */
-/*   Updated: 2022/09/28 21:13:05 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/02 23:54:53 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	do_unsetenv(char **input, char **env)
 	int	k;
 	int	len;
 
-	i = 0;
+	i = -1;
 	k = -1;
 	len = 0;
 	while(input[++i])
