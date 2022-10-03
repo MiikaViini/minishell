@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/31 19:07:23 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/03 09:58:58 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/03 15:19:58 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ void	free_parsed_input(char **p_input)
 		ft_strdel(&p_input[i]);
 }
 
-int	minishell(char **env)
+int	minishell(t_env *env)
 {
 	int		rb;
 	char	buf[4096];
@@ -108,7 +108,7 @@ int	minishell(char **env)
 			ft_putstr("invalid quoting, try again\n");
 		else
 		{
-			parsed_input = parse_input(buf, env);
+			parsed_input = parse_input(buf, env->env);
 			rb = check_builtin(parsed_input, rb, buf, env);
 		}
 		ft_memset(buf, '\0', 4096);
@@ -133,6 +133,7 @@ void update_env(char **env, char *input, char *var)
 		{
 
 			temp = ft_strndup(env[i], len + 1);
+			ft_strdel(&env[i]);
 			env[i] = ft_strjoin(temp ,input);
 			ft_strdel(&temp);
 			return ;
@@ -140,24 +141,22 @@ void update_env(char **env, char *input, char *var)
 	}
 	temp = ft_strjoin(var, "=");
 	env[i++] = ft_strjoin(temp, input);
+	ft_strdel(&temp);
 	env[i] = NULL;
 }
 
-int	check_builtin(char **input, int rb, char *buf, char **env)
+int	check_builtin(char **input, int rb, char *buf, t_env *env)
 {
 	int k;
 	int	ret;
-	char **path;
-
-
 	ret = 0;
 	k = 0;
-	path = get_path(env);
 
 	if (!input[0] && rb)
 		return (-1);
 	(void)buf;
-	update_env(env, input[0], "_");
+	env->path = get_path(env->env);
+	update_env(env->env, input[0], "_");
 	if (rb == 0 || !ft_strcmp(input[0], "exit"))
 	{
 		ft_putstr("exit\n");
@@ -173,11 +172,11 @@ int	check_builtin(char **input, int rb, char *buf, char **env)
 		do_unsetenv(input, env);
 	else if (!ft_strcmp(input[0], "env"))
 		do_env(input, env);
-	else if (!check_command(input, path, env))
+	else if (!check_command(input, env->path, env->env))
 		;
 	else
 		ft_printf("mish-1.0: %s: command not found\n", input[0]);
-	free_strarr(path);
+	free_strarr(env->path);
 	return (1);
 }
 
@@ -203,7 +202,7 @@ void	free_strarr(char **strarr)
 	free(strarr);
 }
 
-char	**get_env(char **dest, char **environ, int argc, char **argv)
+void	get_env(t_env *dest, char **environ, int argc, char **argv)
 {
 	int		i;
 	int		k;
@@ -212,37 +211,38 @@ char	**get_env(char **dest, char **environ, int argc, char **argv)
 	(void)argv;
 	i = 0;
 	k = -1;
-	dest = (char **)malloc(sizeof(char *) * ft_linecount(environ) + 1);
+	dest->env = (char **)malloc(sizeof(char *) * (ft_linecount(environ) * 2) + 1);
 	while (environ[++k])
 	{
 		if (ft_strncmp(environ[k], "OLDPWD=", 7) == 0)
 			k++;
-		dest[i++] = ft_strdup(environ[k]);
+		dest->env[i++] = ft_strdup(environ[k]);
 	}
-	dest[i] = NULL;
+	dest->env[i] = NULL;
 	i = -1;
-	while (dest[++i])
-		if (ft_strncmp(dest[i], "SHLVL=", 6) == 0)
-			dest[i][6] += 1;
-	return (dest);
+	while (dest->env[++i])
+		if (ft_strncmp(dest->env[i], "SHLVL=", 6) == 0)
+			dest->env[i][6] += 1;
 }
 
 int	main(int argc, char **argv, char **environ)
 {
-	char	**env;
+	t_env	*env;
 	int		i;
 	int		rb;
 
 	i = -1;
 	rb = 1;
-	env = NULL;
-	env = get_env(env, environ, argc, argv);
+	env = (t_env *)malloc(sizeof(t_env));
+	get_env(env, environ, argc, argv);
 	system("clear");
 	while (rb != 0)
 	{
 		ft_putstr("mish-1.0$ ");
 		rb = minishell(env);
 	}
-	free_strarr(env);
+	free_strarr(env->env);
+	free_strarr(env->path);
+	free(env);
 	return (0);
 }

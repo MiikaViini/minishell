@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 21:50:13 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/03 00:03:26 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/03 22:05:37 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,7 @@ int execute_command(char **input, char *exec, char **env)
 		ft_printf("minishell: %s: isnt executable\n", exec);
 		return (-1);
 	}
-
 	pid = fork();
-
 	if (pid < 0)
 		return (-1);
 	else if (pid == 0)
@@ -78,43 +76,43 @@ int	check_command(char **input, char **path, char **env)
 	DIR		*dir;
 	struct 	dirent *entity;
 	int		i;
-	int 	k;
 	char	*exec;
 	char	*path_;
+	int		ret;
 
 	i = 0;
-	k = 0;
-	while (path && path[i])
+	ret = 1;
+	while (input[0] && path && path[i])
 	{
+
 		dir = opendir(path[i]);
 		if (dir == NULL)
-		{
-			ft_putstr("Error");
-			return(1);
-		}
+			return (1);
 		entity = readdir(dir);
 		while (entity != NULL)
 		{
-			if (ft_strcmp(input[k], entity->d_name) == 0)
+			if (ft_strcmp(input[0], entity->d_name) == 0)
 			{
-				exec = ft_strjoin("/", input[k]);
+				exec = ft_strjoin("/", input[0]);
 				path_ = ft_strjoin(path[i], exec);
 				execute_command(input, path_, env);
-
 				ft_strdel(&exec);
 				ft_strdel(&path_);
-				return (0);
+				ret = 0;
+				break ;
 			}
-			else if (access(input[k], F_OK) == 0)
+			else if (access(input[0], F_OK) == 0)
 			{
-				execute_command(input, input[k], env);
-				return (0);
+				execute_command(input, input[0], env);
+				ret = 0;
+				break ;
 			}
 			entity = readdir(dir);
 		}
+		closedir(dir);
 		i++;
 	}
-	return (1);
+	return (ret);
 }
 
 char **strarrdup(char **strarr)
@@ -138,56 +136,54 @@ char **strarrdup(char **strarr)
 
 }
 
-int do_env(char **input, char **env)
+int do_env(char **input, t_env *env)
 {
 	int		i;
 	int		k;
-	char	**path;
 	int		arr_len;
 	int		var_len;
 	int		added;
 	char	**new_env;
+	char	*exec;
 
 	i = 1;
 	k = -1;
-	path = NULL;
 	added = 0;
 	arr_len = 0;
 	var_len = 0;
-	new_env = strarrdup(env);
+	new_env = strarrdup(env->env);
+	exec = NULL;
 	if (!input[i])
-		while(env[++k])
-			ft_putendl(env[k]);
+		while(env->env[++k])
+			ft_putendl(env->env[k]);
 	else
 	{
-		while (check_equalsign(input[i]) == 0)
+		while(input[i])
 		{
-			k = -1;
-			while(new_env[++k])
-			{
-				while(ft_strchr(&input[i][var_len], '='))
-					var_len++;
-				if (ft_strncmp(new_env[k], input[i], var_len) == 0 && new_env[k][var_len - 1] == '=')
-				{
-					ft_strdel(&new_env[k]);
-					new_env[k] = ft_strdup(input[i]);
-					added = 1;
-				}
-			}
-			if (!added)
-				new_env[arr_len++] = ft_strdup(input[i]);
+			if (check_equalsign(input[i]))
+				break ;
 			i++;
 		}
-		//new_env[arr_len] = NULL;
-		path = get_path(env);
-		if (!check_command(&input[i], path, new_env))
-			;
+		if (input[i])
+		{
+			exec = input[i];
+			input[i] = NULL;
+			do_setenv(input, env);
+			input[i] = exec;
+			if (!check_command(&input[i], env->path, env->env))
+				;
+			else
+				ft_printf("minishell: env: %s: command not found\n", input[i]);
+		}
 		else
-			ft_printf("env: %s: command not found\n", input[i]);
-		// while (path && path[i])
-		// 	ft_printf("[%s]\n", path[i++]);
+		{
+			do_setenv(input, env);
+			k = -1;
+			while(env->env[++k])
+				ft_putendl(env->env[k]);
+		}
+		env->env = strarrdup(new_env);
 	}
-	free_strarr(path);
 	free_strarr(new_env);
 	return (0);
 }

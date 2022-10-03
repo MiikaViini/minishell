@@ -6,13 +6,13 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/09 15:00:43 by mviinika          #+#    #+#             */
-/*   Updated: 2022/09/29 13:24:21 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/03 11:44:26 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "include/minishell.h"
 
-int do_echo(char **input, char **env)
+int do_echo(char **input, t_env *env)
 {
 	int	i;
 	int	k;

@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/06 08:59:36 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/03 09:39:21 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/03 15:18:13 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,16 @@
 # define MAX_VAR 1024
 # define MAX_PATH 1024
 
-// typedef struct s_env
-// {
-// 	char	**env;
-// }			t_env;
+typedef struct s_env
+{
+	char	**env;
+	char	**path;
+}			t_env;
 
-int	check_builtin(char **input, int rb, char *buf, char **env);
-int	do_echo(char **input, char **env);
+int	check_builtin(char **input, int rb, char *buf, t_env *env);
+int	do_echo(char **input, t_env *env);
+char **strarrdup(char **strarr);
+size_t	ft_linecount(char **arr);
 /*
 **QUOTES
 */
@@ -49,10 +52,10 @@ char	*replace_expansion(char *word, char **env, char *input);
 **PARSING
 */
 char	**parse_input(char *input, char **env);
-int	do_unsetenv(char **input, char **env);
-int	do_setenv(char **input, char **env);
-int do_env(char **input, char **env);
-int do_cd(char **input, char **env);
+int	do_unsetenv(char **input, t_env *env);
+int	do_setenv(char **input, t_env *env);
+int do_env(char **input, t_env *env);
+int do_cd(char **input, t_env *env);
 
 void	free_strarr(char **strarr);
 int check_validity(char **input);

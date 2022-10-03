@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 08:48:51 by mviinika          #+#    #+#             */
-/*   Updated: 2022/09/30 22:40:18 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/03 22:02:51 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int check_validity(char **input)
 	equ_sign = 0;
 	i = 0;
 	k = -1;
-	if (!ft_isalpha(input[1][0]))
+	if (input[1] && !ft_isalpha(input[1][0]))
 	{
 		ft_putstr_fd("minishell: setenv: variable name must begin with a letter.\n", 2);
 		return (1);
@@ -67,7 +67,7 @@ int check_validity(char **input)
 	return (0);
 }
 
-int	do_setenv(char **input, char **env)
+int	do_setenv(char **input, t_env *env)
 {
 	int	i;
 	int	k;
@@ -75,35 +75,41 @@ int	do_setenv(char **input, char **env)
 	int	var_len;
 	int	added;
 
-	i = 0;
+	i = 1;
 	k = -1;
 	added = 0;
 	arr_len = 0;
 	var_len = 0;
 	if (check_validity(input))
 		return (1);
-	while(env[++k])
+	while(env->env[++k])
 		arr_len++;
 	k = -1;
-	while(input[++i])
+	//temp = env->env;
+	//free_strarr(env->env);
+	// env->env = (char **)malloc(sizeof(char *) * ft_linecount(temp) * 2 + 1);
+	// env->env = strarrdup(temp);
+	while(input[i])
 	{
-		while(env[++k])
+
+		while(env->env[++k])
 		{
 			while(ft_strchr(&input[i][var_len], '='))
 				var_len++;
-			if (ft_strncmp(env[k], input[i], var_len) == 0 && env[k][var_len - 1] == '=')
+			if (ft_strncmp(env->env[k], input[i], var_len) == 0 && env->env[k][var_len - 1] == '=')
 			{
-				ft_strdel(&env[k]);
-				env[k] = ft_strdup(input[i]);
+				ft_strdel(&env->env[k]);
+				env->env[k] = ft_strdup(input[i]);
 				added = 1;
 			}
 		}
 		if (!added)
-			env[arr_len++] = ft_strdup(input[i]);
+			env->env[arr_len++] = ft_strdup(input[i]);
+		env->env[arr_len] = NULL;
 		k = 0;
+		i++;
 		added = 0;
 		var_len = 0;
 	}
-	env[arr_len] = NULL;
 	return 0;
 }
