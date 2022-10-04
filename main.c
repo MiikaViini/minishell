@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/31 19:07:23 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/03 15:19:58 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/04 14:07:00 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,7 +131,6 @@ void update_env(char **env, char *input, char *var)
 	{
 		if (ft_strncmp(env[i], var, len) == 0 && env[i][len] == '=')
 		{
-
 			temp = ft_strndup(env[i], len + 1);
 			ft_strdel(&env[i]);
 			env[i] = ft_strjoin(temp ,input);
@@ -140,9 +139,8 @@ void update_env(char **env, char *input, char *var)
 		}
 	}
 	temp = ft_strjoin(var, "=");
-	env[i++] = ft_strjoin(temp, input);
+	env[i] = ft_strjoin(temp, input);
 	ft_strdel(&temp);
-	env[i] = NULL;
 }
 
 int	check_builtin(char **input, int rb, char *buf, t_env *env)
@@ -153,10 +151,11 @@ int	check_builtin(char **input, int rb, char *buf, t_env *env)
 	k = 0;
 
 	if (!input[0] && rb)
-		return (-1);
+		return (1);
 	(void)buf;
 	env->path = get_path(env->env);
-	update_env(env->env, input[0], "_");
+	if (rb != 0)
+		update_env(env->env, input[ft_linecount(input) - 1], "_");
 	if (rb == 0 || !ft_strcmp(input[0], "exit"))
 	{
 		ft_putstr("exit\n");
@@ -175,7 +174,7 @@ int	check_builtin(char **input, int rb, char *buf, t_env *env)
 	else if (!check_command(input, env->path, env->env))
 		;
 	else
-		ft_printf("mish-1.0: %s: command not found\n", input[0]);
+		ft_printf("minishell: %s: command not found\n", input[0]);
 	free_strarr(env->path);
 	return (1);
 }
@@ -235,7 +234,8 @@ int	main(int argc, char **argv, char **environ)
 	rb = 1;
 	env = (t_env *)malloc(sizeof(t_env));
 	get_env(env, environ, argc, argv);
-	system("clear");
+	//system("clear");
+	ft_printf("start\n");
 	while (rb != 0)
 	{
 		ft_putstr("mish-1.0$ ");

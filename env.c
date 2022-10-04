@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 21:50:13 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/03 22:05:37 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/04 15:23:50 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,22 +31,31 @@ int execute_command(char **input, char *exec, char **env)
 	struct stat stat_;
 	int	ret;
 
-	ret = stat(exec, &stat_);
+	ret = lstat(exec, &stat_);
+	ft_printf("ret %d\n", ret);
 	if (!S_ISREG(stat_.st_mode))
 	{
 		ft_printf("minishell: %s: isnt executable\n", exec);
 		return (-1);
 	}
 	pid = fork();
+
 	if (pid < 0)
 		return (-1);
 	else if (pid == 0)
 	{
-		if (execve(exec, input, env) == -1)
-			return (-1);
+		ret = execve(exec, input, env);
+		ft_printf("exec not found %d\n", ret);
+
+
+		// if (execve(exec, input, env) == -1)
+		// {
+		// 	return (-1);
+		// }
 	}
 	else
 		wait(&pid);
+
 	return (0);
 }
 
@@ -79,12 +88,15 @@ int	check_command(char **input, char **path, char **env)
 	char	*exec;
 	char	*path_;
 	int		ret;
+	int		len;
+	int		k;
 
 	i = 0;
 	ret = 1;
+	len = 0;
+	k = 0;
 	while (input[0] && path && path[i])
 	{
-
 		dir = opendir(path[i]);
 		if (dir == NULL)
 			return (1);
@@ -95,17 +107,31 @@ int	check_command(char **input, char **path, char **env)
 			{
 				exec = ft_strjoin("/", input[0]);
 				path_ = ft_strjoin(path[i], exec);
+				while (env[k])
+				{
+					if (ft_strncmp(env[k], "OLDPWD=", 7) == 0)
+					{
+						ft_strdel(&env[k]);
+						env[k] = env[k + 1];
+						while(env[k])
+						{
+							env[k] = env[k + 1];
+							k++;
+						}
+					}
+					k++;
+				}
 				execute_command(input, path_, env);
 				ft_strdel(&exec);
 				ft_strdel(&path_);
-				ret = 0;
-				break ;
+				closedir(dir);
+				return 0;
 			}
 			else if (access(input[0], F_OK) == 0)
 			{
 				execute_command(input, input[0], env);
-				ret = 0;
-				break ;
+				closedir(dir);
+				return 0;
 			}
 			entity = readdir(dir);
 		}
@@ -153,6 +179,7 @@ int do_env(char **input, t_env *env)
 	var_len = 0;
 	new_env = strarrdup(env->env);
 	exec = NULL;
+	update_env(env->env, input[0], "_");
 	if (!input[i])
 		while(env->env[++k])
 			ft_putendl(env->env[k]);
@@ -171,7 +198,7 @@ int do_env(char **input, t_env *env)
 			do_setenv(input, env);
 			input[i] = exec;
 			if (!check_command(&input[i], env->path, env->env))
-				;
+				;// ft_printf("minishell: env: %s: no such file or folder\n", input[i]);
 			else
 				ft_printf("minishell: env: %s: command not found\n", input[i]);
 		}
@@ -182,8 +209,10 @@ int do_env(char **input, t_env *env)
 			while(env->env[++k])
 				ft_putendl(env->env[k]);
 		}
+		free_strarr(env->env);
 		env->env = strarrdup(new_env);
 	}
 	free_strarr(new_env);
+	update_env(env->env, input[ft_linecount(input) - 1], "_");
 	return (0);
 }

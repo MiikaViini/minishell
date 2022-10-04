@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/27 09:14:23 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/02 23:07:09 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/04 15:17:19 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ static char	*word(char *input, int i, int *total, char **env)
 		}
 		if (is_expansion(&input[i]))
 			expansion = 1;
-		if ((input[i] && closed == 0) || (!ft_isspace(input[i + 1]) && closed))
+		if ((input[i] && closed == 0) || (!ft_isspace(input[i]) && closed)) //((!ft_isspace(input[i + 1]) && closed) ||
 		{
 			word[k++] = input[i++];
 			*total += 1;

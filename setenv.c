@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 08:48:51 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/03 22:02:51 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/04 12:19:50 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,11 +105,11 @@ int	do_setenv(char **input, t_env *env)
 		}
 		if (!added)
 			env->env[arr_len++] = ft_strdup(input[i]);
-		env->env[arr_len] = NULL;
 		k = 0;
 		i++;
 		added = 0;
 		var_len = 0;
 	}
+	env->env[arr_len] = NULL;
 	return 0;
 }

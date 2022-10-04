@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/03 09:14:35 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/03 11:43:04 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/04 13:36:51 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,19 +36,24 @@ int	check_access(char *input)
 
 int do_cd(char **input, t_env *env)
 {
-	char		cwd[MAX_PATH + 1];
+	//char		cwd[MAX_PATH + 1];
 	int			i;
 
-	i = 0;
-	ft_memset(cwd, '\0', MAX_PATH + 1);
-	getcwd(cwd, MAX_PATH);
-	if(check_access(input[1]))
+	i = -1;
+	//ft_memset(cwd, '\0', MAX_PATH + 1);
+
+	update_env(env->env, getcwd(NULL, 0), "OLDPWD");
+	if(input[1] && check_access(input[1]))
 		return (1);
-	else
+	else if (!input[1])
 	{
-		update_env(env->env, cwd, "OLDPWD");
-		getcwd(cwd, MAX_PATH);
-		update_env(env->env, cwd, "PWD");
+		while (env->env[++i])
+			if (ft_strncmp(env->env[i], "HOME=", 5) == 0)
+				if (!chdir(env->env[i] + 5))
+					break ;
+		if(!env->env[i])
+			ft_printf("minishell: cd: HOME not set\n");
 	}
+	update_env(env->env, getcwd(NULL, 0), "PWD");
 	return (0);
 }
