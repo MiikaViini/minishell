@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 08:48:51 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/04 12:19:50 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/05 23:00:02 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,23 +85,20 @@ int	do_setenv(char **input, t_env *env)
 	while(env->env[++k])
 		arr_len++;
 	k = -1;
-	//temp = env->env;
-	//free_strarr(env->env);
-	// env->env = (char **)malloc(sizeof(char *) * ft_linecount(temp) * 2 + 1);
-	// env->env = strarrdup(temp);
 	while(input[i])
 	{
-
 		while(env->env[++k])
 		{
 			while(ft_strchr(&input[i][var_len], '='))
 				var_len++;
-			if (ft_strncmp(env->env[k], input[i], var_len) == 0 && env->env[k][var_len - 1] == '=')
+			ft_printf("what\n");
+			if (ft_strncmp(env->env[k], input[i], 2) == 0 && env->env[k][var_len - 1] == '=')
 			{
 				ft_strdel(&env->env[k]);
 				env->env[k] = ft_strdup(input[i]);
 				added = 1;
 			}
+			ft_printf("TTTTTTT\n");
 		}
 		if (!added)
 			env->env[arr_len++] = ft_strdup(input[i]);
@@ -111,5 +108,6 @@ int	do_setenv(char **input, t_env *env)
 		var_len = 0;
 	}
 	env->env[arr_len] = NULL;
+	//ft_printf("%d", arr_len);
 	return 0;
 }

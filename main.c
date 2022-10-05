@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/31 19:07:23 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/05 14:52:58 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/05 22:22:38 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,7 +132,7 @@ int	main(int argc, char **argv, char **environ)
 		ft_putstr("mish-1.0$ ");
 		rb = minishell(env, builtins);
 	}
-	free_strarr(env->env);
+	//free_strarr(env->env);
 	free_strarr(env->path);
 	free_strarr(builtins);
 	free(env);

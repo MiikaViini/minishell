@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 21:50:13 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/05 14:07:40 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/05 22:52:53 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,33 +29,32 @@ int execute_command(char **input, char *exec, char **env)
 {
 	int	pid;
 	struct stat stat_;
-	int	ret;
 
-	ret = lstat(exec, &stat_);
-	ft_printf("ret %d\n", ret);
-	if (!S_ISREG(stat_.st_mode))
+
+	// if (!S_ISREG(stat_.st_mode))
+	// {
+	// 	ft_putstr_fd("minishell: ", 2);
+	// 	ft_putstr_fd(exec, 2);
+	// 	ft_putendl_fd("is not executable", 2);
+	// 	return (-1);
+	// }
+	if (stat(exec, &stat_) != -1 && !S_ISREG(stat_.st_mode))
 	{
-		ft_printf("minishell: %s: isnt executable\n", exec);
 		return (-1);
 	}
 	pid = fork();
-
 	if (pid < 0)
 		return (-1);
 	else if (pid == 0)
 	{
-		ret = execve(exec, input, env);
-		ft_printf("exec not found %d\n", ret);
-
-
-		// if (execve(exec, input, env) == -1)
-		// {
-		// 	return (-1);
-		// }
+		if (execve(exec, input, env) == -1)
+		{
+			ft_putendl_fd("minishell: error occured during execution", 2);
+			exit(EXIT_FAILURE);
+		}
 	}
 	else
 		wait(&pid);
-
 	return (0);
 }
 
@@ -121,7 +120,8 @@ int	check_command(char **input, char **path, char **env)
 					}
 					k++;
 				}
-				execute_command(input, path_, env);
+				if (execute_command(input, path_, env))
+					return (1);
 				ft_strdel(&exec);
 				ft_strdel(&path_);
 				closedir(dir);
@@ -203,13 +203,14 @@ int do_env(char **input, t_env *env)
 		}
 		else
 		{
+			ft_printf("here\n");
 			do_setenv(input, env);
-			k = -1;
-			while(env->env[++k])
-				ft_putendl(env->env[k]);
+			k = 0;
+			while(env->env[k])
+				ft_putendl(env->env[k++]);
+			free_strarr(env->env);
+			env->env = strarrdup(new_env);
 		}
-		free_strarr(env->env);
-		env->env = strarrdup(new_env);
 	}
 	free_strarr(new_env);
 	update_env(env->env, input[ft_linecount(input) - 1], "_");
