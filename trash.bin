@@ -1,0 +1,32 @@
+char *ft_sep(char *str, const char delim)
+{
+	int		i;
+	int		k;
+	int		delim_c;
+	char	*separated;
+
+	separated = ft_strnew(ft_strlen(str));
+	i = 0;
+	k = 0;
+	delim_c = 0;
+	while (str && str[i] && delim_c < 2)
+	{
+		if (str[i] == delim)
+		{
+			delim_c++;
+			i++;
+		}
+		separated[k++] = str[i++];
+	}
+	return (separated);
+}
+
+// void	sgn_handler(int num)
+// {
+// 	//(void)num;
+// 	if (num == SIGINT)
+// 	{
+// 		ft_putstr("\nmish-1.0$ ");
+// 		signal(SIGINT, sgn_handler);
+// 	}
+// }

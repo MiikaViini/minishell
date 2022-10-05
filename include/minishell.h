@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/06 08:59:36 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/03 15:18:13 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/05 14:43:36 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 
 # define MAX_VAR 1024
 # define MAX_PATH 1024
+# define MAX_LINE 4096
 
 typedef struct s_env
 {
@@ -30,7 +31,7 @@ typedef struct s_env
 	char	**path;
 }			t_env;
 
-int	check_builtin(char **input, int rb, char *buf, t_env *env);
+int	check_exec(char **input, int rb, char **builtins, t_env *env);
 int	do_echo(char **input, t_env *env);
 char **strarrdup(char **strarr);
 size_t	ft_linecount(char **arr);
@@ -57,10 +58,23 @@ int	do_setenv(char **input, t_env *env);
 int do_env(char **input, t_env *env);
 int do_cd(char **input, t_env *env);
 
-void	free_strarr(char **strarr);
 int check_validity(char **input);
 int check_equalsign(char *input);
 char **get_path(char **env);
 int	check_command(char **input, char **path, char **env);
 void update_env(char **env, char *input, char *var);
+
+/** MEMORY HANDLING **/
+void	free_strarr(char **strarr);
+
+typedef int	(*t_builtins)(char **input, t_env *env);
+
+static const t_builtins g_builtins[6] = {
+	do_echo,
+	do_cd,
+	do_setenv,
+	do_unsetenv,
+	do_env,
+	NULL
+};
 #endif

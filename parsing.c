@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/27 09:14:23 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/04 15:17:19 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/05 14:46:22 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,14 +82,15 @@ static char	*word(char *input, int i, int *total, char **env)
 			if (s_quote >= 2 || d_quote >= 2)
 				closed = 1;
 		}
+		if (is_expansion(&input[i]))
+			expansion = 1;
 		if ((ft_isspace(input[i]) && s_quote + d_quote == 0)
 			|| (ft_isspace(input[i]) && closed))
 		{
 			*total += 1;
 			break ;
 		}
-		if (is_expansion(&input[i]))
-			expansion = 1;
+		
 		if ((input[i] && closed == 0) || (!ft_isspace(input[i]) && closed)) //((!ft_isspace(input[i + 1]) && closed) ||
 		{
 			word[k++] = input[i++];

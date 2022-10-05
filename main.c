@@ -6,79 +6,13 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/31 19:07:23 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/04 14:07:00 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/05 14:52:58 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "include/minishell.h"
 
-// void	sgn_handler(int num)
-// {
-// 	//(void)num;
-// 	if (num == SIGINT)
-// 	{
-// 		ft_putstr("\nmish-1.0$ ");
-// 		signal(SIGINT, sgn_handler);
-// 	}
-// }
-
-
-char *ft_sep(char *str, const char delim)
-{
-	int		i;
-	int		k;
-	int		delim_c;
-	char	*separated;
-
-	separated = ft_strnew(ft_strlen(str));
-	i = 0;
-	k = 0;
-	delim_c = 0;
-	while (str && str[i] && delim_c < 2)
-	{
-		if (str[i] == delim)
-		{
-			delim_c++;
-			i++;
-		}
-		separated[k++] = str[i++];
-	}
-	return (separated);
-}
-/* Split string to words, whitespace, singlequote and doublequote
-** works as separator
-*/
-// char *check_user(char *word)
-// {
-// 	DIR				*dir_s;
-// 	struct dirent	*entity;
-// 	struct stat		buf;
-// 	char			user_home[200];
-
-// 	ft_memset(user_home, '\0', 200);
-// 	ft_strcat(user_home, "/Users/")
-// 	dir_s = opendir(user_home);
-// 	if (!dir_s)
-// 	{
-// 		exit(1);
-// 	}
-// 	entity = readdir(dir_s);
-// 	while (entity)
-// 	{
-// 		if (ft_strncmp(entity->d_name, word, ft_strlen(word)) == 0)
-// 		{
-// 			//free(word);
-// 			ft_strcat(user_home, entity->d_name);
-// 			lstat(user_home, &buf);
-// 			ft_printf("%s\n", word);
-// 			break ;
-// 		}
-// 		entity = readdir(dir_s);
-// 	}
-// 	return (word);
-// }
-
-void	free_parsed_input(char **p_input)
+static void	free_parsed_input(char **p_input)
 {
 	int i;
 
@@ -89,19 +23,18 @@ void	free_parsed_input(char **p_input)
 		ft_strdel(&p_input[i]);
 }
 
-int	minishell(t_env *env)
+static int	minishell(t_env *env, char **builtins)
 {
 	int		rb;
-	char	buf[4096];
+	char	buf[MAX_LINE + 1];
 	char	**parsed_input;
 
 	rb = 1;
-	ft_memset(buf, '\0', 4096);
+	ft_memset(buf, '\0', MAX_LINE + 1);
 	parsed_input = NULL;
 	if (rb != 0)
 	{
-		//signal(SIGINT, sgn_handler);
-		rb = read(0, &buf, 4096);
+		rb = read(0, &buf, MAX_LINE);
 		if (rb == -1)
 			exit(1);
 		if (check_quotes(buf))
@@ -109,7 +42,7 @@ int	minishell(t_env *env)
 		else
 		{
 			parsed_input = parse_input(buf, env->env);
-			rb = check_builtin(parsed_input, rb, buf, env);
+			rb = check_exec(parsed_input, rb, builtins, env);
 		}
 		ft_memset(buf, '\0', 4096);
 		free_parsed_input(parsed_input);
@@ -143,64 +76,6 @@ void update_env(char **env, char *input, char *var)
 	ft_strdel(&temp);
 }
 
-int	check_builtin(char **input, int rb, char *buf, t_env *env)
-{
-	int k;
-	int	ret;
-	ret = 0;
-	k = 0;
-
-	if (!input[0] && rb)
-		return (1);
-	(void)buf;
-	env->path = get_path(env->env);
-	if (rb != 0)
-		update_env(env->env, input[ft_linecount(input) - 1], "_");
-	if (rb == 0 || !ft_strcmp(input[0], "exit"))
-	{
-		ft_putstr("exit\n");
-		return (EXIT_SUCCESS);
-	}
-	else if (!ft_strcmp(input[0], "echo"))
-		do_echo(input, env);
-	else if (!ft_strcmp(input[0], "cd"))
-		do_cd(input, env);
-	else if (!ft_strcmp(input[0], "setenv"))
-		do_setenv(input, env);
-	else if (!ft_strcmp(input[0], "unsetenv"))
-		do_unsetenv(input, env);
-	else if (!ft_strcmp(input[0], "env"))
-		do_env(input, env);
-	else if (!check_command(input, env->path, env->env))
-		;
-	else
-		ft_printf("minishell: %s: command not found\n", input[0]);
-	free_strarr(env->path);
-	return (1);
-}
-
-size_t	ft_linecount(char **arr)
-{
-	size_t	count;
-
-	count = 0;
-	while (arr[count])
-		count++;
-	return (count);
-}
-
-void	free_strarr(char **strarr)
-{
-	int	i;
-
-	i = 0;
-	if(!strarr || !strarr[0])
-		return ;
-	while (strarr && strarr[i])
-		free(strarr[i++]);
-	free(strarr);
-}
-
 void	get_env(t_env *dest, char **environ, int argc, char **argv)
 {
 	int		i;
@@ -211,6 +86,8 @@ void	get_env(t_env *dest, char **environ, int argc, char **argv)
 	i = 0;
 	k = -1;
 	dest->env = (char **)malloc(sizeof(char *) * (ft_linecount(environ) * 2) + 1);
+	if (!dest->env)
+		return ;
 	while (environ[++k])
 	{
 		if (ft_strncmp(environ[k], "OLDPWD=", 7) == 0)
@@ -224,25 +101,40 @@ void	get_env(t_env *dest, char **environ, int argc, char **argv)
 			dest->env[i][6] += 1;
 }
 
+char **initialize_and_set_builtins(void)
+{
+	char **builtins;
+
+	builtins = (char **)malloc(sizeof(char *) * 5 + 1);
+	if (!builtins)
+		return (NULL);
+	builtins[0] = ft_strdup("echo");
+	builtins[1] = ft_strdup("cd");
+	builtins[2] = ft_strdup("setenv");
+	builtins[3] = ft_strdup("unsetenv");
+	builtins[4] = ft_strdup("env");
+	builtins[5] = NULL;
+	return (builtins);
+}
+
 int	main(int argc, char **argv, char **environ)
 {
 	t_env	*env;
-	int		i;
+	char	**builtins;
 	int		rb;
 
-	i = -1;
 	rb = 1;
+	builtins = initialize_and_set_builtins();
 	env = (t_env *)malloc(sizeof(t_env));
 	get_env(env, environ, argc, argv);
-	//system("clear");
-	ft_printf("start\n");
 	while (rb != 0)
 	{
 		ft_putstr("mish-1.0$ ");
-		rb = minishell(env);
+		rb = minishell(env, builtins);
 	}
 	free_strarr(env->env);
 	free_strarr(env->path);
+	free_strarr(builtins);
 	free(env);
 	return (0);
 }
