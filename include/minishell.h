@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/06 08:59:36 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/07 11:03:30 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/07 20:52:16 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@
 # define E_ARGNOTVAL "please enter arguments in format 'name=value'."
 # define E_NOTALNUM "variable name must contain alphanumeric characters."
 # define E_QUOT "invalid quoting, try again"
+# define E_NOEX "no such file or folder"
 
 typedef struct s_env
 {
@@ -42,7 +43,6 @@ typedef struct s_env
 
 int	check_exec(char **input, int rb, char **builtins, t_env *env);
 int	do_echo(char **input, t_env *env);
-char **strarrdup(char **strarr);
 size_t	ft_linecount(char **arr);
 /*
 **QUOTES
@@ -79,8 +79,9 @@ void	free_strarr(char **strarr);
 void	error_print(char *word, char* e_msg);
 
 typedef int	(*t_builtins)(char **input, t_env *env);
-
+char	**strarrdup(char **dest, char **strarr);
 char **strarrcpy(char **dest, char **strarr);
+void	get_env(t_env *dest, char **environ, int argc, char **argv);
 
 static const t_builtins g_builtins[6] = {
 	do_echo,

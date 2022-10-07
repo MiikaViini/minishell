@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/03 09:14:35 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/05 10:56:40 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/07 21:37:00 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	check_access(char *input)
 		ft_printf("minishell: cd: %s: No such file or folder\n", input);
 		ret = 1;
 	}
-	else if (access(input, X_OK) && stat(input, &buf) == -1)
+	else if (stat(input, &buf) == -1 && access(input, X_OK))
 	{
 		ft_printf("minishell: cd: %s: Permission denied\n", input[1]);
 		ret = 1;
@@ -76,6 +76,7 @@ int do_cd(char **input, t_env *env)
 	else if (!input[1] || ft_strncmp(input[1], "-", 1) == 0)
 		env_dir(input[1], env->env);
 	cwd = getcwd(NULL, 0);
+	ft_printf("%s\n", cwd);
 	update_env(env->env, cwd, "PWD");
 	update_env(env->env, old_cwd, "OLDPWD");
 	free(cwd);

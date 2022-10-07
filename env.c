@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 21:50:13 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/07 14:58:51 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/07 21:34:42 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ int	check_command(char **input, char **path, char **env)
 	ret = 1;
 	len = 0;
 	k = 0;
-	while (input[0] && path && path[i])
+	while (input[0] && path[i])
 	{
 		dir = opendir(path[i]);
 		if (dir == NULL)
@@ -133,26 +133,21 @@ int	check_command(char **input, char **path, char **env)
 	return (ret);
 }
 
-char **strarrdup(char **strarr)
+char	**strarrndup(char **dest, char **strarr, size_t size)
 {
 	int	i;
-	int	len;
-	char **fresh;
 
 	i = -1;
-	len = 0;
 	if (!strarr)
 		return (NULL);
-	while(strarr[++i])
-		len++;
-	fresh = (char **)malloc(sizeof(char *) * (len + 1));
-	if (!fresh)
+	size += ft_linecount(strarr) + 1;
+	dest = (char **)ft_memalloc(sizeof(char *) * (size + 1));
+	if (!dest)
 		return (NULL);
-	i = -1;
 	while (strarr[++i])
-		fresh[i] = ft_strdup(strarr[i]);
-	fresh[i] = NULL;
-	return (fresh);
+		dest[i] = ft_strdup(strarr[i]);
+	dest[i] = NULL;
+	return (dest);
 }
 
 char **strarrcpy(char **dest, char **strarr)
@@ -167,35 +162,19 @@ char **strarrcpy(char **dest, char **strarr)
 	return (dest);
 }
 
-// char **strarrcat(char **dest, char **strarr)
-// {
-// 	int	i;
-
-// 	i = -1;
-// 	if (!strarr)
-// 		return (NULL);
-// 	while(strarr[++i])
-// 		dest[i] = strarr[i];
-// 	return (dest);
-// }
-
 int do_env(char **input, t_env *env)
 {
 	int		i;
 	int		k;
-	int		arr_len;
-	int		var_len;
-	int		added;
+	t_env	temp;
 	char	*exec;
 
 	i = 1;
 	k = -1;
-	added = 0;
-	arr_len = 0;
-	var_len = 0;
 	exec = NULL;
-	update_env(env->env, input[0], "_");
-	if (!input[i])
+	temp.env = strarrndup(temp.env, env->env, ft_linecount(input));
+	update_env(temp.env, input[0], "_");
+	if (!input[1])
 		while(env->env[++k])
 			ft_putendl(env->env[k]);
 	else
@@ -210,22 +189,22 @@ int do_env(char **input, t_env *env)
 		{
 			exec = input[i];
 			input[i] = NULL;
-			do_setenv(input, env);
+			do_setenv(input, &temp);
 			input[i] = exec;
-			if (!check_command(&input[i], env->path, env->env))
+			if (!check_command(&input[i], env->path, temp.env))
 				;// ft_printf("minishell: env: %s: no such file or folder\n", input[i]);
 			else
-				ft_printf("minishell: env: %s: command not found\n", input[i]);
+				error_print(input[0], E_NOEX);
 		}
 		else
 		{
-			do_setenv(input, env);
+			do_setenv(input, &temp);
 			k = -1;
-			while(env->env[++k])
-				ft_putendl(env->env[k]);
+			while(temp.env[++k])
+				ft_putendl(temp.env[k]);
 		}
 	}
-	do_unsetenv(input, env);
+	free_strarr(temp.env);
 	update_env(env->env, input[ft_linecount(input) - 1], "_");
 	return (0);
 }
