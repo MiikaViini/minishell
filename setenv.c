@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 08:48:51 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/05 23:00:02 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/07 11:25:10 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ int check_validity(char **input)
 	k = -1;
 	if (input[1] && !ft_isalpha(input[1][0]))
 	{
-		ft_putstr_fd("minishell: setenv: variable name must begin with a letter.\n", 2);
+		error_print(input[0], E_NOTVAL);
 		return (1);
 	}
 	while (input[++i])
@@ -51,14 +51,14 @@ int check_validity(char **input)
 		equ_sign = check_equalsign(input[i]);
 		if (equ_sign)
 		{
-			ft_putstr_fd("minishell: setenv: please enter arguments in format 'name=value'.\n", 2);
+			error_print(input[0], E_ARGNOTVAL);
 			return (1);
 		}
 		while(input[i][++k])
 		{
 			if(!is_valid_char(input[i][k]))
 			{
-				ft_putstr_fd("minishell: setenv: variable name must contain alphanumeric characters.\n", 2);
+				error_print(input[0], E_NOTALNUM);
 				return(1);
 			}
 		}
@@ -71,43 +71,53 @@ int	do_setenv(char **input, t_env *env)
 {
 	int	i;
 	int	k;
-	int	arr_len;
 	int	var_len;
 	int	added;
+	//int ret = 0;
+	// char **temp;
 
-	i = 1;
-	k = -1;
+	i = 0;
+	k = 0;
 	added = 0;
-	arr_len = 0;
 	var_len = 0;
+
+	// free_strarr(env->env);
+	// temp = (char**)malloc(sizeof(char *) * 1000);
+
+	// temp = strarrdup(env->env);
+	// env->env = strarrdup(temp);
 	if (check_validity(input))
 		return (1);
-	while(env->env[++k])
-		arr_len++;
-	k = -1;
-	while(input[i])
+	while(input[++i])
 	{
-		while(env->env[++k])
+		while(env->env[k])
 		{
+			ft_printf("index k:%d, input :%s env :%s\n", k, input[i], env->env[k]);
 			while(ft_strchr(&input[i][var_len], '='))
 				var_len++;
-			ft_printf("what\n");
-			if (ft_strncmp(env->env[k], input[i], 2) == 0 && env->env[k][var_len - 1] == '=')
+			if (ft_strncmp(env->env[k], input[i], var_len) == 0 && env->env[k][var_len - 1] == '=')
 			{
-				ft_strdel(&env->env[k]);
+				//ft_strdel(&env->env[k]);
 				env->env[k] = ft_strdup(input[i]);
 				added = 1;
+				break ;
 			}
-			ft_printf("TTTTTTT\n");
+			k++;
 		}
 		if (!added)
-			env->env[arr_len++] = ft_strdup(input[i]);
-		k = 0;
-		i++;
+		{
+			//ft_printf("%d", k);
+			env->env[k++] = ft_strdup(input[i]);
+			env->env[k] = NULL;
+		}
 		added = 0;
 		var_len = 0;
+		k = 0;
 	}
-	env->env[arr_len] = NULL;
-	//ft_printf("%d", arr_len);
+	//env->env[k] = NULL;
+	// k = -1;
+	// while(temp[++k])
+	// 	ft_printf("%s\n", temp[k]);
+	// exit(1);
 	return 0;
 }

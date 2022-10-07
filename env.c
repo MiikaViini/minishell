@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 21:50:13 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/05 22:52:53 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/07 11:56:57 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,14 +30,6 @@ int execute_command(char **input, char *exec, char **env)
 	int	pid;
 	struct stat stat_;
 
-
-	// if (!S_ISREG(stat_.st_mode))
-	// {
-	// 	ft_putstr_fd("minishell: ", 2);
-	// 	ft_putstr_fd(exec, 2);
-	// 	ft_putendl_fd("is not executable", 2);
-	// 	return (-1);
-	// }
 	if (stat(exec, &stat_) != -1 && !S_ISREG(stat_.st_mode))
 	{
 		return (-1);
@@ -49,7 +41,7 @@ int execute_command(char **input, char *exec, char **env)
 	{
 		if (execve(exec, input, env) == -1)
 		{
-			ft_putendl_fd("minishell: error occured during execution", 2);
+			error_print(exec, E_EXE);
 			exit(EXIT_FAILURE);
 		}
 	}
@@ -149,9 +141,11 @@ char **strarrdup(char **strarr)
 
 	i = -1;
 	len = 0;
+	if (!strarr)
+		return (NULL);
 	while(strarr[++i])
 		len++;
-	fresh = (char **)malloc(sizeof(char *) * len + 1);
+	fresh = (char **)malloc(sizeof(char *) * (len + 1));
 	if (!fresh)
 		return (NULL);
 	i = -1;
@@ -161,6 +155,18 @@ char **strarrdup(char **strarr)
 	return (fresh);
 }
 
+char **strarrcpy(char **dest, char **strarr)
+{
+	int	i;
+
+	i = -1;
+	if (!strarr)
+		return (NULL);
+	while(strarr[++i])
+		dest[i] = strarr[i];
+	return (dest);
+}
+
 int do_env(char **input, t_env *env)
 {
 	int		i;
@@ -168,16 +174,18 @@ int do_env(char **input, t_env *env)
 	int		arr_len;
 	int		var_len;
 	int		added;
-	char	**new_env;
 	char	*exec;
+	t_env   *temp;
 
 	i = 1;
 	k = -1;
 	added = 0;
 	arr_len = 0;
 	var_len = 0;
-	new_env = strarrdup(env->env);
+	temp = (t_env *)malloc(sizeof(t_env));
+	temp->env = (char **)ft_memalloc(sizeof(char *) * 1000);
 	exec = NULL;
+	temp->env = strarrcpy(temp->env, env->env);
 	update_env(env->env, input[0], "_");
 	if (!input[i])
 		while(env->env[++k])
@@ -203,16 +211,16 @@ int do_env(char **input, t_env *env)
 		}
 		else
 		{
-			ft_printf("here\n");
-			do_setenv(input, env);
-			k = 0;
-			while(env->env[k])
-				ft_putendl(env->env[k++]);
-			free_strarr(env->env);
-			env->env = strarrdup(new_env);
+			do_setenv(input, temp);
+			k = -1;
+			while(temp->env[++k])
+				ft_putendl(temp->env[k]);
+			// free_strarr(temp->env);
+			// free(temp);
+			//env->env = strarrdup(new_env);
 		}
 	}
-	free_strarr(new_env);
+	//free_strarr(new_env);
 	update_env(env->env, input[ft_linecount(input) - 1], "_");
 	return (0);
 }

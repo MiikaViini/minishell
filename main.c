@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/31 19:07:23 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/05 22:22:38 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/07 11:57:42 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,11 @@ static int	minishell(t_env *env, char **builtins)
 		if (rb == -1)
 			exit(1);
 		if (check_quotes(buf))
-			ft_putstr("invalid quoting, try again\n");
+			error_print(NULL, E_QUOT);
 		else
 		{
-			parsed_input = parse_input(buf, env->env);
+			if(rb != 0)
+				parsed_input = parse_input(buf, env->env);
 			rb = check_exec(parsed_input, rb, builtins, env);
 		}
 		ft_memset(buf, '\0', 4096);
@@ -65,8 +66,10 @@ void update_env(char **env, char *input, char *var)
 		if (ft_strncmp(env[i], var, len) == 0 && env[i][len] == '=')
 		{
 			temp = ft_strndup(env[i], len + 1);
-			ft_strdel(&env[i]);
-			env[i] = ft_strjoin(temp ,input);
+			//ft_printf("update %s\n", temp);
+			ft_memset(env[i], '\0', ft_strlen(env[i]));
+			ft_strcat(env[i],temp);
+			ft_strcat(env[i], input);
 			ft_strdel(&temp);
 			return ;
 		}
@@ -85,7 +88,7 @@ void	get_env(t_env *dest, char **environ, int argc, char **argv)
 	(void)argv;
 	i = 0;
 	k = -1;
-	dest->env = (char **)malloc(sizeof(char *) * (ft_linecount(environ) * 2) + 1);
+	dest->env = (char **)ft_memalloc(sizeof(char *) * 8000);//(ft_linecount(environ) * 2) + 1
 	if (!dest->env)
 		return ;
 	while (environ[++k])
@@ -103,17 +106,17 @@ void	get_env(t_env *dest, char **environ, int argc, char **argv)
 
 char **initialize_and_set_builtins(void)
 {
-	char **builtins;
+	static char *builtins[6] = {"echo", "cd", "setenv", "unsetenv", "env"};
 
-	builtins = (char **)malloc(sizeof(char *) * 5 + 1);
-	if (!builtins)
-		return (NULL);
-	builtins[0] = ft_strdup("echo");
-	builtins[1] = ft_strdup("cd");
-	builtins[2] = ft_strdup("setenv");
-	builtins[3] = ft_strdup("unsetenv");
-	builtins[4] = ft_strdup("env");
-	builtins[5] = NULL;
+	// builtins = (char **)malloc(sizeof(char *) * 5 + 1);
+	// if (!builtins)
+	// 	return (NULL);
+	// builtins[0] = ft_strdup("echo");
+	// builtins[1] = ft_strdup("cd");
+	// builtins[2] = ft_strdup("setenv");
+	// builtins[3] = ft_strdup("unsetenv");
+	// builtins[4] = ft_strdup("env");
+	// builtins[5] = NULL;
 	return (builtins);
 }
 
@@ -132,9 +135,8 @@ int	main(int argc, char **argv, char **environ)
 		ft_putstr("mish-1.0$ ");
 		rb = minishell(env, builtins);
 	}
-	//free_strarr(env->env);
+	free_strarr(env->env);
 	free_strarr(env->path);
-	free_strarr(builtins);
 	free(env);
 	return (0);
 }

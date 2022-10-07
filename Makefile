@@ -6,18 +6,18 @@
 #    By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/07/09 19:07:08 by mviinika          #+#    #+#              #
-#    Updated: 2022/10/05 13:37:23 by mviinika         ###   ########.fr        #
+#    Updated: 2022/10/07 10:50:39 by mviinika         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 
 SRC_FILES = main.c echo.c check_quotes.c expansions.c parsing.c quotecheck_utils.c \
-			unsetenv.c setenv.c env.c cd.c utils.c check_exec.c
+			unsetenv.c setenv.c env.c cd.c utils.c check_exec.c error_print.c
 
 OBJS = $(SRC_FILES:.c=.o)
 
-FLAGS = -Wall -Wextra -Werror -g
+FLAGS = -Wall -Wextra -Werror -g -fsanitize=address
 
 LIBFT = ./libft/libft.a
 
@@ -36,7 +36,7 @@ all: $(NAME)
 $(NAME): $(OBJS)
 	@make -C $(LIBFT_DIR)
 	@gcc -c $(FLAGS) $(SRC_FILES) -I $(INC)
-	@gcc $(OBJS) -o $(NAME) $(LIBFT)
+	@gcc $(FLAGS) $(OBJS) -o $(NAME) $(LIBFT)
 	@echo "$(GREEN)$(NAME) compiled$(RESET)"
 
 clean:

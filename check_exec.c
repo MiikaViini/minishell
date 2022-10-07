@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/05 13:37:00 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/05 14:51:24 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/07 11:41:41 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,10 @@ int	check_exec(char **input, int rb, char **builtins, t_env *env)
 	int	ret;
 
 	ret = 0;
-	if (!input[0] && rb)
+	if (rb && !input[0])
 		return (1);
 	env->path = get_path(env->env);
-	if (rb != 0)
+	if (rb)
 		update_env(env->env, input[ft_linecount(input) - 1], "_");
 	if (rb == 0 || !ft_strcmp(input[0], "exit"))
 	{
@@ -48,7 +48,7 @@ int	check_exec(char **input, int rb, char **builtins, t_env *env)
 	else if (!check_command(input, env->path, env->env))
 		;
 	else
-		ft_printf("minishell: %s: command not found\n", input[0]);
+		error_print(input[0], E_NOTF);
 	free_strarr(env->path);
 	return (1);
 }

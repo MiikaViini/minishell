@@ -1,35 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   error_print.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/05 13:33:07 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/06 10:04:40 by mviinika         ###   ########.fr       */
+/*   Created: 2022/10/06 08:28:50 by mviinika          #+#    #+#             */
+/*   Updated: 2022/10/06 08:52:06 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "include/minishell.h"
 
-size_t	ft_linecount(char **arr)
+void	error_print(char *word, char* e_msg)
 {
-	size_t	count;
-
-	count = 0;
-	while (arr[count])
-		count++;
-	return (count);
-}
-
-void	free_strarr(char **strarr)
-{
-	int	i;
-
-	i = 0;
-	if(!strarr || !strarr[i])
-		return ;
-	while (strarr[i])
-		ft_strdel(&strarr[i++]);
-	free(strarr);
+	ft_putstr_fd(MSHELL, 2);
+	ft_putstr_fd(": ", 2);
+	ft_putstr_fd(word, 2);
+	ft_putstr_fd(": ", 2);
+	ft_putendl_fd(e_msg, 2);
 }

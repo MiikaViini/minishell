@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/06 08:59:36 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/05 14:43:36 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/07 11:03:30 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,15 @@
 # define MAX_VAR 1024
 # define MAX_PATH 1024
 # define MAX_LINE 4096
+
+# define MSHELL "minishell"
+
+# define E_EXE "error occured during execution"
+# define E_NOTF "command not found"
+# define E_NOTVAL "variable name must begin with a letter."
+# define E_ARGNOTVAL "please enter arguments in format 'name=value'."
+# define E_NOTALNUM "variable name must contain alphanumeric characters."
+# define E_QUOT "invalid quoting, try again"
 
 typedef struct s_env
 {
@@ -67,7 +76,11 @@ void update_env(char **env, char *input, char *var);
 /** MEMORY HANDLING **/
 void	free_strarr(char **strarr);
 
+void	error_print(char *word, char* e_msg);
+
 typedef int	(*t_builtins)(char **input, t_env *env);
+
+char **strarrcpy(char **dest, char **strarr);
 
 static const t_builtins g_builtins[6] = {
 	do_echo,
