@@ -6,7 +6,7 @@
 #    By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/11/30 09:25:07 by mviinika          #+#    #+#              #
-#    Updated: 2022/10/07 10:13:39 by mviinika         ###   ########.fr        #
+#    Updated: 2022/10/07 13:56:26 by mviinika         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -49,7 +49,7 @@ GREEN = \x1b[32;01m
 YELLOW = \x1b[33;01m
 RESET = \x1b[32;00m
 
-FLAGS = -Wall -Wextra -Werror -fsanitize=address -g
+FLAGS = -Wall -Wextra -Werror -g
 
 all: $(NAME)
 

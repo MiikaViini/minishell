@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/31 19:07:23 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/07 11:57:42 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/07 14:42:16 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,13 +61,14 @@ void update_env(char **env, char *input, char *var)
 
 	i = -1;
 	len = ft_strlen(var);
+	if (!var)
+		return ;
 	while(env[++i])
 	{
 		if (ft_strncmp(env[i], var, len) == 0 && env[i][len] == '=')
 		{
 			temp = ft_strndup(env[i], len + 1);
-			//ft_printf("update %s\n", temp);
-			ft_memset(env[i], '\0', ft_strlen(env[i]));
+			ft_memset(env[i], '\0', ft_strlen(temp) + ft_strlen(input));
 			ft_strcat(env[i],temp);
 			ft_strcat(env[i], input);
 			ft_strdel(&temp);

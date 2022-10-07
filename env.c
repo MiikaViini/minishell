@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 21:50:13 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/07 11:56:57 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/07 14:58:51 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,6 +167,18 @@ char **strarrcpy(char **dest, char **strarr)
 	return (dest);
 }
 
+// char **strarrcat(char **dest, char **strarr)
+// {
+// 	int	i;
+
+// 	i = -1;
+// 	if (!strarr)
+// 		return (NULL);
+// 	while(strarr[++i])
+// 		dest[i] = strarr[i];
+// 	return (dest);
+// }
+
 int do_env(char **input, t_env *env)
 {
 	int		i;
@@ -175,17 +187,13 @@ int do_env(char **input, t_env *env)
 	int		var_len;
 	int		added;
 	char	*exec;
-	t_env   *temp;
 
 	i = 1;
 	k = -1;
 	added = 0;
 	arr_len = 0;
 	var_len = 0;
-	temp = (t_env *)malloc(sizeof(t_env));
-	temp->env = (char **)ft_memalloc(sizeof(char *) * 1000);
 	exec = NULL;
-	temp->env = strarrcpy(temp->env, env->env);
 	update_env(env->env, input[0], "_");
 	if (!input[i])
 		while(env->env[++k])
@@ -211,16 +219,13 @@ int do_env(char **input, t_env *env)
 		}
 		else
 		{
-			do_setenv(input, temp);
+			do_setenv(input, env);
 			k = -1;
-			while(temp->env[++k])
-				ft_putendl(temp->env[k]);
-			// free_strarr(temp->env);
-			// free(temp);
-			//env->env = strarrdup(new_env);
+			while(env->env[++k])
+				ft_putendl(env->env[k]);
 		}
 	}
-	//free_strarr(new_env);
+	do_unsetenv(input, env);
 	update_env(env->env, input[ft_linecount(input) - 1], "_");
 	return (0);
 }

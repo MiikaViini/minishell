@@ -6,7 +6,7 @@
 #    By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/07/09 19:07:08 by mviinika          #+#    #+#              #
-#    Updated: 2022/10/07 10:50:39 by mviinika         ###   ########.fr        #
+#    Updated: 2022/10/07 13:56:14 by mviinika         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,7 @@ SRC_FILES = main.c echo.c check_quotes.c expansions.c parsing.c quotecheck_utils
 
 OBJS = $(SRC_FILES:.c=.o)
 
-FLAGS = -Wall -Wextra -Werror -g -fsanitize=address
+FLAGS = -Wall -Wextra -Werror -g
 
 LIBFT = ./libft/libft.a
 

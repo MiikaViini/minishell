@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 08:48:51 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/07 11:25:10 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/07 14:34:48 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,12 +92,12 @@ int	do_setenv(char **input, t_env *env)
 	{
 		while(env->env[k])
 		{
-			ft_printf("index k:%d, input :%s env :%s\n", k, input[i], env->env[k]);
+			//ft_printf("index k:%d, input :%s env :%s\n", k, input[i], env->env[k]);
 			while(ft_strchr(&input[i][var_len], '='))
 				var_len++;
 			if (ft_strncmp(env->env[k], input[i], var_len) == 0 && env->env[k][var_len - 1] == '=')
 			{
-				//ft_strdel(&env->env[k]);
+				ft_strdel(&env->env[k]);
 				env->env[k] = ft_strdup(input[i]);
 				added = 1;
 				break ;
@@ -115,9 +115,6 @@ int	do_setenv(char **input, t_env *env)
 		k = 0;
 	}
 	//env->env[k] = NULL;
-	// k = -1;
-	// while(temp[++k])
-	// 	ft_printf("%s\n", temp[k]);
 	// exit(1);
 	return 0;
 }
