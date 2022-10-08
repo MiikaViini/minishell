@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/27 09:14:23 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/07 11:32:42 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/08 14:52:26 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	is_expansion(char *str)
 		ret = 1;
 	else if (str[i] == '~')
 	{
-		if (str[i + 1] == '/' || str[i + 1] == '\0' || str[i + 1] == '+' || str[i + 1] == '-') //(str[i - 1] && str[i - 1] != '~')
+		//if (str[i + 1] == '/' || str[i + 1] == '\0' || str[i + 1] == '+' || str[i + 1] == '-') //(str[i - 1] && str[i - 1] != '~')
 			ret = 1;
 	}
 	return (ret);

@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/03 09:14:35 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/07 21:37:00 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/08 15:04:36 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,10 @@ int	check_access(char *input)
 		ft_printf("minishell: cd: %s: No such file or folder\n", input);
 		ret = 1;
 	}
-	else if (stat(input, &buf) == -1 && access(input, X_OK))
+	else if (lstat(input, &buf) == -1 || access(input, X_OK) || access(input, R_OK))
 	{
-		ft_printf("minishell: cd: %s: Permission denied\n", input[1]);
+		// ft_printf("minishell: cd: %s: Permission denied\n", input[1]);
+		error_print(input, E_NOPERM);
 		ret = 1;
 	}
 	else if(chdir(input) == -1)
@@ -60,6 +61,32 @@ void env_dir(char *input, char **env)
 		ft_putstr_fd("minishell: cd: variable doesnt have a value\n", 2);
 }
 
+char	*user_expansion(char *input)
+{
+	DIR		*dir;
+	struct 	dirent *entity;
+	char	*path;
+
+
+	dir = opendir("/Users");
+	path = NULL;
+	if (dir == NULL)
+		return (NULL);
+	entity = readdir(dir);
+	while(entity != NULL)
+	{
+		if (ft_strcmp(input, entity->d_name) == 0)
+			{
+				path = ft_strjoin("/Users/", input);
+			}
+		entity = readdir(dir);
+	}
+	closedir(dir);
+	if (!path)
+		path = ft_strjoin("~", input);
+	return (path);
+}
+
 int do_cd(char **input, t_env *env)
 {
 	char		*old_cwd;
@@ -76,7 +103,8 @@ int do_cd(char **input, t_env *env)
 	else if (!input[1] || ft_strncmp(input[1], "-", 1) == 0)
 		env_dir(input[1], env->env);
 	cwd = getcwd(NULL, 0);
-	ft_printf("%s\n", cwd);
+	if (!cwd)
+		exit(EXIT_FAILURE);
 	update_env(env->env, cwd, "PWD");
 	update_env(env->env, old_cwd, "OLDPWD");
 	free(cwd);

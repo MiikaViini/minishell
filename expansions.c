@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/27 09:15:09 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/05 14:52:01 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/08 15:04:39 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,10 @@ char	*replace_expansion(char *word, char **env, char *input)
 	// TILDE HANDLING //////////////***************************************************************
 	if (word[0] == '~' && word[1] != '$')
 	{
+
 		if (word[1] == '/' || word[1] == '\0')
 		{
+
 			while (env[++k])
 			{
 				if (ft_strncmp(env[k], "HOME=", 5) == 0)
@@ -80,7 +82,11 @@ char	*replace_expansion(char *word, char **env, char *input)
 			}
 		}
 		else
-			expanded = ft_strdup(word);
+		{
+
+			expanded = user_expansion(&word[1]);
+		}
+
 	}
 	// TILDE HANDLING ENDS//////////////***************************************************************
 	else
