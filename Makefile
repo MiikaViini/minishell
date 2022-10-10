@@ -6,14 +6,15 @@
 #    By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/07/09 19:07:08 by mviinika          #+#    #+#              #
-#    Updated: 2022/10/07 13:56:14 by mviinika         ###   ########.fr        #
+#    Updated: 2022/10/10 20:22:02 by mviinika         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 
 SRC_FILES = main.c echo.c check_quotes.c expansions.c parsing.c quotecheck_utils.c \
-			unsetenv.c setenv.c env.c cd.c utils.c check_exec.c error_print.c
+			unsetenv.c setenv.c env.c cd.c utils.c check_exec.c error_print.c \
+			dollar_expansion.c
 
 OBJS = $(SRC_FILES:.c=.o)
 

@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/31 19:07:23 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/07 21:18:11 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/10 15:29:19 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static int	minishell(t_env *env, char **builtins)
 		if (rb == -1)
 			exit(1);
 		if (check_quotes(buf))
-			error_print(NULL, E_QUOT);
+			error_print(NULL, NULL, E_QUOT);
 		else
 		{
 			if(rb != 0)
@@ -47,8 +47,7 @@ static int	minishell(t_env *env, char **builtins)
 		}
 		ft_memset(buf, '\0', 4096);
 		free_parsed_input(parsed_input);
-		if (parsed_input)
-			free(parsed_input);
+		free(parsed_input);
 	}
 	return (rb);
 }
@@ -70,8 +69,6 @@ void update_env(char **env, char *input, char *var)
 			temp = ft_strndup(env[i], len + 1);
 			ft_strdel(&env[i]);
 			env[i] = ft_strjoin(temp, input);
-			// ft_strcat(env[i],temp);
-			// ft_strcat(env[i], input);
 			ft_strdel(&temp);
 			return ;
 		}
@@ -81,16 +78,40 @@ void update_env(char **env, char *input, char *var)
 	ft_strdel(&temp);
 }
 
-void	get_env(t_env *dest, char **environ, int argc, char **argv)
+void set_shell_lvl(t_env *env)
+{
+	int		num;
+	char	*temp;
+	int		i;
+	
+	i = 0;
+	temp = NULL;
+	while (env->env[++i])
+	{
+		if (ft_strncmp(env->env[i], "SHLVL=", 6) == 0)
+		{
+			num = ft_atoi(env->env[i] + 6);
+			num++;
+			if (num >= 1000)
+				num = 0;
+			temp = ft_itoa(num);
+			ft_strdel(&env->env[i]);
+			env->env[i] = ft_strjoin("SHLVL=", temp);
+			ft_strdel(&temp);
+		}
+	}
+}
+
+static void	get_env(t_env *dest, char **environ, int argc, char **argv)
 {
 	int		i;
 	int		k;
-
+	
 	(void)argc;
 	(void)argv;
 	i = 0;
 	k = -1;
-	dest->env = (char **)ft_memalloc(sizeof(char *) * 8000);//(ft_linecount(environ) * 2) + 1
+	dest->env = (char **)ft_memalloc(sizeof(char *) * (ft_linecount(environ) + 1));
 	if (!dest->env)
 		return ;
 	while (environ[++k])
@@ -100,25 +121,12 @@ void	get_env(t_env *dest, char **environ, int argc, char **argv)
 		dest->env[i++] = ft_strdup(environ[k]);
 	}
 	dest->env[i] = NULL;
-	i = -1;
-	while (dest->env[++i])
-		if (ft_strncmp(dest->env[i], "SHLVL=", 6) == 0)
-			dest->env[i][6] += 1;
+	set_shell_lvl(dest);
 }
 
-char **initialize_and_set_builtins(void)
+static char **initialize_and_set_builtins(void)
 {
-	static char *builtins[6] = {"echo", "cd", "setenv", "unsetenv", "env"};
-
-	// builtins = (char **)malloc(sizeof(char *) * 5 + 1);
-	// if (!builtins)
-	// 	return (NULL);
-	// builtins[0] = ft_strdup("echo");
-	// builtins[1] = ft_strdup("cd");
-	// builtins[2] = ft_strdup("setenv");
-	// builtins[3] = ft_strdup("unsetenv");
-	// builtins[4] = ft_strdup("env");
-	// builtins[5] = NULL;
+	static char *builtins[6] = { "echo", "cd", "setenv", "unsetenv", "env"};
 	return (builtins);
 }
 

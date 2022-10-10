@@ -1,27 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   error_print.c                                      :+:      :+:    :+:   */
+/*   ft_strarrcpy.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/06 08:28:50 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/10 13:28:46 by mviinika         ###   ########.fr       */
+/*   Created: 2022/10/10 13:32:58 by mviinika          #+#    #+#             */
+/*   Updated: 2022/10/10 13:33:42 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "include/minishell.h"
+#include "libft.h"
 
-void	error_print(char *word, char *command, char* e_msg)
+char **ft_strarrcpy(char **dest, char **strarr)
 {
-	ft_putstr_fd(MSHELL, 2);
-	ft_putstr_fd(": ", 2);
-	if (command)
-	{
-		ft_putstr_fd(command, 2);
-		ft_putstr_fd(": ", 2);
-	}
-	ft_putstr_fd(word, 2);
-	ft_putstr_fd(": ", 2);
-	ft_putendl_fd(e_msg, 2);
+	int	i;
+
+	i = -1;
+	if (!strarr)
+		return (NULL);
+	while(strarr[++i])
+		dest[i] = strarr[i];
+	return (dest);
 }

@@ -1,27 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   error_print.c                                      :+:      :+:    :+:   */
+/*   ft_linecount.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/06 08:28:50 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/10 13:28:46 by mviinika         ###   ########.fr       */
+/*   Created: 2022/10/10 13:41:32 by mviinika          #+#    #+#             */
+/*   Updated: 2022/10/10 13:41:41 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "include/minishell.h"
+#include "libft.h"
 
-void	error_print(char *word, char *command, char* e_msg)
+size_t	ft_linecount(char **arr)
 {
-	ft_putstr_fd(MSHELL, 2);
-	ft_putstr_fd(": ", 2);
-	if (command)
-	{
-		ft_putstr_fd(command, 2);
-		ft_putstr_fd(": ", 2);
-	}
-	ft_putstr_fd(word, 2);
-	ft_putstr_fd(": ", 2);
-	ft_putendl_fd(e_msg, 2);
+	size_t	count;
+
+	count = 0;
+	while (arr[count])
+		count++;
+	return (count);
 }

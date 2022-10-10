@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 21:50:13 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/07 21:34:42 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/10 15:35:22 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,7 @@ int execute_command(char **input, char *exec, char **env)
 	struct stat stat_;
 
 	if (stat(exec, &stat_) != -1 && !S_ISREG(stat_.st_mode))
-	{
 		return (-1);
-	}
 	pid = fork();
 	if (pid < 0)
 		return (-1);
@@ -41,7 +39,7 @@ int execute_command(char **input, char *exec, char **env)
 	{
 		if (execve(exec, input, env) == -1)
 		{
-			error_print(exec, E_EXE);
+			error_print(exec, NULL, E_EXE);
 			exit(EXIT_FAILURE);
 		}
 	}
@@ -53,20 +51,15 @@ int execute_command(char **input, char *exec, char **env)
 int check_validity_env(char **input)
 {
 	int	i;
-	int	k;
 	int equ_sign;
 
 	equ_sign = 0;
 	i = 0;
-	k = -1;
 	while (input[++i])
 	{
 		equ_sign = check_equalsign(input[i]);
 		if (equ_sign)
-		{
-			//ft_putstr_fd("minishell: setenv: please enter arguments in format 'name=value'.\n", 2);
 			return (1);
-		}
 	}
 	return (0);
 }
@@ -133,78 +126,52 @@ int	check_command(char **input, char **path, char **env)
 	return (ret);
 }
 
-char	**strarrndup(char **dest, char **strarr, size_t size)
+static void exec_w_env(char **input, t_env *env, int i, int k)
 {
-	int	i;
-
-	i = -1;
-	if (!strarr)
-		return (NULL);
-	size += ft_linecount(strarr) + 1;
-	dest = (char **)ft_memalloc(sizeof(char *) * (size + 1));
-	if (!dest)
-		return (NULL);
-	while (strarr[++i])
-		dest[i] = ft_strdup(strarr[i]);
-	dest[i] = NULL;
-	return (dest);
-}
-
-char **strarrcpy(char **dest, char **strarr)
-{
-	int	i;
-
-	i = -1;
-	if (!strarr)
-		return (NULL);
-	while(strarr[++i])
-		dest[i] = strarr[i];
-	return (dest);
+	t_env	temp;
+	char	*exec;
+	
+	exec = NULL;
+	temp.env = ft_strarrndup(temp.env, env->env, ft_linecount(input));
+	update_env(temp.env, input[0], "_");
+	if (input[i])
+	{
+		exec = input[i];
+		input[i] = NULL;
+		do_setenv(input, &temp);
+		input[i] = exec;
+		if (!check_command(&input[i], env->path, temp.env))
+			;
+		else
+			error_print(input[i], "env",E_NOEX);
+	}
+	else
+	{
+		do_setenv(input, &temp);
+		k = -1;
+		while(temp.env[++k])
+			ft_putendl(temp.env[k]);
+	}
+	free_strarr(temp.env);
 }
 
 int do_env(char **input, t_env *env)
 {
 	int		i;
 	int		k;
-	t_env	temp;
-	char	*exec;
 
-	i = 1;
+	i = 0;
 	k = -1;
-	exec = NULL;
-	temp.env = strarrndup(temp.env, env->env, ft_linecount(input));
-	update_env(temp.env, input[0], "_");
 	if (!input[1])
 		while(env->env[++k])
 			ft_putendl(env->env[k]);
 	else
 	{
-		while(input[i])
-		{
+		while(input[++i])
 			if (check_equalsign(input[i]))
 				break ;
-			i++;
-		}
-		if (input[i])
-		{
-			exec = input[i];
-			input[i] = NULL;
-			do_setenv(input, &temp);
-			input[i] = exec;
-			if (!check_command(&input[i], env->path, temp.env))
-				;// ft_printf("minishell: env: %s: no such file or folder\n", input[i]);
-			else
-				error_print(input[0], E_NOEX);
-		}
-		else
-		{
-			do_setenv(input, &temp);
-			k = -1;
-			while(temp.env[++k])
-				ft_putendl(temp.env[k]);
-		}
+		exec_w_env(input, env, i, k);
 	}
-	free_strarr(temp.env);
 	update_env(env->env, input[ft_linecount(input) - 1], "_");
 	return (0);
 }

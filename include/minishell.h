@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/06 08:59:36 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/08 14:48:38 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/10 20:50:44 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@
 # define E_QUOT "invalid quoting, try again"
 # define E_NOEX "no such file or folder"
 # define E_NOPERM "permission denied"
+# define E_NODIR "is not a directory"
+# define E_NULLVAR "variable doesnt have a value"
 
 typedef struct s_env
 {
@@ -74,16 +76,16 @@ int check_equalsign(char *input);
 char **get_path(char **env);
 int	check_command(char **input, char **path, char **env);
 void update_env(char **env, char *input, char *var);
+char *dollar_expansion(char *expanded, char *word, char **env);
+char	*expand_and_concat(char *expanded, char **env, int k, int len);
+int var_name_len(char *word, int len, int i);
 
 /** MEMORY HANDLING **/
 void	free_strarr(char **strarr);
 
-void	error_print(char *word, char* e_msg);
+void	error_print(char *word, char *command,char* e_msg);
 
 typedef int	(*t_builtins)(char **input, t_env *env);
-char	**strarrdup(char **dest, char **strarr);
-char **strarrcpy(char **dest, char **strarr);
-void	get_env(t_env *dest, char **environ, int argc, char **argv);
 
 static const t_builtins g_builtins[6] = {
 	do_echo,

@@ -6,13 +6,13 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/05 13:37:00 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/07 14:26:02 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/10 13:22:29 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "include/minishell.h"
 
-int	check_builtins(char **input, char **builtins, t_env *env)
+static int	check_builtins(char **input, char **builtins, t_env *env)
 {
 	int k;
 
@@ -48,7 +48,7 @@ int	check_exec(char **input, int rb, char **builtins, t_env *env)
 	else if (!check_command(input, env->path, env->env))
 		;
 	else
-		error_print(input[0], E_NOTF);
+		error_print(input[0], NULL, E_NOTF);
 	free_strarr(env->path);
 	return (1);
 }

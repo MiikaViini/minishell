@@ -1,27 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   error_print.c                                      :+:      :+:    :+:   */
+/*   ft_strarrndup.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/06 08:28:50 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/10 13:28:46 by mviinika         ###   ########.fr       */
+/*   Created: 2022/10/10 13:34:07 by mviinika          #+#    #+#             */
+/*   Updated: 2022/10/10 13:37:14 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "include/minishell.h"
+#include "libft.h"
 
-void	error_print(char *word, char *command, char* e_msg)
+char	**ft_strarrndup(char **dest, char **strarr, size_t size)
 {
-	ft_putstr_fd(MSHELL, 2);
-	ft_putstr_fd(": ", 2);
-	if (command)
-	{
-		ft_putstr_fd(command, 2);
-		ft_putstr_fd(": ", 2);
-	}
-	ft_putstr_fd(word, 2);
-	ft_putstr_fd(": ", 2);
-	ft_putendl_fd(e_msg, 2);
+	int	i;
+
+	i = -1;
+	if (!strarr)
+		return (NULL);
+	size += ft_linecount(strarr) + 1;
+	dest = (char **)ft_memalloc(sizeof(char *) * (size + 1));
+	if (!dest)
+		return (NULL);
+	while (strarr[++i])
+		dest[i] = ft_strdup(strarr[i]);
+	dest[i] = NULL;
+	return (dest);
 }
