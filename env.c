@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 21:50:13 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/10 15:35:22 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/10 21:37:30 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,20 +91,6 @@ int	check_command(char **input, char **path, char **env)
 			{
 				exec = ft_strjoin("/", input[0]);
 				path_ = ft_strjoin(path[i], exec);
-				while (env[k])
-				{
-					if (ft_strncmp(env[k], "OLDPWD=", 7) == 0)
-					{
-						ft_strdel(&env[k]);
-						env[k] = env[k + 1];
-						while(env[k])
-						{
-							env[k] = env[k + 1];
-							k++;
-						}
-					}
-					k++;
-				}
 				if (execute_command(input, path_, env))
 					return (1);
 				ft_strdel(&exec);
@@ -175,3 +161,18 @@ int do_env(char **input, t_env *env)
 	update_env(env->env, input[ft_linecount(input) - 1], "_");
 	return (0);
 }
+
+// while (env[k])
+// {
+// 	if (ft_strncmp(env[k], "OLDPWD=", 7) == 0)
+// 	{
+// 		ft_strdel(&env[k]);
+// 		env[k] = env[k + 1];
+// 		while(env[k])
+// 		{
+// 			env[k] = env[k + 1];
+// 			k++;
+// 		}
+// 	}
+// 	k++;
+// }

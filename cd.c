@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/03 09:14:35 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/10 21:24:25 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/10 21:29:14 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@ static int	check_access(char *input)
 		error_print(input, "cd", E_NOEX);
 		ret = 1;
 	}
-	else if (lstat(input, &buf) == -1 || access(input, X_OK) || access(input, R_OK))
+	else if (lstat(input, &buf) == -1 
+		|| access(input, X_OK) || access(input, R_OK))
 	{
 		error_print(input, "cd", E_NOPERM);
 		ret = 1;
