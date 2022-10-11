@@ -57,22 +57,9 @@ size_t	longest_var(char **env)
 // 	len = 0;
 // }
 
-int var_name_len(char *word, int len, int i)
-{
-	while(ft_isalnum(word[len + i]) || (!ft_isalnum(word[len + i]) && word[len + i] == '_'))
-		len++;
-	return (len);
-}
 
-char	*expand_and_concat(char *expanded, char **env, int k, int len)
-{
-	char	*temp;
-	
-	temp = ft_strjoin(expanded, env[k] + len + 1);
-	 expanded = ft_strcpy(expanded, temp);
-	ft_strdel(&temp);
-	return (expanded);
-}
+
+
 
 char	*expand_and_concat_tilde(char *expanded, char **env, char *word, int len)
 {
@@ -94,7 +81,7 @@ char	*expand_and_concat_tilde(char *expanded, char **env, char *word, int len)
 
 char	*replace_expansion(char *word, char **env, char *input)
 {
-	int		i;
+	int		len;
 	int		k;
 	char 	*expanded;
 	char 	*temp;
@@ -102,7 +89,7 @@ char	*replace_expansion(char *word, char **env, char *input)
 	expanded = ft_strnew(longest_var(env) + ft_strlen(input));
 	(void)input;
 	temp = NULL;
-	i = 0;
+	len = 0;
 	k = -1;
 	// if (word[0] == '~' && word[1] == '$')
 	// 	i++;
@@ -168,6 +155,6 @@ char	*replace_expansion(char *word, char **env, char *input)
 	}
 	// TILDE HANDLING ENDS//////////////***************************************************************
 	else
-		expanded = dollar_expansion(expanded, word, env);
+		expanded = dollar_expansion(expanded, word, env, len);
 	return (expanded);
 }

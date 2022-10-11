@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/06 08:59:36 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/10 20:50:44 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/11 13:23:43 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,9 +76,7 @@ int check_equalsign(char *input);
 char **get_path(char **env);
 int	check_command(char **input, char **path, char **env);
 void update_env(char **env, char *input, char *var);
-char *dollar_expansion(char *expanded, char *word, char **env);
-char	*expand_and_concat(char *expanded, char **env, int k, int len);
-int var_name_len(char *word, int len, int i);
+char *dollar_expansion(char *expanded, char *word, char **env, int len);
 
 /** MEMORY HANDLING **/
 void	free_strarr(char **strarr);

@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/03 09:14:35 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/11 10:48:13 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/11 14:11:03 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ static int	check_access(char *input, t_env *env, char *old_cwd)
 	struct stat buf;
 
 	ret = 0;
+	ft_printf("%s\n", input	);
 	if (access(input, F_OK))
 	{
 		error_print(input, "cd", E_NOEX);

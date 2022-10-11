@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 21:50:13 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/11 11:11:10 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/11 15:01:56 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,20 +64,39 @@ int check_validity_env(char **input)
 	return (0);
 }
 
+int	execute_path_bin(char **input, char *path, char **env)
+{
+	char	*exec;
+	char	*path_;
+	exec = ft_strjoin("/", *input);
+	path_ = ft_strjoin(path, exec);
+	if (execute_command(input, path_, env))
+		return (1);
+	ft_strdel(&exec);
+	ft_strdel(&path_);
+	return 0;
+}
+
+int	tried_to_execute(char **input, char *f_name, char **path, char **env)
+{
+	if (ft_strcmp(input[0], f_name) == 0
+		&& !execute_path_bin(input, *path, env))
+		return 1;
+	else if (access(input[0], F_OK) == 0 && !execute_command(input, input[0], env))
+		return 1;
+	return (0);
+}
+
 int	check_command(char **input, char **path, char **env)
 {
 	DIR		*dir;
 	struct 	dirent *entity;
 	int		i;
-	char	*exec;
-	char	*path_;
-	int		len;
 	int		k;
 
-	i = 0;
-	len = 0;
+	i = -1;
 	k = 0;
-	while (input[0] && path && path[i])
+	while (input[0] && path && path[++i])
 	{
 		dir = opendir(path[i]);
 		if (dir == NULL)
@@ -85,27 +104,14 @@ int	check_command(char **input, char **path, char **env)
 		entity = readdir(dir);
 		while (entity != NULL)
 		{
-			if (ft_strcmp(input[0], entity->d_name) == 0)
+			if (tried_to_execute(input, entity->d_name, &path[i], env))
 			{
-				exec = ft_strjoin("/", input[0]);
-				path_ = ft_strjoin(path[i], exec);
-				if (execute_command(input, path_, env))
-					return (1);
-				ft_strdel(&exec);
-				ft_strdel(&path_);
-				closedir(dir);
-				return 0;
-			}
-			else if (access(input[0], F_OK) == 0)
-			{
-				execute_command(input, input[0], env);
 				closedir(dir);
 				return 0;
 			}
 			entity = readdir(dir);
 		}
 		closedir(dir);
-		i++;
 	}
 	return (1);
 }
@@ -127,12 +133,11 @@ static void exec_w_env(char **input, t_env *env, int i, int k)
 		if (!check_command(&input[i], env->path, temp.env))
 			;
 		else
-			error_print(input[i], "env",E_NOEX);
+			error_print(input[i], "env", E_NOEX);
 	}
 	else
 	{
 		do_setenv(input, &temp);
-		k = -1;
 		while(temp.env[++k])
 			ft_putendl(temp.env[k]);
 	}
@@ -154,9 +159,9 @@ int do_env(char **input, t_env *env)
 		while(input[++i])
 			if (check_equalsign(input[i]))
 				break ;
+		k = -1;
 		exec_w_env(input, env, i, k);
 	}
-	
 	update_env(env->env, input[ft_linecount(input) - 1], "_");
 	return (0);
 }
