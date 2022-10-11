@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/31 19:07:23 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/11 11:31:17 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/11 23:27:52 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,12 +108,14 @@ static void	get_env(t_env *dest, char **environ, int argc, char **argv)
 {
 	int		i;
 	int		k;
+	int		size;
 	
 	(void)argc;
 	(void)argv;
+	size = 3 + ft_linecount(environ);
 	i = 0;
 	k = -1;
-	dest->env = (char **)ft_memalloc(sizeof(char *) * (ft_linecount(environ) + 2));
+	dest->env = (char **)ft_memalloc(sizeof(char *) * (size));
 	if (!dest->env)
 		return ;
 	while (environ[++k])

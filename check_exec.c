@@ -6,11 +6,24 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/05 13:37:00 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/11 14:15:27 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/11 23:19:12 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "include/minishell.h"
+
+static char **get_path(char **env)
+{
+	int		i;
+	char 	**path;
+
+	i = -1;
+	path = NULL;
+	while (env[++i])
+		if (ft_strncmp(env[i], "PATH=", 5) == 0)
+			path = ft_strsplit(env[i] + 5, ':');
+	return (path);
+}
 
 static int	check_builtins(char **input, char **builtins, t_env *env)
 {

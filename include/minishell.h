@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/06 08:59:36 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/11 13:23:43 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/11 21:12:00 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,11 @@
 # define E_ARGNOTVAL "please enter arguments in format 'name=value'."
 # define E_NOTALNUM "variable name must contain alphanumeric characters."
 # define E_QUOT "invalid quoting, try again"
-# define E_NOEX "no such file or folder"
+# define E_NOEX "no such file or directory"
 # define E_NOPERM "permission denied"
 # define E_NODIR "is not a directory"
 # define E_NULLVAR "variable doesnt have a value"
+# define E_ISDIR "is a directory"
 
 typedef struct s_env
 {
@@ -73,11 +74,10 @@ int do_cd(char **input, t_env *env);
 
 int check_validity(char **input);
 int check_equalsign(char *input);
-char **get_path(char **env);
 int	check_command(char **input, char **path, char **env);
 void update_env(char **env, char *input, char *var);
 char *dollar_expansion(char *expanded, char *word, char **env, int len);
-
+char *tilde_expansion(char *word, char **env, char *expanded);
 /** MEMORY HANDLING **/
 void	free_strarr(char **strarr);
 

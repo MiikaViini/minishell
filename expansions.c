@@ -61,23 +61,7 @@ size_t	longest_var(char **env)
 
 
 
-char	*expand_and_concat_tilde(char *expanded, char **env, char *word, int len)
-{
-	char	*temp;
-	
-	// temp = ft_strjoin(expanded, env[k] + len + 1);
-	// ft_printf("temp [%s]\n",temp);
-	// if (expanded)
-	// 	ft_strdel(&expanded);
-	// expanded = ft_strdup(temp);
-	// ft_strdel(&temp);
-	temp = ft_strdup(*env + len);
-	if(expanded)
-		ft_strdel(&expanded);
-	expanded = ft_strjoin(temp, &word[1]);
-	ft_strdel(&temp);
-	return (expanded);
-}
+
 
 char	*replace_expansion(char *word, char **env, char *input)
 {
@@ -96,62 +80,63 @@ char	*replace_expansion(char *word, char **env, char *input)
 	// TILDE HANDLING //////////////***************************************************************
 	if (word[0] == '~' && word[1] != '$')
 	{
-		if (word[1] == '/' || word[1] == '\0')
-		{
-			while (env[++k])
-			{
-				if (ft_strncmp(env[k], "HOME=", 5) == 0)
-				{
-					expanded = expand_and_concat_tilde(expanded, env + k, word, 5);
-					//expand_and_concat(expanded, env, k, 4);
-					// temp = ft_strdup(env[k] + 5);
-					// ft_strdel(&expanded);
-					// expanded = ft_strjoin(temp, &word[1]);
-					// ft_strdel(&temp);
-					break ;
-				}
-			}
-		}
-		else if (word[1] == '-')
-		{
-			while (env[++k])
-			{
-				if (ft_strncmp(env[k], "OLDPWD=", 7) == 0)
-				{
-					expanded = expand_and_concat_tilde(expanded, env + k, &word[1],7);
-					//expand_and_concat(expanded, env, k, 6);
-					// temp = ft_strdup(env[k] + 7);
-					// ft_strdel(&expanded);
-					// expanded = ft_strjoin(temp, &word[2]);
-					// ft_strdel(&temp);
-					//exit(1);
-					break ;
-				}
-				k++;
-			}
-		}
-		else if (word[1] == '+')
-		{
-			while (env[++k])
-			{
-				if (ft_strncmp(env[k], "PWD=", 4) == 0)
-				{
-					expanded = expand_and_concat_tilde(expanded, env + k, &word[1], 4);
-					//expand_and_concat(expanded, env, k, 3);
-					// temp = ft_strdup(env[k] + 4);
-					// ft_strdel(&expanded);
-					// expanded = ft_strjoin(temp, &word[2]);
-					// ft_strdel(&temp);
-					break ;
-				}
-			}
-		}
-		else
-		{
-			if (expanded)
-				ft_strdel(&expanded);
-			expanded = ft_strdup(user_expansion(word));
-		}
+		expanded = tilde_expansion(word, env, expanded);
+		// if (word[1] == '/' || word[1] == '\0')
+		// {
+		// 	while (env[++k])
+		// 	{
+		// 		if (ft_strncmp(env[k], "HOME=", 5) == 0)
+		// 		{
+		// 			expanded = expand_and_concat_tilde(expanded, env + k, word, 5);
+		// 			//expand_and_concat(expanded, env, k, 4);
+		// 			// temp = ft_strdup(env[k] + 5);
+		// 			// ft_strdel(&expanded);
+		// 			// expanded = ft_strjoin(temp, &word[1]);
+		// 			// ft_strdel(&temp);
+		// 			break ;
+		// 		}
+		// 	}
+		// }
+		// else if (word[1] == '-')
+		// {
+		// 	while (env[++k])
+		// 	{
+		// 		if (ft_strncmp(env[k], "OLDPWD=", 7) == 0)
+		// 		{
+		// 			expanded = expand_and_concat_tilde(expanded, env + k, &word[1],7);
+		// 			//expand_and_concat(expanded, env, k, 6);
+		// 			// temp = ft_strdup(env[k] + 7);
+		// 			// ft_strdel(&expanded);
+		// 			// expanded = ft_strjoin(temp, &word[2]);
+		// 			// ft_strdel(&temp);
+		// 			//exit(1);
+		// 			break ;
+		// 		}
+		// 		k++;
+		// 	}
+		// }
+		// else if (word[1] == '+')
+		// {
+		// 	while (env[++k])
+		// 	{
+		// 		if (ft_strncmp(env[k], "PWD=", 4) == 0)
+		// 		{
+		// 			expanded = expand_and_concat_tilde(expanded, env + k, &word[1], 4);
+		// 			//expand_and_concat(expanded, env, k, 3);
+		// 			// temp = ft_strdup(env[k] + 4);
+		// 			// ft_strdel(&expanded);
+		// 			// expanded = ft_strjoin(temp, &word[2]);
+		// 			// ft_strdel(&temp);
+		// 			break ;
+		// 		}
+		// 	}
+		// }
+		// else
+		// {
+		// 	if (expanded)
+		// 		ft_strdel(&expanded);
+		// 	expanded = ft_strdup(user_expansion(word));
+		// }
 	}
 	// TILDE HANDLING ENDS//////////////***************************************************************
 	else
