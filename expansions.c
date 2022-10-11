@@ -1,3 +1,4 @@
+
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
@@ -68,9 +69,7 @@ char	*expand_and_concat(char *expanded, char **env, int k, int len)
 	char	*temp;
 	
 	temp = ft_strjoin(expanded, env[k] + len + 1);
-	if (expanded)
-		ft_strdel(&expanded);
-	expanded = ft_strdup(temp);
+	 expanded = ft_strcpy(expanded, temp);
 	ft_strdel(&temp);
 	return (expanded);
 }
@@ -100,7 +99,7 @@ char	*replace_expansion(char *word, char **env, char *input)
 	char 	*expanded;
 	char 	*temp;
 	
-	expanded = ft_strnew(longest_var(env));
+	expanded = ft_strnew(longest_var(env) + ft_strlen(input));
 	(void)input;
 	temp = NULL;
 	i = 0;
@@ -158,7 +157,6 @@ char	*replace_expansion(char *word, char **env, char *input)
 					// ft_strdel(&temp);
 					break ;
 				}
-				k++;
 			}
 		}
 		else

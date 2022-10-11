@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/31 19:07:23 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/10 15:29:19 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/11 11:31:17 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ void set_shell_lvl(t_env *env)
 	char	*temp;
 	int		i;
 	
-	i = 0;
+	i = -1;
 	temp = NULL;
 	while (env->env[++i])
 	{
@@ -98,8 +98,10 @@ void set_shell_lvl(t_env *env)
 			ft_strdel(&env->env[i]);
 			env->env[i] = ft_strjoin("SHLVL=", temp);
 			ft_strdel(&temp);
+			return ;
 		}
 	}
+	update_env(env->env, "1", "SHLVL");
 }
 
 static void	get_env(t_env *dest, char **environ, int argc, char **argv)
@@ -111,7 +113,7 @@ static void	get_env(t_env *dest, char **environ, int argc, char **argv)
 	(void)argv;
 	i = 0;
 	k = -1;
-	dest->env = (char **)ft_memalloc(sizeof(char *) * (ft_linecount(environ) + 1));
+	dest->env = (char **)ft_memalloc(sizeof(char *) * (ft_linecount(environ) + 2));
 	if (!dest->env)
 		return ;
 	while (environ[++k])

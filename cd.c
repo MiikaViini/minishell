@@ -6,13 +6,13 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/03 09:14:35 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/10 21:29:14 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/11 10:48:13 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "include/minishell.h"
 
-static int	check_access(char *input)
+static int	check_access(char *input, t_env *env, char *old_cwd)
 {
 	int ret;
 	struct stat buf;
@@ -34,12 +34,14 @@ static int	check_access(char *input)
 		error_print(input, "cd", E_NODIR);
 		ret = 1;
 	}
+	if (!ret)
+		update_env(env->env, old_cwd, "OLDPWD");
 	return (ret);
 }
 
 static void env_dir(char *input, char **env)
 {
-	int	i;
+	int		i;
 
 	i = -1;
 	while (env[++i])
@@ -60,8 +62,10 @@ static void env_dir(char *input, char **env)
 			}
 		}
 	}
-	if(!env[i])
-		error_print(input, "cd", E_NULLVAR);
+	if((!env[i] && !input) || (!env[i] && ft_strncmp(input, "--", 2) == 0))
+		error_print("HOME", "cd", E_NULLVAR);
+	else if (!env[i] && ft_strncmp(input, "-", 1) == 0)
+		error_print("OLDPWD", "cd", E_NULLVAR);
 }
 
 char	*user_expansion(char *input)
@@ -99,7 +103,7 @@ int do_cd(char **input, t_env *env)
 	old_cwd = getcwd(NULL, 0);
 	if (old_cwd == NULL)
 		return (1);
-	if(input[1] && !(ft_strncmp(input[1], "-", 1) == 0) && check_access(input[1]))
+	if(input[1] && !(ft_strncmp(input[1], "-", 1) == 0) && check_access(input[1], env, old_cwd))
 	{
 		free(old_cwd);
 		return (1);
@@ -110,7 +114,6 @@ int do_cd(char **input, t_env *env)
 	if (!cwd)
 		exit(EXIT_FAILURE);
 	update_env(env->env, cwd, "PWD");
-	update_env(env->env, old_cwd, "OLDPWD");
 	free(cwd);
 	free(old_cwd);
 	return (0);

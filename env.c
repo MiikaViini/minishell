@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 21:50:13 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/10 21:37:30 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/11 11:11:10 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,15 +71,13 @@ int	check_command(char **input, char **path, char **env)
 	int		i;
 	char	*exec;
 	char	*path_;
-	int		ret;
 	int		len;
 	int		k;
 
 	i = 0;
-	ret = 1;
 	len = 0;
 	k = 0;
-	while (input[0] && path[i])
+	while (input[0] && path && path[i])
 	{
 		dir = opendir(path[i]);
 		if (dir == NULL)
@@ -109,7 +107,7 @@ int	check_command(char **input, char **path, char **env)
 		closedir(dir);
 		i++;
 	}
-	return (ret);
+	return (1);
 }
 
 static void exec_w_env(char **input, t_env *env, int i, int k)
@@ -158,6 +156,7 @@ int do_env(char **input, t_env *env)
 				break ;
 		exec_w_env(input, env, i, k);
 	}
+	
 	update_env(env->env, input[ft_linecount(input) - 1], "_");
 	return (0);
 }
