@@ -6,7 +6,7 @@
 #    By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/07/09 19:07:08 by mviinika          #+#    #+#              #
-#    Updated: 2022/10/12 14:45:31 by mviinika         ###   ########.fr        #
+#    Updated: 2022/10/12 21:31:15 by mviinika         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,11 +30,12 @@ SRC_FILES = main.c \
 			utils2.c \
 			user_expansion.c \
 			update_env.c \
-			is_expansion.c
+			is_expansion.c \
+			get_env.c
 
 OBJS = $(SRC_FILES:.c=.o)
 
-FLAGS = -Wall -Wextra -Werror -g
+FLAGS = -Wall -Wextra -Werror -g -fsanitize=address
 
 LIBFT = ./libft/libft.a
 

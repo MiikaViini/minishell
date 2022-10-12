@@ -6,35 +6,41 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/12 10:45:58 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/12 10:46:25 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/12 22:26:00 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "include/minishell.h"
 
+static int	is_valid_user(char *input, char *name)
+{
+	if (ft_strcmp(&input[1], name) == 0 && input[0] != '.' && input[1] != '.')
+		return (1);
+	return (0);
+}
+
 char	*user_expansion(char *input)
 {
-	DIR		*dir;
-	struct 	dirent *entity;
-	char	*path;
+	DIR				*dir;
+	struct dirent	*entity;
+	char			*path;
 
 	dir = opendir("/Users");
 	path = NULL;
 	if (dir == NULL)
 		return (NULL);
 	entity = readdir(dir);
-	while(entity != NULL)
+	while (entity != NULL)
 	{
-		if (ft_strcmp(&input[1], entity->d_name) == 0)
+		if (is_valid_user(input, entity->d_name))
 		{
 			path = ft_strjoin("/Users/", &input[1]);
-			ft_strdel(&input);
-			input = ft_strdup(path);
-			ft_strdel(&path);
-			break ;
+			closedir(dir);
+			return (path);
 		}
 		entity = readdir(dir);
 	}
 	closedir(dir);
-	return (input);
+	error_print(input + 1, NULL, E_NOUSER);
+	return (path);
 }

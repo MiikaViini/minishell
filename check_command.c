@@ -6,16 +6,16 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/11 20:41:14 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/12 09:49:34 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/12 17:55:03 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "include/minishell.h"
 
-static int execute_command(char **input, char *exec, char **env)
+static int	execute_command(char **input, char *exec, char **env)
 {
-	int	pid;
-	struct stat stat_;
+	int			pid;
+	struct stat	stat_;
 
 	if (stat(exec, &stat_) != -1 && !S_ISREG(stat_.st_mode))
 		return (1);
@@ -35,11 +35,11 @@ static int execute_command(char **input, char *exec, char **env)
 	return (0);
 }
 
-static int execute_path_bin(char **input, char *path, char **env, DIR *dir) 
+static int	execute_path_bin(char **input, char *path, char **env, DIR *dir)
 {
 	char	*exec;
 	char	*path_;
-	
+
 	exec = ft_strjoin("/", input[0]);
 	path_ = ft_strjoin(path, exec);
 	if (!path_ || execute_command(input, path_, env))
@@ -55,7 +55,7 @@ static int execute_path_bin(char **input, char *path, char **env, DIR *dir)
 	return (0);
 }
 
-static int open_and_read_dir(char *path, DIR **dir, struct dirent **ent)
+static int	open_and_read_dir(char *path, DIR **dir, struct dirent **ent)
 {
 	*dir = opendir(path);
 	if (dir == NULL)
@@ -66,10 +66,9 @@ static int open_and_read_dir(char *path, DIR **dir, struct dirent **ent)
 
 static int	check_path_bin(char **input, char **path, char **env)
 {
-	
-	DIR		*dir;
-	struct 	dirent *entity;
-	int		i;
+	DIR				*dir;
+	struct dirent	*entity;
+	int				i;
 
 	i = -1;
 	dir = NULL;
@@ -83,19 +82,19 @@ static int	check_path_bin(char **input, char **path, char **env)
 			{
 				if (execute_path_bin(input, path[i], env, dir))
 					return (1);
-				return 0;
+				return (0);
 			}
 			entity = readdir(dir);
 		}
 		closedir(dir);
 	}
 	error_print(input[0], NULL, E_NOTF);
-	return 0;
+	return (0);
 }
 
 int	check_command(char **input, char **path, char **env)
 {
-	struct stat buf;
+	struct stat	buf;
 
 	if (ft_strchr(input[0], '/') && access(input[0], F_OK) == 0)
 	{
@@ -108,6 +107,6 @@ int	check_command(char **input, char **path, char **env)
 			return (1);
 	}
 	else if (!check_path_bin(input, path, env))
-		return 1;
+		return (1);
 	return (0);
 }

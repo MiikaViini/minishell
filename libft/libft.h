@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/08 14:13:57 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/10 13:45:10 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/12 18:01:57 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,10 +106,7 @@ size_t	ft_putstrlen(char const *s);
 int		get_next_line(const int fd, char **line);
 char	**ft_strsplitws(char const *s);
 char	**ft_strarrndup(char **dest, char **strarr, size_t size);
-char 	**ft_strarrcpy(char **dest, char **strarr);
+char	**ft_strarrcpy(char **dest, char **strarr);
 size_t	ft_linecount(char **arr);
-
-
-
 
 #endif

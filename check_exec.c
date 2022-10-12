@@ -6,16 +6,16 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/05 13:37:00 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/12 09:10:51 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/12 22:25:14 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "include/minishell.h"
 
-static char **get_path(char **env)
+static char	**get_path(char **env)
 {
 	int		i;
-	char 	**path;
+	char	**path;
 
 	i = -1;
 	path = NULL;
@@ -27,10 +27,10 @@ static char **get_path(char **env)
 
 static int	check_builtins(char **input, char **builtins, t_env *env)
 {
-	int k;
+	int	k;
 
 	k = -1;
-	while(builtins[++k])
+	while (builtins[++k])
 	{
 		if (ft_strequ(builtins[k], input[0]))
 		{
@@ -46,7 +46,7 @@ int	check_exec(char **input, int rb, char **builtins, t_env *env)
 	int	ret;
 
 	ret = 0;
-	if (rb && !input[0])
+	if ((rb && !input) || (rb && !input[0]))
 		return (1);
 	env->path = get_path(env->env);
 	if (rb)

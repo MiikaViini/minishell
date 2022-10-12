@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/27 09:14:23 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/12 14:47:25 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/12 22:54:37 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 static int	is_end_of_word(char c, t_quotes *quots)
 {
-	return((ft_isspace(c) && quots->s_quote + quots->d_quote == 0)
-			|| (ft_isspace(c) && quots->closed));
+	return ((ft_isspace(c) && quots->s_quote + quots->d_quote == 0)
+		|| (ft_isspace(c) && quots->closed));
 }
 
 static void	initialise_q_struct(t_quotes *quotes)
@@ -62,14 +62,15 @@ static char	*word(char *input, int i, int *total, char **env)
 	while (input[i])
 	{
 		rem_quote(&quots, input, total, &i);
-		if (is_expansion(&input[i]))
+		if (is_expansion(input, i))
 			expansion = 1;
 		if (is_end_of_word(input[i], &quots) && (*total)++)
 			break ;
 		if (can_be_added(input[i], &quots))
 			add_letter(word, input[i++], total, &k);
 	}
-	if (expansion && !quots.s_quote)
+	if ((expansion && !quots.s_quote)
+		|| (word[0] == '~' && word[1] != '$' && !quots.s_quote))
 		word = handle_expansions(word, env, total, &i);
 	return (word);
 }
@@ -91,10 +92,13 @@ char	**parse_input(char *input, char **env)
 		return (NULL);
 	while (trimmed_inp[i])
 	{
-		parsed[k++] = word(trimmed_inp, i, &total, env);
-		if (!parsed[k - 1][0])
-			ft_strdel(&parsed[--k]);
+		parsed[k] = word(trimmed_inp, i, &total, env);
+		if (!parsed[k])
+			return (NULL);
+		if (!parsed[k][0])
+			ft_strdel(&parsed[k]);
 		i = total;
+		k++;
 	}
 	parsed[k] = NULL;
 	ft_strdel(&trimmed_inp);

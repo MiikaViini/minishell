@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/03 09:14:35 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/12 10:46:18 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/12 18:00:20 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,12 @@
 
 static int	check_access(char *input, t_env *env, char *old_cwd)
 {
-	int ret;
-	struct stat buf;
+	int			ret;
+	struct stat	buf;
 
 	ret = 0;
-	if ((!lstat(input, &buf) && access(input, X_OK)) 
-		|| (!lstat(input, &buf) && access(input, R_OK))) 
+	if ((!lstat(input, &buf) && access(input, X_OK))
+		|| (!lstat(input, &buf) && access(input, R_OK)))
 	{
 		error_print(input, "cd", E_NOPERM);
 		ret = 1;
@@ -29,7 +29,7 @@ static int	check_access(char *input, t_env *env, char *old_cwd)
 		error_print(input, "cd", E_NOEX);
 		ret = 1;
 	}
-	else if(chdir(input) == -1)
+	else if (chdir(input) == -1)
 	{
 		error_print(input, "cd", E_NODIR);
 		ret = 1;
@@ -39,7 +39,7 @@ static int	check_access(char *input, t_env *env, char *old_cwd)
 	return (ret);
 }
 
-static void env_dir(char *input, char **env)
+static void	env_dir(char *input, char **env)
 {
 	int		i;
 
@@ -49,7 +49,7 @@ static void env_dir(char *input, char **env)
 		if (!input || ft_strncmp(input, "--", 2) == 0)
 		{
 			if (ft_strncmp(env[i], "HOME=", 5) == 0)
-				if(!chdir(env[i] + 5))
+				if (!chdir(env[i] + 5))
 					break ;
 		}
 		else if (ft_strncmp(input, "-", 1) == 0)
@@ -62,15 +62,13 @@ static void env_dir(char *input, char **env)
 			}
 		}
 	}
-	if((!env[i] && !input) || (!env[i] && ft_strncmp(input, "--", 2) == 0))
+	if ((!env[i] && !input) || (!env[i] && ft_strncmp(input, "--", 2) == 0))
 		error_print("HOME", "cd", E_NULLVAR);
 	else if (!env[i] && ft_strncmp(input, "-", 1) == 0)
 		error_print("OLDPWD", "cd", E_NULLVAR);
 }
 
-
-
-int do_cd(char **input, t_env *env)
+int	do_cd(char **input, t_env *env)
 {
 	char		*old_cwd;
 	char		*cwd;
@@ -78,7 +76,8 @@ int do_cd(char **input, t_env *env)
 	old_cwd = getcwd(NULL, 0);
 	if (old_cwd == NULL)
 		return (1);
-	if(input[1] && !(ft_strncmp(input[1], "-", 1) == 0) && check_access(input[1], env, old_cwd))
+	if (input[1] && !(ft_strncmp(input[1], "-", 1) == 0)
+		&& check_access(input[1], env, old_cwd))
 	{
 		free(old_cwd);
 		return (1);

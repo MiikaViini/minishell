@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 08:48:51 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/12 14:57:49 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/12 23:33:35 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static int	sweep_input(char **input, int equ_sign)
 {
 	int	i;
 	int	k;
-	
+
 	i = 0;
 	while (input[++i])
 	{
@@ -24,35 +24,35 @@ static int	sweep_input(char **input, int equ_sign)
 		equ_sign = check_equalsign(input[i]);
 		if (equ_sign)
 		{
-			error_print(input[i], "setenv",E_ARGNOTVAL);
+			error_print(input[i], "setenv", E_ARGNOTVAL);
 			return (1);
 		}
-		while(input[i][++k])
+		while (input[i][++k])
 		{
-			if(!is_valid_char(input[i][k]))
+			if (!is_valid_char(input[i][k]))
 			{
 				error_print(input[i], "setenv", E_NOTALNUM);
-				return(1);
+				return (1);
 			}
 		}
 	}
 	return (0);
 }
 
-static int check_validity(char **input)
+static int	check_validity(char **input)
 {
 	int	ret;
-	int equ_sign;
+	int	equ_sign;
 	int	i;
 
 	i = 0;
 	equ_sign = 0;
 	ret = 0;
-	while(input[++i])
+	while (input[++i])
 	{
 		if (input[i] && !ft_isalpha(input[i][0]))
 		{
-			error_print(input[0], "setenv",E_NOTVAL);
+			error_print(input[0], "setenv", E_NOTVAL);
 			return (1);
 		}
 	}
@@ -63,19 +63,18 @@ static int check_validity(char **input)
 static int	find_env(char *input, t_env *env, int *added, int *k)
 {
 	int	var_len;
-	
+
 	var_len = 0;
-	while(env->env[*k])
+	while (env->env[*k])
 	{
-		while(ft_strchr(&input[var_len], '='))
+		while (ft_strchr(&input[var_len], '='))
 			var_len++;
-		if (ft_strncmp(env->env[*k], input, var_len) == 0 
+		if (ft_strncmp(env->env[*k], input, var_len) == 0
 			&& env->env[*k][var_len - 1] == '=')
 		{
 			ft_strdel(&env->env[*k]);
 			env->env[*k] = ft_strdup(input);
 			*added = 1;
-			break ;
 		}
 		*k += 1;
 	}
@@ -92,8 +91,9 @@ int	do_setenv(char **input, t_env *env)
 	i = 0;
 	if (check_validity(input))
 		return (1);
-	while(input[++i])
+	while (input[++i])
 	{
+		k = 0;
 		added = 0;
 		added = find_env(input[i], env, &added, &k);
 		if (!added)
@@ -102,5 +102,5 @@ int	do_setenv(char **input, t_env *env)
 			env->env[k] = NULL;
 		}
 	}
-	return 0;
+	return (0);
 }

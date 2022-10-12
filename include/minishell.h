@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/06 08:59:36 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/12 14:48:00 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/12 22:40:31 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@
 # define E_NODIR "is not a directory"
 # define E_NULLVAR "variable doesnt have a value"
 # define E_ISDIR "is a directory"
+# define E_NOUSER "no such user or named directory"
 
 typedef struct s_env
 {
@@ -60,13 +61,14 @@ int		do_echo(char **input, t_env *env);
 int		do_env(char **input, t_env *env);
 int		do_setenv(char **input, t_env *env);
 int		do_unsetenv(char **input, t_env *env);
-char 	*dollar_expansion(char *expanded, char *word, char **env, int len);
-void	error_print(char *word, char *command,char* e_msg);
-char 	*handle_expansions(char *input, char **env, int *total, int *i);
-int		is_expansion(char *str);
+char	*dollar_expansion(char *expanded, char *word, char **env, int len);
+void	error_print(char *word, char *command, char *e_msg);
+void	get_env(t_env *dest, char **environ, int argc, char **argv);
+char	*handle_expansions(char *input, char **env, int *total, int *i);
+int		is_expansion(char *str, int i);
 char	**parse_input(char *input, char **env);
-char 	*tilde_expansion(char *word, char **env, char *expanded);
-void 	update_env(char **env, char *input, char *var);
+char	*tilde_expansion(char *word, char **env, char *expanded);
+void	update_env(char **env, char *input, char *var);
 char	*user_expansion(char *input);
 
 /***********\
@@ -86,9 +88,9 @@ int		is_valid_char(char c);
 void	add_letter(char *word, char c, int *total, int *k);
 int		can_be_added(char c, t_quotes *quots);
 
-typedef int	(*t_builtins)(char **input, t_env *env);
+typedef int					(*t_builtins)(char **input, t_env *env);
 
-static const t_builtins g_builtins[6] = {
+static const t_builtins		g_builtins[6] = {
 	do_echo,
 	do_cd,
 	do_setenv,

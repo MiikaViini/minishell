@@ -6,13 +6,13 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/12 14:35:58 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/12 14:37:19 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/12 17:56:53 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include	"include/minishell.h"
 
-void update_env(char **env, char *input, char *var)
+void	update_env(char **env, char *input, char *var)
 {
 	int		i;
 	char	*temp;
@@ -22,7 +22,7 @@ void update_env(char **env, char *input, char *var)
 	len = ft_strlen(var);
 	if (!var)
 		return ;
-	while(env[++i])
+	while (env[++i])
 	{
 		if (ft_strncmp(env[i], var, len) == 0 && env[i][len] == '=')
 		{
