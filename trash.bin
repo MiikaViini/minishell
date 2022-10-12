@@ -30,3 +30,21 @@ char *ft_sep(char *str, const char delim)
 // 		signal(SIGINT, sgn_handler);
 // 	}
 // }
+
+// if (is_quote(input[i]))
+// {
+// 	while (is_double_quote(input[i]) && quots.s_quote == 0)
+// 	{
+// 		quots.d_quote += 1;
+// 		i++;
+// 		*total += 1;
+// 	}
+// 	while (is_single_quote(input[i]) && !quots.d_quote)
+// 	{
+// 		quots.s_quote += 1;
+// 		i++;
+// 		*total += 1;
+// 	}
+// 	if (quots.s_quote >= 2 || quots.d_quote >= 2)
+// 		quots.closed = 1;
+// }

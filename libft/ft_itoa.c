@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/29 09:39:49 by mviinika          #+#    #+#             */
-/*   Updated: 2022/05/10 12:50:44 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/12 14:04:34 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ char	*ft_itoa(int n)
 	i = 0;
 	num = ft_strnew(ft_lenint(t) + 1);
 	if (!num)
-		return (NULL);
+		exit(1);
 	if (n == 0)
 		num[i++] = '0';
 	while (n > 0)

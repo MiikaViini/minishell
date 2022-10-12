@@ -1,28 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   quotecheck_utils.c                                 :+:      :+:    :+:   */
+/*   is_expansion.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/09/27 09:17:32 by mviinika          #+#    #+#             */
-/*   Updated: 2022/09/27 09:19:00 by mviinika         ###   ########.fr       */
+/*   Created: 2022/10/12 14:44:48 by mviinika          #+#    #+#             */
+/*   Updated: 2022/10/12 14:44:49 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "include/minishell.h"
 
-int	is_single_quote(char c)
+int	is_expansion(char *str)
 {
-	return (c == '\'');
-}
+	int ret;
+	int	i;
 
-int	is_double_quote(char c)
-{
-	return (c == '"');
-}
-
-int	is_quote(char c)
-{
-	return (c == '\'' || c == '"');
+	i = 0;
+	ret = 0;
+	if ((str[i] == '$' && ft_isalnum(str[i + 1])) 
+		|| (str[i] == '$' && str[i + 1] == '_'))
+		ret = 1;
+	else if (str[i] == '~')
+		ret = 1;
+	return (ret);
 }

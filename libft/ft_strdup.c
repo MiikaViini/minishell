@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/12 15:43:28 by mviinika          #+#    #+#             */
-/*   Updated: 2022/05/04 13:37:53 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/12 14:03:40 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ char	*ft_strdup(const char *s)
 	i = 0;
 	str = (char *)malloc(sizeof(char) * (ft_strlen((char *)s) + 1));
 	if (!str)
-		return (NULL);
+		exit(1);
 	while (s[i])
 	{
 		str[i] = s[i];

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cd.c                                               :+:      :+:    :+:   */
+/*   do_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/03 09:14:35 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/11 20:20:20 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/12 10:46:18 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,15 +18,15 @@ static int	check_access(char *input, t_env *env, char *old_cwd)
 	struct stat buf;
 
 	ret = 0;
-	if (access(input, F_OK))
-	{
-		error_print(input, "cd", E_NOEX);
-		ret = 1;
-	}
-	else if (lstat(input, &buf) == -1 
-		|| access(input, X_OK) || access(input, R_OK))
+	if ((!lstat(input, &buf) && access(input, X_OK)) 
+		|| (!lstat(input, &buf) && access(input, R_OK))) 
 	{
 		error_print(input, "cd", E_NOPERM);
+		ret = 1;
+	}
+	else if (access(input, F_OK))
+	{
+		error_print(input, "cd", E_NOEX);
 		ret = 1;
 	}
 	else if(chdir(input) == -1)
@@ -68,32 +68,7 @@ static void env_dir(char *input, char **env)
 		error_print("OLDPWD", "cd", E_NULLVAR);
 }
 
-char	*user_expansion(char *input)
-{
-	DIR		*dir;
-	struct 	dirent *entity;
-	char	*path;
 
-	dir = opendir("/Users");
-	path = NULL;
-	if (dir == NULL)
-		return (NULL);
-	entity = readdir(dir);
-	while(entity != NULL)
-	{
-		if (ft_strcmp(&input[1], entity->d_name) == 0)
-		{
-			path = ft_strjoin("/Users/", &input[1]);
-			ft_strdel(&input);
-			input = ft_strdup(path);
-			ft_strdel(&path);
-			break ;
-		}
-		entity = readdir(dir);
-	}
-	closedir(dir);
-	return (input);
-}
 
 int do_cd(char **input, t_env *env)
 {

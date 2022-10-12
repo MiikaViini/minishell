@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 20:20:37 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/11 13:23:25 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/12 15:59:41 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 
 static int var_name_len(char *word, int len, int i)
 {
-	while(ft_isalnum(word[len + i]) || (!ft_isalnum(word[len + i]) && word[len + i] == '_'))
+	while(ft_isalnum(word[len + i]) || (!ft_isalnum(word[len + i]) 
+		&& word[len + i] == '_'))
 		len++;
 	return (len);
 }
@@ -24,11 +25,23 @@ static char	*expand_and_concat(char *expanded, char **env, int k, int len)
 	char	*temp;
 	
 	temp = ft_strjoin(expanded, env[k] + len + 1);
-	 expanded = ft_strcpy(expanded, temp);
+	expanded = ft_strcpy(expanded, temp);
 	ft_strdel(&temp);
 	return (expanded);
 }
 
+static int	add_letter_exp(char *word, char	*expanded, int *i, int *j)
+{
+	if (!is_expansion(&word[*i]) || (word[*i] == '~'
+		&& is_expansion(&word[*i + 1])))
+	{
+		expanded[*j] = word[*i];
+		*i += 1;
+		*j += 1;
+		return (0);
+	}
+	return (1);
+}
 char *dollar_expansion(char *expanded, char *word, char **env, int len)
 {
 	int		i;
@@ -37,21 +50,21 @@ char *dollar_expansion(char *expanded, char *word, char **env, int len)
 	
 	i = 0;
 	j = 0;
-	k = -1;
-	while(word[i])
+	while (word[i])
 	{
-		if (!is_expansion(&word[i]) || (word[i] == '~' && is_expansion(&word[i + 1])))
-			expanded[j++] = word[i++];
+		if (!add_letter_exp(word, expanded, &i, &j))
+			;
 		else
 		{
+			k = -1;
 			len = var_name_len(word, len, ++i);
 			while(env[++k])
-				if (ft_strncmp(env[k], &word[i], len) == 0 && env[k][len] == '=')
+				if (ft_strncmp(env[k], &word[i], len) == 0
+					 && env[k][len] == '=')
 					expanded = expand_and_concat(expanded, env, k, len);
 			i += len;
 			j = ft_strlen(expanded);
 			len = 0;
-			k = -1;
 		}
 	}
 	return (expanded);

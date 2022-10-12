@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/19 10:42:33 by mviinika          #+#    #+#             */
-/*   Updated: 2022/04/25 13:30:15 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/12 14:03:04 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ char	*ft_strnew(size_t size)
 	i = 0;
 	fresh = (char *)malloc(sizeof(char) * size + 1);
 	if (fresh == NULL)
-		return (NULL);
+		exit(1);
 	while (size--)
 	{
 		fresh[i] = '\0';

@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/31 19:07:23 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/11 23:27:52 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/12 14:37:03 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,31 +52,7 @@ static int	minishell(t_env *env, char **builtins)
 	return (rb);
 }
 
-void update_env(char **env, char *input, char *var)
-{
-	int		i;
-	char	*temp;
-	int		len;
 
-	i = -1;
-	len = ft_strlen(var);
-	if (!var)
-		return ;
-	while(env[++i])
-	{
-		if (ft_strncmp(env[i], var, len) == 0 && env[i][len] == '=')
-		{
-			temp = ft_strndup(env[i], len + 1);
-			ft_strdel(&env[i]);
-			env[i] = ft_strjoin(temp, input);
-			ft_strdel(&temp);
-			return ;
-		}
-	}
-	temp = ft_strjoin(var, "=");
-	env[i] = ft_strjoin(temp, input);
-	ft_strdel(&temp);
-}
 
 void set_shell_lvl(t_env *env)
 {
@@ -117,7 +93,7 @@ static void	get_env(t_env *dest, char **environ, int argc, char **argv)
 	k = -1;
 	dest->env = (char **)ft_memalloc(sizeof(char *) * (size));
 	if (!dest->env)
-		return ;
+		exit(1);
 	while (environ[++k])
 	{
 		if (ft_strncmp(environ[k], "OLDPWD=", 7) == 0)
@@ -143,6 +119,8 @@ int	main(int argc, char **argv, char **environ)
 	rb = 1;
 	builtins = initialize_and_set_builtins();
 	env = (t_env *)malloc(sizeof(t_env));
+	if(!env)
+		exit(1);
 	get_env(env, environ, argc, argv);
 	while (rb != 0)
 	{

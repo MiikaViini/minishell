@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/22 14:47:26 by mviinika          #+#    #+#             */
-/*   Updated: 2022/05/09 18:04:24 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/12 14:04:55 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	len = ft_strlen((char *)s1) + ft_strlen((char *)s2);
 	fresh = ft_strnew(len);
 	if (fresh == NULL)
-		return (NULL);
+		exit(1);
 	while (s1 && *s1 != '\0')
 		fresh[i++] = *s1++;
 	while (s2 && *s2 != '\0')

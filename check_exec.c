@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/05 13:37:00 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/11 23:19:12 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/12 09:10:51 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ int	check_exec(char **input, int rb, char **builtins, t_env *env)
 	}
 	else if (check_builtins(input, builtins, env))
 		;
-	else if (!check_command(input, env->path, env->env))
+	else if (check_command(input, env->path, env->env))
 		;
 	else
 		error_print(input[0], NULL, E_NOTF);

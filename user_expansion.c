@@ -1,44 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   unsetenv.c                                         :+:      :+:    :+:   */
+/*   user_expansion.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/09/28 14:30:06 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/07 15:03:25 by mviinika         ###   ########.fr       */
+/*   Created: 2022/10/12 10:45:58 by mviinika          #+#    #+#             */
+/*   Updated: 2022/10/12 10:46:25 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "include/minishell.h"
 
-int	do_unsetenv(char **input, t_env *env)
+char	*user_expansion(char *input)
 {
-	int	i;
-	int	k;
-	int	len;
+	DIR		*dir;
+	struct 	dirent *entity;
+	char	*path;
 
-	i = -1;
-	k = 0;
-	len = 0;
-	while(input[++i])
+	dir = opendir("/Users");
+	path = NULL;
+	if (dir == NULL)
+		return (NULL);
+	entity = readdir(dir);
+	while(entity != NULL)
 	{
-		while (env->env[k])
+		if (ft_strcmp(&input[1], entity->d_name) == 0)
 		{
-			len = ft_strlen(input[i]);
-			if (ft_strncmp(env->env[k], input[i], len) == 0 && env->env[k][len] == '=')
-			{
-				ft_strdel(&env->env[k]);
-				env->env[k] = env->env[k + 1];
-				while(env->env[k])
-				{
-					env->env[k] = env->env[k + 1];
-					k++;
-				}
-			}
-			k++;
+			path = ft_strjoin("/Users/", &input[1]);
+			ft_strdel(&input);
+			input = ft_strdup(path);
+			ft_strdel(&path);
+			break ;
 		}
-		k = 0;
+		entity = readdir(dir);
 	}
-	return (0);
+	closedir(dir);
+	return (input);
 }

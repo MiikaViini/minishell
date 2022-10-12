@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/06 08:59:36 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/11 21:12:00 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/12 14:48:00 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define MINISHELL_H
 
 # include <sys/wait.h>
- #include <sys/stat.h>
+# include <sys/stat.h>
 # include <signal.h>
 # include "../libft/libft.h"
 # include <dirent.h>
@@ -45,43 +45,46 @@ typedef struct s_env
 	char	**path;
 }			t_env;
 
-int	check_exec(char **input, int rb, char **builtins, t_env *env);
-int	do_echo(char **input, t_env *env);
-size_t	ft_linecount(char **arr);
-char	*user_expansion(char *input);
-/*
-**QUOTES
-*/
-int	is_single_quote(char c);
-int	is_double_quote(char c);
-int	is_quote(char c);
-int	check_quotes(char *input);
-int	is_expansion(char *str);
+typedef struct s_quotes
+{
+	int	s_quote;
+	int	d_quote;
+	int	closed;
+}			t_quotes;
 
-/*
-**EXPANSIONS
-*/
-char	*replace_expansion(char *word, char **env, char *input);
-
-/*
-**PARSING
-*/
-char	**parse_input(char *input, char **env);
-int	do_unsetenv(char **input, t_env *env);
-int	do_setenv(char **input, t_env *env);
-int do_env(char **input, t_env *env);
-int do_cd(char **input, t_env *env);
-
-int check_validity(char **input);
-int check_equalsign(char *input);
-int	check_command(char **input, char **path, char **env);
-void update_env(char **env, char *input, char *var);
-char *dollar_expansion(char *expanded, char *word, char **env, int len);
-char *tilde_expansion(char *word, char **env, char *expanded);
-/** MEMORY HANDLING **/
-void	free_strarr(char **strarr);
-
+int		check_command(char **input, char **path, char **env);
+int		check_exec(char **input, int rb, char **builtins, t_env *env);
+int		check_quotes(char *input);
+int		do_cd(char **input, t_env *env);
+int		do_echo(char **input, t_env *env);
+int		do_env(char **input, t_env *env);
+int		do_setenv(char **input, t_env *env);
+int		do_unsetenv(char **input, t_env *env);
+char 	*dollar_expansion(char *expanded, char *word, char **env, int len);
 void	error_print(char *word, char *command,char* e_msg);
+char 	*handle_expansions(char *input, char **env, int *total, int *i);
+int		is_expansion(char *str);
+char	**parse_input(char *input, char **env);
+char 	*tilde_expansion(char *word, char **env, char *expanded);
+void 	update_env(char **env, char *input, char *var);
+char	*user_expansion(char *input);
+
+/***********\
+** utils.c **
+\***********/
+size_t	ft_linecount(char **arr);
+void	free_strarr(char **strarr);
+int		is_single_quote(char c);
+int		is_double_quote(char c);
+int		is_quote(char c);
+
+/***********\
+** utils2.c **
+\***********/
+int		check_equalsign(char *input);
+int		is_valid_char(char c);
+void	add_letter(char *word, char c, int *total, int *k);
+int		can_be_added(char c, t_quotes *quots);
 
 typedef int	(*t_builtins)(char **input, t_env *env);
 

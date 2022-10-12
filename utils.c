@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/05 13:33:07 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/07 14:09:26 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/12 09:51:57 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,4 +32,19 @@ void	free_strarr(char **strarr)
 	while (strarr[i])
 		ft_strdel(&strarr[i++]);
 	free(strarr);
+}
+
+int	is_single_quote(char c)
+{
+	return (c == '\'');
+}
+
+int	is_double_quote(char c)
+{
+	return (c == '"');
+}
+
+int	is_quote(char c)
+{
+	return (c == '\'' || c == '"');
 }
