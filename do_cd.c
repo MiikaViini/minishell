@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/03 09:14:35 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/12 18:00:20 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/13 13:36:59 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,7 @@ static int	check_access(char *input, t_env *env, char *old_cwd)
 	struct stat	buf;
 
 	ret = 0;
-	if ((!lstat(input, &buf) && access(input, X_OK))
-		|| (!lstat(input, &buf) && access(input, R_OK)))
+	if (!stat(input, &buf) && access(input, X_OK))
 	{
 		error_print(input, "cd", E_NOPERM);
 		ret = 1;
@@ -70,25 +69,19 @@ static void	env_dir(char *input, char **env)
 
 int	do_cd(char **input, t_env *env)
 {
-	char		*old_cwd;
-	char		*cwd;
+	char		old_cwd[MAX_PATH + 1];
+	char		cwd[MAX_PATH + 1];
 
-	old_cwd = getcwd(NULL, 0);
-	if (old_cwd == NULL)
-		return (1);
+	ft_memset(old_cwd, '\0', 1025);
+	ft_memset(cwd, '\0', 1025);
+	getcwd(old_cwd, MAX_PATH);
 	if (input[1] && !(ft_strncmp(input[1], "-", 1) == 0)
 		&& check_access(input[1], env, old_cwd))
-	{
-		free(old_cwd);
 		return (1);
-	}
 	else if (!input[1] || ft_strncmp(input[1], "-", 1) == 0)
 		env_dir(input[1], env->env);
-	cwd = getcwd(NULL, 0);
-	if (!cwd)
-		exit(EXIT_FAILURE);
+	getcwd(cwd, MAX_PATH);
 	update_env(env->env, cwd, "PWD");
-	free(cwd);
-	free(old_cwd);
+	update_env(env->env, old_cwd, "OLDPWD");
 	return (0);
 }

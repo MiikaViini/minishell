@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 08:48:51 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/12 23:33:35 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/13 14:05:06 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ static int	check_validity(char **input)
 	ret = 0;
 	while (input[++i])
 	{
-		if (input[i] && !ft_isalpha(input[i][0]))
+		if ((input[i] && !ft_isalpha(input[i][0]) && input[i][0] != '_'))
 		{
 			error_print(input[0], "setenv", E_NOTVAL);
 			return (1);
