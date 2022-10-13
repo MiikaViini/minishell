@@ -6,7 +6,7 @@
 #    By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/07/09 19:07:08 by mviinika          #+#    #+#              #
-#    Updated: 2022/10/13 12:29:42 by mviinika         ###   ########.fr        #
+#    Updated: 2022/10/13 14:22:14 by mviinika         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,7 +35,7 @@ SRC_FILES = main.c \
 
 OBJS = $(SRC_FILES:.c=.o)
 
-FLAGS = -Wall -Wextra -Werror -g
+FLAGS = -Wall -Wextra -Werror -g -pedantic
 
 LIBFT = ./libft/libft.a
 

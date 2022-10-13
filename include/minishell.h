@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/06 08:59:36 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/13 10:55:33 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/13 14:24:55 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@
 # define E_NOEX "no such file or directory"
 # define E_NOPERM "permission denied"
 # define E_NODIR "is not a directory"
-# define E_NULLVAR "variable doesnt have a value"
+# define E_NULLVAR "not set"
 # define E_ISDIR "is a directory"
 # define E_NOUSER "no such user or named directory"
 
