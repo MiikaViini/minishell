@@ -6,23 +6,20 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/27 09:14:23 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/12 22:54:37 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/13 10:56:59 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "include/minishell.h"
 
-static int	is_end_of_word(char c, t_quotes *quots)
-{
-	return ((ft_isspace(c) && quots->s_quote + quots->d_quote == 0)
-		|| (ft_isspace(c) && quots->closed));
-}
-
-static void	initialise_q_struct(t_quotes *quotes)
+static void	initialise_structs(t_quotes *quotes, t_word *ints, char *input)
 {
 	quotes->s_quote = 0;
 	quotes->d_quote = 0;
 	quotes->closed = 0;
+	ints->expan = 0;
+	ints->k = 0;
+	ints->len = (int)ft_strlen(input);
 }
 
 static void	rem_quote(t_quotes *quots, char *input, int *tot, int *i)
@@ -48,31 +45,36 @@ static void	rem_quote(t_quotes *quots, char *input, int *tot, int *i)
 
 static char	*word(char *input, int i, int *total, char **env)
 {
-	int			k;
 	char		*word;
-	int			expansion;
 	t_quotes	quots;
+	t_word		ints;
 
-	initialise_q_struct(&quots);
-	expansion = 0;
-	k = 0;
+	initialise_structs(&quots, &ints, input);
 	word = ft_strnew(ft_strlen(input));
 	while (ft_isspace(input[i]) && (*total)++)
 		i++;
-	while (input[i])
+	while (i < ints.len)
 	{
 		rem_quote(&quots, input, total, &i);
 		if (is_expansion(input, i))
-			expansion = 1;
+			ints.expan = 1;
 		if (is_end_of_word(input[i], &quots) && (*total)++)
 			break ;
 		if (can_be_added(input[i], &quots))
-			add_letter(word, input[i++], total, &k);
+			add_letter(word, input[i++], total, &ints.k);
 	}
-	if ((expansion && !quots.s_quote)
+	if ((ints.expan && !quots.s_quote)
 		|| (word[0] == '~' && word[1] != '$' && !quots.s_quote))
 		word = handle_expansions(word, env, total, &i);
 	return (word);
+}
+
+void	set_pars_struct(t_pars *pars, char *input)
+{
+	pars->parsed = (char **)ft_memalloc \
+	(sizeof(char *) * (ft_wordcount_ws(input) + 1));
+	pars->trimmed = ft_strtrim(input);
+	pars->len = (int)ft_strlen(pars->trimmed);
 }
 
 char	**parse_input(char *input, char **env)
@@ -80,27 +82,25 @@ char	**parse_input(char *input, char **env)
 	int			i;
 	int			k;
 	static int	total;
-	char		*trimmed_inp;
-	char		**parsed;
+	t_pars		pars;
 
 	i = 0;
 	k = 0;
 	total = 0;
-	parsed = (char **)malloc(sizeof(char *) * 100);
-	trimmed_inp = ft_strtrim(input);
-	if (!parsed || !trimmed_inp || !input)
-		return (NULL);
-	while (trimmed_inp[i])
+	set_pars_struct(&pars, input);
+	while (i < pars.len)
 	{
-		parsed[k] = word(trimmed_inp, i, &total, env);
-		if (!parsed[k])
+		pars.parsed[k++] = word(pars.trimmed, i, &total, env);
+		if (!pars.parsed[k - 1])
+		{
+			ft_strdel(&pars.trimmed);
+			free_parsed_input(pars.parsed);
+			free(pars.parsed);
 			return (NULL);
-		if (!parsed[k][0])
-			ft_strdel(&parsed[k]);
+		}
 		i = total;
-		k++;
 	}
-	parsed[k] = NULL;
-	ft_strdel(&trimmed_inp);
-	return (parsed);
+	pars.parsed[k] = NULL;
+	ft_strdel(&pars.trimmed);
+	return (pars.parsed);
 }

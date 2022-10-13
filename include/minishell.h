@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/06 08:59:36 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/12 22:40:31 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/13 10:55:33 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,20 @@ typedef struct s_quotes
 	int	closed;
 }			t_quotes;
 
+typedef struct s_pars
+{
+	int		len;
+	char	**parsed;
+	char	*trimmed;
+}			t_pars;
+
+typedef struct s_word
+{
+	int		len;
+	int		expan;
+	int		k;
+}			t_word;
+
 int		check_command(char **input, char **path, char **env);
 int		check_exec(char **input, int rb, char **builtins, t_env *env);
 int		check_quotes(char *input);
@@ -70,6 +84,7 @@ char	**parse_input(char *input, char **env);
 char	*tilde_expansion(char *word, char **env, char *expanded);
 void	update_env(char **env, char *input, char *var);
 char	*user_expansion(char *input);
+void	free_parsed_input(char **p_input);
 
 /***********\
 ** utils.c **
@@ -87,6 +102,7 @@ int		check_equalsign(char *input);
 int		is_valid_char(char c);
 void	add_letter(char *word, char c, int *total, int *k);
 int		can_be_added(char c, t_quotes *quots);
+int		is_end_of_word(char c, t_quotes *quots);
 
 typedef int					(*t_builtins)(char **input, t_env *env);
 

@@ -1,24 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memalloc.c                                      :+:      :+:    :+:   */
+/*   ft_wordcount_ws.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/18 14:51:16 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/13 10:19:18 by mviinika         ###   ########.fr       */
+/*   Created: 2022/10/13 10:15:19 by mviinika          #+#    #+#             */
+/*   Updated: 2022/10/13 10:48:07 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include  "libft.h"
+#include "libft.h"
 
-void	*ft_memalloc(size_t size)
+size_t	ft_wordcount_ws(const char *s)
 {
-	void	*mem;
+	size_t	i;
+	size_t	count;
 
-	mem = malloc(sizeof(size_t) * size);
-	if (mem == NULL)
-		exit(1);
-	ft_bzero(mem, size);
-	return (mem);
+	i = 0;
+	count = 0;
+	while (s[i])
+	{
+		if ((!ft_isspace(s[i]) && ft_isspace(s[i + 1]))
+			|| (!ft_isspace(s[i]) && s[i + 1] == '\0'))
+			count++;
+		i++;
+	}
+	return (count);
 }

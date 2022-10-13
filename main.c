@@ -6,13 +6,13 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/31 19:07:23 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/12 21:51:12 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/13 10:55:19 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "include/minishell.h"
 
-static void	free_parsed_input(char **p_input)
+void	free_parsed_input(char **p_input)
 {
 	int	i;
 

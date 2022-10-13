@@ -6,7 +6,7 @@
 #    By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/11/30 09:25:07 by mviinika          #+#    #+#              #
-#    Updated: 2022/10/10 13:43:52 by mviinika         ###   ########.fr        #
+#    Updated: 2022/10/13 10:23:37 by mviinika         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,7 +35,8 @@ SRCS = ft_atoi.c ft_bzero.c ft_isalnum.c ft_isalpha.c \
 	ft_lstaddlast.c ft_isspace.c ft_swap.c ft_strndup.c \
 	ft_pow.c ft_dectobin.c ft_bintodec.c ft_abs.c ft_intlen.c \
 	ft_itoabase.c ft_ftoa.c ft_ltoa.c ft_utoa.c ft_putstrlen.c \
-	get_next_line.c ft_strsplitws.c ft_strarrcpy.c ft_strarrndup.c ft_linecount.c
+	get_next_line.c ft_strsplitws.c ft_strarrcpy.c \
+	ft_strarrndup.c ft_linecount.c ft_wordcount_ws.c
 
 OBJ = $(SRCS:.c=.o)
 

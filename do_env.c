@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 21:50:13 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/12 17:56:31 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/13 11:24:17 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,12 @@ static void	try_execute(char **input, int *i, t_env *temp, t_env *env)
 
 	exec = input[*i];
 	input[*i] = NULL;
-	if (do_setenv(input, temp))
-		;
-	input[*i] = exec;
-	if (!check_command(&input[*i], env->path, temp->env))
+	if (!do_setenv(input, temp))
 		;
 	else
-		error_print(input[*i], "env", E_NOEX);
+		return ;
+	input[*i] = exec;
+	check_command(&input[*i], env->path, temp->env);
 }
 
 static void	exec_w_env(char **input, t_env *env, int i, int k)

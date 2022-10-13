@@ -6,7 +6,7 @@
 #    By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/07/09 19:07:08 by mviinika          #+#    #+#              #
-#    Updated: 2022/10/12 21:31:15 by mviinika         ###   ########.fr        #
+#    Updated: 2022/10/13 12:29:42 by mviinika         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,7 +35,7 @@ SRC_FILES = main.c \
 
 OBJS = $(SRC_FILES:.c=.o)
 
-FLAGS = -Wall -Wextra -Werror -g -fsanitize=address
+FLAGS = -Wall -Wextra -Werror -g
 
 LIBFT = ./libft/libft.a
 
@@ -58,7 +58,7 @@ $(NAME): $(OBJS)
 	@echo "$(GREEN)$(NAME) compiled$(RESET)"
 
 clean:
-	@echo "$(YELLOW)Deleting ft_ls objs$(RESET)"
+	@echo "$(YELLOW)Deleting $(NAME) objs$(RESET)"
 	@make clean -C $(LIBFT_DIR)
 	@rm -f $(OBJS)
 
