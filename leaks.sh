@@ -3,7 +3,7 @@
 
 while true
 do
-	leaks minishell;
+	leaks minishell_peetu;
 	sleep 1;
 	printf "checking again in ...3";
 	sleep 1;

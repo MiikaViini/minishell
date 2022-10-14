@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/03 09:14:35 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/13 14:28:36 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/14 10:51:09 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ static int	check_access(char *input, t_env *env, char *old_cwd)
 	struct stat	buf;
 
 	ret = 0;
+	(void)env;
+	(void)old_cwd;
 	if (!stat(input, &buf) && access(input, X_OK))
 	{
 		error_print(input, "cd", E_NOPERM);
@@ -33,8 +35,6 @@ static int	check_access(char *input, t_env *env, char *old_cwd)
 		error_print(input, "cd", E_NODIR);
 		ret = 1;
 	}
-	if (!ret)
-		update_env(env->env, old_cwd, "OLDPWD");
 	return (ret);
 }
 
@@ -81,6 +81,8 @@ int	do_cd(char **input, t_env *env)
 	else if (!input[1] || ft_strncmp(input[1], "-", 1) == 0)
 		env_dir(input[1], env->env);
 	getcwd(cwd, MAX_PATH);
+	if (ft_strcmp(cwd, old_cwd))
+		update_env(env->env, old_cwd, "OLDPWD");
 	update_env(env->env, cwd, "PWD");
 	return (0);
 }

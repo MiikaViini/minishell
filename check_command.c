@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/11 20:41:14 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/13 14:41:09 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/14 11:15:51 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,8 @@ static int	execute_command(char **input, char *exec, char **env)
 			exit(EXIT_FAILURE);
 		}
 	}
-	wait(&pid);
+	else
+		wait(&pid);
 	return (0);
 }
 
@@ -57,7 +58,7 @@ static int	execute_path_bin(char **input, char *path, char **env, DIR *dir)
 static int	open_and_read_dir(char *path, DIR **dir, struct dirent **ent)
 {
 	*dir = opendir(path);
-	if (dir == NULL)
+	if (*dir == NULL)
 		return (1);
 	*ent = readdir(*dir);
 	return (0);
