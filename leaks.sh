@@ -3,15 +3,9 @@
 
 while true
 do
-	leaks minishell_peetu;
-	sleep 1;
-	printf "checking again in ...3";
-	sleep 1;
-	printf " ...2";
-	sleep 1;
-	printf " ...1";
-	sleep 1;
-	echo
+	leaks minishell;
+		sleep 1;
+	# echo
 done
 
 #copied from Alex Mann

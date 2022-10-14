@@ -6,7 +6,7 @@
 #    By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/14 12:56:26 by mviinika          #+#    #+#              #
-#    Updated: 2022/09/05 10:11:04 by mviinika         ###   ########.fr        #
+#    Updated: 2022/10/14 13:31:43 by mviinika         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,7 +30,7 @@ OBJS = $(SRCS:.c=.o)
 
 LIBFT = ../libft.a
 
-FLAGS = -Wall -Werror -Wextra -O3
+FLAGS = -Wall -Werror -Wextra -pedantic
 
 ##COLOURS##
 RED = \x1b[31;01m

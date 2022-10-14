@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/05 13:37:00 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/14 11:05:05 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/14 13:25:38 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,11 @@ static char	**get_path(char **env)
 	char	**path;
 
 	i = -1;
-	path = NULL;
 	while (env[++i])
-		if (ft_strncmp(env[i], "PATH=", 5) == 0)
+	{
+		if (ft_strncmp(env[i], "PATH=", 5) == 0 && env[i][5])
 			path = ft_strsplit(env[i] + 5, ':');
+	}
 	return (path);
 }
 
@@ -51,7 +52,7 @@ int	check_exec(char **input, int rb, char **builtins, t_env *env)
 	env->path = get_path(env->env);
 	if (rb)
 		update_env(env->env, input[ft_linecount(input) - 1], "_");
-	if (rb == 0 || !ft_strcmp(input[0], "exit"))
+	if (rb == 0 || (input[0] && !ft_strcmp(input[0], "exit")))
 	{
 		ft_putstr("exit\n");
 		return (EXIT_SUCCESS);

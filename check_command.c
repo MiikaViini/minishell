@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/11 20:41:14 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/14 11:15:51 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/14 11:46:06 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,7 @@ static int	execute_command(char **input, char *exec, char **env)
 			exit(EXIT_FAILURE);
 		}
 	}
-	else
-		wait(&pid);
+	wait(&pid);
 	return (0);
 }
 

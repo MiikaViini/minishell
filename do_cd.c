@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/03 09:14:35 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/14 10:51:09 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/14 14:45:32 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,22 @@ static int	check_access(char *input, t_env *env, char *old_cwd)
 	return (ret);
 }
 
-static void	env_dir(char *input, char **env)
+static int	check_env_var(char *input, char **env)
+{
+	if ((!*env && !input) || (!*env && ft_strncmp(input, "--", 2) == 0))
+	{
+		error_print("HOME", "cd", E_NULLVAR);
+		return (1);
+	}
+	else if (!*env && ft_strncmp(input, "-", 1) == 0)
+	{
+		error_print("OLDPWD", "cd", E_NULLVAR);
+		return (1);
+	}
+	return (0);
+}
+
+static int	env_dir(char *input, char **env)
 {
 	int		i;
 
@@ -61,10 +76,9 @@ static void	env_dir(char *input, char **env)
 			}
 		}
 	}
-	if ((!env[i] && !input) || (!env[i] && ft_strncmp(input, "--", 2) == 0))
-		error_print("HOME", "cd", E_NULLVAR);
-	else if (!env[i] && ft_strncmp(input, "-", 1) == 0)
-		error_print("OLDPWD", "cd", E_NULLVAR);
+	if (check_env_var(input, &env[i]))
+		return (1);
+	return (0);
 }
 
 int	do_cd(char **input, t_env *env)
@@ -79,10 +93,12 @@ int	do_cd(char **input, t_env *env)
 		&& check_access(input[1], env, old_cwd))
 		return (1);
 	else if (!input[1] || ft_strncmp(input[1], "-", 1) == 0)
-		env_dir(input[1], env->env);
+	{
+		if (env_dir(input[1], env->env))
+			return (1);
+	}
 	getcwd(cwd, MAX_PATH);
-	if (ft_strcmp(cwd, old_cwd))
-		update_env(env->env, old_cwd, "OLDPWD");
+	update_env(env->env, old_cwd, "OLDPWD");
 	update_env(env->env, cwd, "PWD");
 	return (0);
 }

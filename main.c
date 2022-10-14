@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/31 19:07:23 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/13 10:55:19 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/14 14:15:33 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,23 +61,20 @@ static char	**initialize_and_set_builtins(void)
 
 int	main(int argc, char **argv, char **environ)
 {
-	t_env	*env;
+	t_env	env;
 	char	**builtins;
 	int		rb;
 
 	rb = 1;
 	builtins = initialize_and_set_builtins();
-	env = (t_env *)malloc(sizeof(t_env));
-	if (!env)
-		exit(1);
-	get_env(env, environ, argc, argv);
+	get_env(&env, environ, argc, argv);
+	ft_putstr("\033[2J\033[H");
 	while (rb != 0)
 	{
 		ft_putstr("mish-1.0$ ");
-		rb = minishell(env, builtins);
+		rb = minishell(&env, builtins);
 	}
-	free_strarr(env->env);
-	free_strarr(env->path);
-	free(env);
+	free_strarr(env.env);
+	free_strarr(env.path);
 	return (0);
 }

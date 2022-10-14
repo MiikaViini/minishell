@@ -6,7 +6,7 @@
 #    By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/11/30 09:25:07 by mviinika          #+#    #+#              #
-#    Updated: 2022/10/13 10:23:37 by mviinika         ###   ########.fr        #
+#    Updated: 2022/10/14 13:35:09 by mviinika         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -50,7 +50,7 @@ GREEN = \x1b[32;01m
 YELLOW = \x1b[33;01m
 RESET = \x1b[32;00m
 
-FLAGS = -Wall -Wextra -Werror -g
+FLAGS = -Wall -Wextra -Werror
 
 all: $(NAME)
 
