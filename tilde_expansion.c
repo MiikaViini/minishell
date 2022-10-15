@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/11 20:50:39 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/13 10:50:34 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/15 19:37:56 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,15 @@ static char	*handle_home(char *word, char **env, char *expanded)
 
 	k = -1;
 	while (env[++k])
+	{
 		if (ft_strncmp(env[k], "HOME=", 5) == 0)
 			expanded = expand_and_cat_tld(expanded, env + k, word, 5);
+		else
+		{
+			ft_strdel(&expanded);
+			expanded = ft_strdup(word);
+		}
+	}
 	return (expanded);
 }
 
@@ -40,8 +47,15 @@ static char	*handle_oldpwd(char *word, char **env, char *expanded)
 
 	k = -1;
 	while (env[++k])
+	{
 		if (ft_strncmp(env[k], "OLDPWD=", 7) == 0)
 			expanded = expand_and_cat_tld(expanded, env + k, &word[1], 7);
+		else
+		{
+			ft_strdel(&expanded);
+			expanded = ft_strdup(word);
+		}
+	}
 	return (expanded);
 }
 
@@ -51,8 +65,15 @@ static char	*handle_pwd(char *word, char **env, char *expanded)
 
 	k = -1;
 	while (env[++k])
+	{
 		if (ft_strncmp(env[k], "PWD=", 4) == 0)
 			expanded = expand_and_cat_tld(expanded, env + k, &word[1], 4);
+		else
+		{
+			ft_strdel(&expanded);
+			expanded = ft_strdup(word);
+		}
+	}
 	return (expanded);
 }
 

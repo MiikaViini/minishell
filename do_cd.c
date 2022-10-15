@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/03 09:14:35 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/14 14:45:32 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/15 19:50:54 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,10 @@ int	do_cd(char **input, t_env *env)
 			return (1);
 	}
 	getcwd(cwd, MAX_PATH);
+	if (cwd[0] == '\0')
+		update_env(env->env, input[1], "PWD");
+	else
+		update_env(env->env, cwd, "PWD");
 	update_env(env->env, old_cwd, "OLDPWD");
-	update_env(env->env, cwd, "PWD");
 	return (0);
 }

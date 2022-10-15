@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/05 13:37:00 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/14 13:25:38 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/15 20:31:55 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,14 @@ static char	**get_path(char **env)
 	char	**path;
 
 	i = -1;
+	path = (char **)ft_memalloc(sizeof(char *));
 	while (env[++i])
 	{
 		if (ft_strncmp(env[i], "PATH=", 5) == 0 && env[i][5])
+		{
+			free(path);
 			path = ft_strsplit(env[i] + 5, ':');
+		}
 	}
 	return (path);
 }
