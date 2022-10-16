@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/27 09:15:09 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/16 13:39:10 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/16 13:46:54 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,11 +50,7 @@ char	*handle_expansions(char *input, char **env, int *total, int *i)
 	char	*expanded;
 
 	expanded = replace_expansion(input, env, input);
-	if (!expanded)
-	{
-		ft_strdel(&input);
-		return (NULL);
-	}
+	ft_printf("[%s]\n", expanded);
 	*total += ft_strlen(&input[*i]);
 	ft_strdel(&input);
 	return (expanded);
