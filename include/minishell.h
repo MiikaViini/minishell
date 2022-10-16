@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/06 08:59:36 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/16 13:39:22 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/13 14:24:55 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <pwd.h>
 # include <unistd.h>
 
+# define MAX_VAR 1024
 # define MAX_PATH 1024
 # define MAX_LINE 4096
 

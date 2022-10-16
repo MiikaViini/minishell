@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/27 09:15:09 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/16 13:46:54 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/16 21:34:25 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,13 +31,28 @@ static size_t	longest_var(char **env)
 	return (longest);
 }
 
+static int	mall_c(char *input, char **env)
+{
+	int	i;
+	int	count;
+
+	i = -1;
+	count = 0;
+	while (input[++i])
+	{
+		if (input[i] == '$')
+			count++;
+	}
+	return (longest_var(env) * (count + 1));
+}
+
 static char	*replace_expansion(char *word, char **env, char *input)
 {
 	char	*expanded;
 	int		len;
 
 	len = 0;
-	expanded = ft_strnew(longest_var(env) + ft_strlen(input));
+	expanded = ft_strnew(mall_c(input, env) + ft_strlen(input));
 	if (word[0] == '~' && word[1] != '$')
 		expanded = tilde_expansion(word, env, expanded);
 	else
@@ -50,7 +65,6 @@ char	*handle_expansions(char *input, char **env, int *total, int *i)
 	char	*expanded;
 
 	expanded = replace_expansion(input, env, input);
-	ft_printf("[%s]\n", expanded);
 	*total += ft_strlen(&input[*i]);
 	ft_strdel(&input);
 	return (expanded);

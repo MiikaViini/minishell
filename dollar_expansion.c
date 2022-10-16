@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 20:20:37 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/16 13:34:21 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/16 21:03:11 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,7 @@ static char	*expand_and_concat(char *expanded, char **env, int k, int len)
 	char	*temp;
 
 	temp = ft_strjoin(expanded, env[k] + len + 1);
-	ft_strdel(&expanded);
-	expanded = ft_strdup(temp);
+	expanded = ft_strcpy(expanded, temp);
 	ft_strdel(&temp);
 	return (expanded);
 }

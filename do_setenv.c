@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 08:48:51 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/13 14:05:06 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/16 22:19:40 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,21 +60,36 @@ static int	check_validity(char **input)
 	return (ret);
 }
 
+static int	get_var_len(char *input)
+{
+	int	i;
+	int	var_len;
+
+	i = -1;
+	var_len = 0;
+	while (input[++i])
+	{
+		var_len++;
+		if (input[i] == '=')
+			break ;
+	}
+	return (var_len);
+}
+
 static int	find_env(char *input, t_env *env, int *added, int *k)
 {
 	int	var_len;
 
-	var_len = 0;
+	var_len = get_var_len(input);
 	while (env->env[*k])
 	{
-		while (ft_strchr(&input[var_len], '='))
-			var_len++;
 		if (ft_strncmp(env->env[*k], input, var_len) == 0
 			&& env->env[*k][var_len - 1] == '=')
 		{
 			ft_strdel(&env->env[*k]);
 			env->env[*k] = ft_strdup(input);
 			*added = 1;
+			break ;
 		}
 		*k += 1;
 	}
