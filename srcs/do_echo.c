@@ -6,11 +6,11 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/09 15:00:43 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/12 17:34:34 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/16 22:51:02 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "include/minishell.h"
+#include "../include/minishell.h"
 
 int	do_echo(char **input, t_env *env)
 {

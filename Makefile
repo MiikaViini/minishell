@@ -6,7 +6,7 @@
 #    By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/07/09 19:07:08 by mviinika          #+#    #+#              #
-#    Updated: 2022/10/15 20:16:25 by mviinika         ###   ########.fr        #
+#    Updated: 2022/10/16 23:02:19 by mviinika         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,15 +33,21 @@ SRC_FILES = main.c \
 			is_expansion.c \
 			get_env.c
 
-OBJS = $(SRC_FILES:.c=.o)
+#OBJS = $(SRC_FILES:.c=.o)
+
+DIR_O = objs
+
+DIR_S = srcs
+
+SRCS = $(addprefix $(DIR_S)/,$(SRC_FILES))
+
+OBJS = $(addprefix $(DIR_O)/,$(SRC_FILES:.c=.o))
 
 FLAGS = -Wall -Wextra -Werror -g -pedantic
 
 LIBFT = ./libft/libft.a
 
 LIBFT_DIR = ./libft/
-
-INC = ./include/
 
 ##COLOURS##
 RED = \x1b[31;01m
@@ -53,14 +59,17 @@ all: $(NAME)
 
 $(NAME): $(OBJS)
 	@make -C $(LIBFT_DIR)
-	@gcc -c $(FLAGS) $(SRC_FILES) -I $(INC)
 	@gcc $(FLAGS) $(OBJS) -o $(NAME) $(LIBFT)
 	@echo "$(GREEN)$(NAME) compiled$(RESET)"
 
+$(OBJS): $(DIR_O)/%.o: $(DIR_S)/%.c include/minishell.h
+	@mkdir -p $(DIR_O)
+	gcc $(FLAGS) -c -I include -o $@ $<
+
 clean:
 	@echo "$(YELLOW)Deleting $(NAME) objs$(RESET)"
+	@rm -Rf $(DIR_O)
 	@make clean -C $(LIBFT_DIR)
-	@rm -f $(OBJS)
 
 fclean: clean
 	@echo "$(RED)Removing $(NAME) $(RESET)"

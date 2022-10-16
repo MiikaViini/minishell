@@ -6,11 +6,11 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/27 09:16:07 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/04 11:24:19 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/16 23:01:14 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "include/minishell.h"
+#include "../include/minishell.h"
 
 int	check_quotes(char *input)
 {

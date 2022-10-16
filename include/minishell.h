@@ -6,20 +6,16 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/06 08:59:36 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/13 14:24:55 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/16 22:29:38 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# include <sys/wait.h>
 # include <sys/stat.h>
-# include <signal.h>
 # include "../libft/libft.h"
 # include <dirent.h>
-# include <pwd.h>
-# include <unistd.h>
 
 # define MAX_VAR 1024
 # define MAX_PATH 1024

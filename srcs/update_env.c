@@ -6,11 +6,11 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/12 14:35:58 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/12 17:56:53 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/16 22:51:02 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include	"include/minishell.h"
+#include	"../include/minishell.h"
 
 void	update_env(char **env, char *input, char *var)
 {
