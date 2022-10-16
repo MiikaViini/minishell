@@ -3,7 +3,7 @@
 
 while true
 do
-	leaks minishell;
+	leaks bash;
 		sleep 1;
 	# echo
 done
