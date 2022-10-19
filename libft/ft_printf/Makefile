@@ -6,7 +6,7 @@
 #    By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/14 12:56:26 by mviinika          #+#    #+#              #
-#    Updated: 2022/10/14 13:31:43 by mviinika         ###   ########.fr        #
+#    Updated: 2022/10/18 13:26:00 by mviinika         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,7 +38,7 @@ GREEN = \x1b[32;01m
 YELLOW = \x1b[33;01m
 RESET = \x1b[32;00m
 
-all: $(NAME) Makefile ft_printf.h
+all: $(NAME)
 
 $(NAME): $(OBJS)
 	@cp $(LIBFT) .

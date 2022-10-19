@@ -6,14 +6,14 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 09:58:49 by mviinika          #+#    #+#             */
-/*   Updated: 2022/07/14 14:04:49 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/18 12:49:57 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FT_PRINTF_H
 # define FT_PRINTF_H
 
-# include "../libft.h"
+# include "../include/libft.h"
 # include <stdarg.h>
 
 # define CONV "discoxXfpuU%b"

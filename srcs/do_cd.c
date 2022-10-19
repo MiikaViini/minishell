@@ -6,20 +6,18 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/03 09:14:35 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/16 22:51:02 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/19 13:20:33 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-static int	check_access(char *input, t_env *env, char *old_cwd)
+static int	check_access(char *input)
 {
 	int			ret;
 	struct stat	buf;
 
 	ret = 0;
-	(void)env;
-	(void)old_cwd;
 	if (!stat(input, &buf) && access(input, X_OK))
 	{
 		error_print(input, "cd", E_NOPERM);
@@ -90,7 +88,7 @@ int	do_cd(char **input, t_env *env)
 	ft_memset(cwd, '\0', 1025);
 	getcwd(old_cwd, MAX_PATH);
 	if (input[1] && !(ft_strncmp(input[1], "-", 1) == 0)
-		&& check_access(input[1], env, old_cwd))
+		&& check_access(input[1]))
 		return (1);
 	else if (!input[1] || ft_strncmp(input[1], "-", 1) == 0)
 	{

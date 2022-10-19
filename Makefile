@@ -6,7 +6,7 @@
 #    By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/07/09 19:07:08 by mviinika          #+#    #+#              #
-#    Updated: 2022/10/16 23:02:19 by mviinika         ###   ########.fr        #
+#    Updated: 2022/10/19 13:13:47 by mviinika         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,9 +31,8 @@ SRC_FILES = main.c \
 			user_expansion.c \
 			update_env.c \
 			is_expansion.c \
-			get_env.c
-
-#OBJS = $(SRC_FILES:.c=.o)
+			get_env.c \
+			passwd_user.c
 
 DIR_O = objs
 

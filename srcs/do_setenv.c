@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 08:48:51 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/16 22:51:02 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/18 12:30:44 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,14 +24,14 @@ static int	sweep_input(char **input, int equ_sign)
 		equ_sign = check_equalsign(input[i]);
 		if (equ_sign)
 		{
-			error_print(input[i], "setenv", E_ARGNOTVAL);
+			error_print(NULL, "setenv", E_ARGNOTVAL);
 			return (1);
 		}
 		while (input[i][++k])
 		{
 			if (!is_valid_char(input[i][k]))
 			{
-				error_print(input[i], "setenv", E_NOTALNUM);
+				error_print(NULL, "setenv", E_NOTALNUM);
 				return (1);
 			}
 		}
@@ -52,7 +52,7 @@ static int	check_validity(char **input)
 	{
 		if ((input[i] && !ft_isalpha(input[i][0]) && input[i][0] != '_'))
 		{
-			error_print(input[0], "setenv", E_NOTVAL);
+			error_print(NULL, "setenv", E_NOTVAL);
 			return (1);
 		}
 	}

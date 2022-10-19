@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/06 08:28:50 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/16 22:51:02 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/18 12:28:04 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,10 @@ void	error_print(char *word, char *command, char *e_msg)
 		ft_putstr_fd(command, 2);
 		ft_putstr_fd(": ", 2);
 	}
-	ft_putstr_fd(word, 2);
-	ft_putstr_fd(": ", 2);
+	if (word)
+	{
+		ft_putstr_fd(word, 2);
+		ft_putstr_fd(": ", 2);
+	}
 	ft_putendl_fd(e_msg, 2);
 }

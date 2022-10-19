@@ -6,13 +6,13 @@
 #    By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/11/30 09:25:07 by mviinika          #+#    #+#              #
-#    Updated: 2022/10/14 13:35:09 by mviinika         ###   ########.fr        #
+#    Updated: 2022/10/18 13:19:08 by mviinika         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = libft.a
 
-SRCS = ft_atoi.c ft_bzero.c ft_isalnum.c ft_isalpha.c \
+SRC_FILES = ft_atoi.c ft_bzero.c ft_isalnum.c ft_isalpha.c \
 	ft_isascii.c ft_isdigit.c \
 	ft_isprint.c ft_itoa.c ft_memalloc.c ft_memccpy.c \
 	ft_memchr.c ft_memcmp.c \
@@ -38,7 +38,15 @@ SRCS = ft_atoi.c ft_bzero.c ft_isalnum.c ft_isalpha.c \
 	get_next_line.c ft_strsplitws.c ft_strarrcpy.c \
 	ft_strarrndup.c ft_linecount.c ft_wordcount_ws.c
 
-OBJ = $(SRCS:.c=.o)
+DIR_O = objs
+
+DIR_S = srcs
+
+SRCS = $(addprefix $(DIR_S)/,$(SRC_FILES))
+
+OBJS = $(addprefix $(DIR_O)/,$(SRC_FILES:.c=.o))
+
+FLAGS = -Wall -Wextra -Werror -g -pedantic
 
 FT_PRINTF = ft_printf/libftprintf.a
 
@@ -54,19 +62,20 @@ FLAGS = -Wall -Wextra -Werror
 
 all: $(NAME)
 
-$(NAME): $(OBJ) libft.h Makefile
-	@gcc -c $(FLAGS) $(SRCS)
-	@ar rcs $(NAME) $(OBJ)
+$(NAME): $(OBJS)
+	@ar rcs $(NAME) $(OBJS)
 	@make -C ./ft_printf/
 	@cp $(FT_PRINTF) $(NAME)
-	@gcc -c $(FLAGS) $(SRCS)
-	@ar rcs $(NAME) $(OBJ)
+	@ar rcs $(NAME) ${OBJS}
 	@echo "$(GREEN)Libft compiled$(RESET)"
 
+$(OBJS): $(DIR_O)/%.o: $(DIR_S)/%.c include/libft.h
+	@mkdir -p $(DIR_O)
+	gcc $(FLAGS) -c -I include -o $@ $<
 
 clean:
 	@echo "$(YELLOW)Deleting libft objs$(RESET)"
-	@rm -f $(OBJ)
+	@rm -Rf $(DIR_O)
 	@make clean -C $(FT_PRINTF_DIR)
 
 fclean: clean

@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/12 10:45:58 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/16 22:51:02 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/19 13:12:06 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@ char	*user_expansion(char *input)
 		entity = readdir(dir);
 	}
 	closedir(dir);
-	error_print(input + 1, NULL, E_NOUSER);
+	path = passwd_user(input);
+	if (path == NULL)
+		error_print(input + 1, NULL, E_NOUSER);
 	return (path);
 }
