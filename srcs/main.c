@@ -6,28 +6,28 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/31 19:07:23 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/17 12:42:00 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/18 13:24:39 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../include/minishell.h"
 
-void free_parsed_input(char **p_input)
+void	free_parsed_input(char **p_input)
 {
-	int i;
+	int	i;
 
 	i = -1;
 	if (!p_input || !p_input[0])
-		return;
+		return ;
 	while (p_input[++i])
 		ft_strdel(&p_input[i]);
 }
 
-static int minishell(t_env *env, char **builtins)
+static int	minishell(t_env *env, char **builtins)
 {
-	int rb;
-	char buf[MAX_LINE + 1];
-	char **parsed_input;
+	int		rb;
+	char	buf[MAX_LINE + 1];
+	char	**parsed_input;
 
 	rb = 1;
 	ft_memset(buf, '\0', MAX_LINE + 1);
@@ -52,18 +52,18 @@ static int minishell(t_env *env, char **builtins)
 	return (rb);
 }
 
-static char **initialize_and_set_builtins(void)
+static char	**initialize_and_set_builtins(void)
 {
-	static char *builtins[6] = {"echo", "cd", "setenv", "unsetenv", "env"};
+	static char	*builtins[6] = {"echo", "cd", "setenv", "unsetenv", "env"};
 
 	return (builtins);
 }
 
-int main(int argc, char **argv, char **environ)
+int	main(int argc, char **argv, char **environ)
 {
-	t_env env;
-	char **builtins;
-	int rb;
+	t_env	env;
+	char	**builtins;
+	int		rb;
 
 	rb = 1;
 	builtins = initialize_and_set_builtins();

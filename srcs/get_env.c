@@ -6,17 +6,17 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/12 17:39:14 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/17 12:42:00 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/16 22:51:02 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../include/minishell.h"
 
-static void set_shell_lvl(t_env *env)
+static void	set_shell_lvl(t_env *env)
 {
-	int num;
-	char *temp;
-	int i;
+	int		num;
+	char	*temp;
+	int		i;
 
 	i = -1;
 	temp = NULL;
@@ -27,22 +27,22 @@ static void set_shell_lvl(t_env *env)
 			num = ft_atoi(env->env[i] + 6);
 			num++;
 			if (num >= 1000)
-				num = 1;
+				num = 0;
 			temp = ft_itoa(num);
 			ft_strdel(&env->env[i]);
 			env->env[i] = ft_strjoin("SHLVL=", temp);
 			ft_strdel(&temp);
-			return;
+			return ;
 		}
 	}
 	update_env(env->env, "1", "SHLVL");
 }
 
-void get_env(t_env *dest, char **environ, int argc, char **argv)
+void	get_env(t_env *dest, char **environ, int argc, char **argv)
 {
-	int i;
-	int k;
-	int size;
+	int		i;
+	int		k;
+	int		size;
 
 	(void)argc;
 	(void)argv;

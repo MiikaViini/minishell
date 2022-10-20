@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/06 08:59:36 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/17 11:57:32 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/19 13:13:06 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,16 @@
 # define MINISHELL_H
 
 # include <sys/stat.h>
-# include "../libft/libft.h"
+# include "../libft/include/libft.h"
 # include <dirent.h>
+# include <fcntl.h>
+# include <pwd.h>
 
 # define MAX_VAR 1024
 # define MAX_PATH 1024
 # define MAX_LINE 4096
 
-# define MSHELL "mish"
+# define MSHELL "minishell"
 
 # define E_EXE "error occured during execution"
 # define E_NOTF "command not found"
@@ -77,6 +79,7 @@ void	get_env(t_env *dest, char **environ, int argc, char **argv);
 char	*handle_expansions(char *input, char **env, int *total, int *i);
 int		is_expansion(char *str, int i);
 char	**parse_input(char *input, char **env);
+char	*passwd_user(char *input);
 char	*tilde_expansion(char *word, char **env, char *expanded);
 void	update_env(char **env, char *input, char *var);
 char	*user_expansion(char *input);

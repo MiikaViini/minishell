@@ -6,15 +6,15 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/12 09:56:41 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/17 12:42:00 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/18 12:32:26 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../include/minishell.h"
 
-int check_equalsign(char *input)
+int	check_equalsign(char *input)
 {
-	int i;
+	int	i;
 
 	i = -1;
 	while (input[++i])
@@ -25,24 +25,28 @@ int check_equalsign(char *input)
 	return (1);
 }
 
-int is_valid_char(char c)
+int	is_valid_char(char c)
 {
-	return (!ft_isalnum(c) || (ft_isalnum(c) && c != '_') || (ft_isalnum(c) && c != '='));
+	return (ft_isalnum(c)
+		|| c == '_'
+		|| c == '=');
 }
 
-void add_letter(char *word, char c, int *total, int *k)
+void	add_letter(char *word, char c, int *total, int *k)
 {
 	word[*k] = c;
 	*total += 1;
 	*k += 1;
 }
 
-int can_be_added(char c, t_quotes *quots)
+int	can_be_added(char c, t_quotes *quots)
 {
-	return ((c && quots->closed == 0) || (!ft_isspace(c) && quots->closed));
+	return ((c && quots->closed == 0)
+		|| (!ft_isspace(c) && quots->closed));
 }
 
-int is_end_of_word(char c, t_quotes *quots)
+int	is_end_of_word(char c, t_quotes *quots)
 {
-	return ((ft_isspace(c) && quots->s_quote + quots->d_quote == 0) || (ft_isspace(c) && quots->closed));
+	return ((ft_isspace(c) && quots->s_quote + quots->d_quote == 0)
+		|| (ft_isspace(c) && quots->closed));
 }

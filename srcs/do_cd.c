@@ -6,16 +6,16 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/03 09:14:35 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/20 08:47:37 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/19 13:20:33 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../include/minishell.h"
 
-static int check_access(char *input)
+static int	check_access(char *input)
 {
-	int ret;
-	struct stat buf;
+	int			ret;
+	struct stat	buf;
 
 	ret = 0;
 	if (!stat(input, &buf) && access(input, X_OK))
@@ -36,7 +36,7 @@ static int check_access(char *input)
 	return (ret);
 }
 
-static int check_env_var(char *input, char **env)
+static int	check_env_var(char *input, char **env)
 {
 	if ((!*env && !input) || (!*env && ft_strncmp(input, "--", 2) == 0))
 	{
@@ -51,9 +51,9 @@ static int check_env_var(char *input, char **env)
 	return (0);
 }
 
-static int env_dir(char *input, char **env)
+static int	env_dir(char *input, char **env)
 {
-	int i;
+	int		i;
 
 	i = -1;
 	while (env[++i])
@@ -62,7 +62,7 @@ static int env_dir(char *input, char **env)
 		{
 			if (ft_strncmp(env[i], "HOME=", 5) == 0)
 				if (!chdir(env[i] + 5))
-					break;
+					break ;
 		}
 		else if (ft_strncmp(input, "-", 1) == 0)
 		{
@@ -70,7 +70,7 @@ static int env_dir(char *input, char **env)
 			{
 				ft_putendl(env[i] + 7);
 				if (!chdir(env[i] + 7))
-					break;
+					break ;
 			}
 		}
 	}
@@ -79,15 +79,15 @@ static int env_dir(char *input, char **env)
 	return (0);
 }
 
-int do_cd(char **input, t_env *env)
+int	do_cd(char **input, t_env *env)
 {
-	char old_cwd[MAX_PATH + 1];
-	char cwd[MAX_PATH + 1];
+	char		old_cwd[MAX_PATH + 1];
+	char		cwd[MAX_PATH + 1];
 
 	ft_memset(old_cwd, '\0', 1025);
 	ft_memset(cwd, '\0', 1025);
 	getcwd(old_cwd, MAX_PATH);
-	if (input[1] && !(ft_strncmp(input[1], "-", 1) == 0) 
+	if (input[1] && !(ft_strncmp(input[1], "-", 1) == 0)
 		&& check_access(input[1]))
 		return (1);
 	else if (!input[1] || ft_strncmp(input[1], "-", 1) == 0)

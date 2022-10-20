@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/05 13:37:00 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/17 12:07:13 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/16 23:02:31 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ static int	check_builtins(char **input, char **builtins, t_env *env)
 	int	k;
 
 	k = -1;
-	update_env(env->env, input[0], "_");
 	while (builtins[++k])
 	{
 		if (ft_strequ(builtins[k], input[0]))
@@ -55,6 +54,8 @@ int	check_exec(char **input, int rb, char **builtins, t_env *env)
 	if ((rb && !input) || (rb && !input[0]))
 		return (1);
 	env->path = get_path(env->env);
+	if (rb)
+		update_env(env->env, input[ft_linecount(input) - 1], "_");
 	if (rb == 0 || (input[0] && !ft_strcmp(input[0], "exit")))
 	{
 		ft_putstr("exit\n");
@@ -66,7 +67,6 @@ int	check_exec(char **input, int rb, char **builtins, t_env *env)
 		;
 	else
 		error_print(input[0], NULL, E_NOTF);
-	update_env(env->env, input[ft_linecount(input) - 1], "_");
 	free_strarr(env->path);
 	return (1);
 }

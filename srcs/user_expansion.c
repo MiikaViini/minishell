@@ -6,24 +6,24 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/12 10:45:58 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/17 12:42:00 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/19 13:12:06 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../include/minishell.h"
 
-static int is_valid_user(char *input, char *name)
+static int	is_valid_user(char *input, char *name)
 {
 	if (ft_strcmp(&input[1], name) == 0 && input[0] != '.' && input[1] != '.')
 		return (1);
 	return (0);
 }
 
-char *user_expansion(char *input)
+char	*user_expansion(char *input)
 {
-	DIR *dir;
-	struct dirent *entity;
-	char *path;
+	DIR				*dir;
+	struct dirent	*entity;
+	char			*path;
 
 	dir = opendir("/Users");
 	path = NULL;
@@ -41,6 +41,8 @@ char *user_expansion(char *input)
 		entity = readdir(dir);
 	}
 	closedir(dir);
-	error_print(input + 1, NULL, E_NOUSER);
+	path = passwd_user(input);
+	if (path == NULL)
+		error_print(input + 1, NULL, E_NOUSER);
 	return (path);
 }

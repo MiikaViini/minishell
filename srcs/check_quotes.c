@@ -6,17 +6,17 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/27 09:16:07 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/17 12:42:00 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/16 23:01:14 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../include/minishell.h"
 
-int check_quotes(char *input)
+int	check_quotes(char *input)
 {
-	int i;
-	int s_quote;
-	int d_quote;
+	int		i;
+	int		s_quote;
+	int		d_quote;
 
 	i = 0;
 	s_quote = 0;
