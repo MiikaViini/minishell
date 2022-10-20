@@ -6,13 +6,13 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/06 08:28:50 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/17 12:08:56 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/17 12:42:00 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+#include "minishell.h"
 
-void	error_print(char *word, char *command, char *e_msg)
+void error_print(char *word, char *command, char *e_msg)
 {
 	ft_putstr_fd(MSHELL, 2);
 	ft_putstr_fd(": ", 2);

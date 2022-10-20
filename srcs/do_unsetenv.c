@@ -6,13 +6,13 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/28 14:30:06 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/16 22:51:02 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/17 12:42:00 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+#include "minishell.h"
 
-void	delete_var(t_env *env, int *k)
+void delete_var(t_env *env, int *k)
 {
 	ft_strdel(&env->env[*k]);
 	env->env[*k] = env->env[*k + 1];
@@ -24,11 +24,11 @@ void	delete_var(t_env *env, int *k)
 	env->env[*k] = NULL;
 }
 
-int	do_unsetenv(char **input, t_env *env)
+int do_unsetenv(char **input, t_env *env)
 {
-	int	i;
-	int	k;
-	int	len;
+	int i;
+	int k;
+	int len;
 
 	i = 0;
 	len = 0;
@@ -38,8 +38,7 @@ int	do_unsetenv(char **input, t_env *env)
 		while (env->env[++k])
 		{
 			len = (int)ft_strlen(input[i]);
-			if (ft_strnequ(env->env[k], input[i], len)
-				&& env->env[k][len] == '=')
+			if (ft_strnequ(env->env[k], input[i], len) && env->env[k][len] == '=')
 			{
 				delete_var(env, &k);
 			}

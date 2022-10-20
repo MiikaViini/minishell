@@ -6,23 +6,22 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 20:20:37 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/16 22:51:02 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/17 12:42:00 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+#include "minishell.h"
 
-static int	var_name_len(char *word, int len, int i)
+static int var_name_len(char *word, int len, int i)
 {
-	while (ft_isalnum(word[len + i]) || (!ft_isalnum(word[len + i])
-			&& word[len + i] == '_'))
+	while (ft_isalnum(word[len + i]) || (!ft_isalnum(word[len + i]) && word[len + i] == '_'))
 		len++;
 	return (len);
 }
 
-static char	*expand_and_concat(char *expanded, char **env, int k, int len)
+static char *expand_and_concat(char *expanded, char **env, int k, int len)
 {
-	char	*temp;
+	char *temp;
 
 	temp = ft_strjoin(expanded, env[k] + len + 1);
 	expanded = ft_strcpy(expanded, temp);
@@ -30,10 +29,9 @@ static char	*expand_and_concat(char *expanded, char **env, int k, int len)
 	return (expanded);
 }
 
-static int	add_letter_exp(char *word, char	*expanded, int *i, int *j)
+static int add_letter_exp(char *word, char *expanded, int *i, int *j)
 {
-	if (!is_expansion(word, *i) || (word[*i] == '~'
-			&& is_expansion(word, *i + 1)))
+	if (!is_expansion(word, *i) || (word[*i] == '~' && is_expansion(word, *i + 1)))
 	{
 		expanded[*j] = word[*i];
 		*i += 1;
@@ -43,11 +41,11 @@ static int	add_letter_exp(char *word, char	*expanded, int *i, int *j)
 	return (1);
 }
 
-char	*dollar_expansion(char *expanded, char *word, char **env, int len)
+char *dollar_expansion(char *expanded, char *word, char **env, int len)
 {
-	int		i;
-	int		j;
-	int		k;
+	int i;
+	int j;
+	int k;
 
 	i = 0;
 	j = 0;
@@ -60,8 +58,7 @@ char	*dollar_expansion(char *expanded, char *word, char **env, int len)
 			k = -1;
 			len = var_name_len(word, len, ++i);
 			while (env[++k])
-				if (ft_strncmp(env[k], &word[i], len) == 0
-					&& env[k][len] == '=')
+				if (ft_strncmp(env[k], &word[i], len) == 0 && env[k][len] == '=')
 					expanded = expand_and_concat(expanded, env, k, len);
 			i += len;
 			j = ft_strlen(expanded);

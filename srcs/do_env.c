@@ -6,29 +6,29 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 21:50:13 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/17 12:03:32 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/17 12:42:00 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+#include "minishell.h"
 
-static void	try_execute(char **input, int *i, t_env *temp, t_env *env)
+static void try_execute(char **input, int *i, t_env *temp, t_env *env)
 {
-	char	*exec;
+	char *exec;
 
 	exec = input[*i];
 	input[*i] = NULL;
 	if (!do_setenv(input, temp))
 		;
 	else
-		return ;
+		return;
 	input[*i] = exec;
 	check_command(&input[*i], env->path, temp->env);
 }
 
-static void	exec_w_env(char **input, t_env *env, int i, int k)
+static void exec_w_env(char **input, t_env *env, int i, int k)
 {
-	t_env	temp;
+	t_env temp;
 
 	temp.env = ft_strarrndup(temp.env, env->env, ft_linecount(input));
 	if (input[i])
@@ -44,10 +44,10 @@ static void	exec_w_env(char **input, t_env *env, int i, int k)
 	free_strarr(temp.env);
 }
 
-int	do_env(char **input, t_env *env)
+int do_env(char **input, t_env *env)
 {
-	int		i;
-	int		k;
+	int i;
+	int k;
 
 	i = 0;
 	k = -1;
@@ -58,7 +58,7 @@ int	do_env(char **input, t_env *env)
 	{
 		while (input[++i])
 			if (check_equalsign(input[i]))
-				break ;
+				break;
 		k = -1;
 		exec_w_env(input, env, i, k);
 	}
