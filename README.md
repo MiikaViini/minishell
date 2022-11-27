@@ -9,6 +9,9 @@ I concider that parsing was the hardest part, and
 i managed to handle it in the scope of the subject by
 'trial and error' and asking around how other people did it.
 
+In eval_test directory is little 'leaktester' which 
+i used during developing to ensure there is no memoryleaks.
+
 Usage:
 
 1. Clone the repository
