@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/12 09:56:41 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/18 12:32:26 by mviinika         ###   ########.fr       */
+/*   Updated: 2023/07/26 14:39:07 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,8 @@ int	is_valid_char(char c)
 {
 	return (ft_isalnum(c)
 		|| c == '_'
-		|| c == '=');
+		|| c == '='
+        || c == '/');
 }
 
 void	add_letter(char *word, char c, int *total, int *k)

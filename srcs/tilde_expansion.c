@@ -6,7 +6,7 @@
 /*   By: mviinika <mviinika@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/11 20:50:39 by mviinika          #+#    #+#             */
-/*   Updated: 2022/10/16 22:51:02 by mviinika         ###   ########.fr       */
+/*   Updated: 2022/10/19 19:10:28 by mviinika         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,10 @@ static char	*handle_home(char *word, char **env, char *expanded)
 	while (env[++k])
 	{
 		if (ft_strncmp(env[k], "HOME=", 5) == 0)
+		{
 			expanded = expand_and_cat_tld(expanded, env + k, word, 5);
+			break ;
+		}
 		else
 		{
 			ft_strdel(&expanded);
@@ -49,7 +52,10 @@ static char	*handle_oldpwd(char *word, char **env, char *expanded)
 	while (env[++k])
 	{
 		if (ft_strncmp(env[k], "OLDPWD=", 7) == 0)
+		{
 			expanded = expand_and_cat_tld(expanded, env + k, &word[1], 7);
+			break ;
+		}
 		else
 		{
 			ft_strdel(&expanded);
@@ -67,7 +73,10 @@ static char	*handle_pwd(char *word, char **env, char *expanded)
 	while (env[++k])
 	{
 		if (ft_strncmp(env[k], "PWD=", 4) == 0)
+		{
 			expanded = expand_and_cat_tld(expanded, env + k, &word[1], 4);
+			break ;
+		}
 		else
 		{
 			ft_strdel(&expanded);
@@ -83,9 +92,9 @@ char	*tilde_expansion(char *word, char **env, char *expanded)
 
 	if (word[1] == '/' || word[1] == '\0')
 		expanded = handle_home(word, env, expanded);
-	else if (word[1] == '-')
+	else if (word[1] == '-' && !word[2])
 		expanded = handle_oldpwd(word, env, expanded);
-	else if (word[1] == '+')
+	else if (word[1] == '+' && !word[2])
 		expanded = handle_pwd(word, env, expanded);
 	else
 	{
